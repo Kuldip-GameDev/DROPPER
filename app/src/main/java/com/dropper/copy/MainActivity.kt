@@ -21,7 +21,8 @@ class MainActivity : Activity() {
                 "1. Tap the button below and enable \"Dropper Copy\" under accessibility.\n" +
                 "2. Android 13+ (sideloaded): if the toggle is greyed out, open App info → ⋮ → " +
                 "Allow restricted settings, then retry.\n" +
-                "3. Open any app and tap the floating ⧉ button. Tap lines to select, then Copy.\n\n" +
+                "3. Open any app and tap the floating ⧉ button, then drag a box over the text you want. " +
+                "It turns blue; tap Copy. Tap a single line to select just that line, or List for everything.\n\n" +
                 "Drag the button to move it. Password fields are never read."
             textSize = 16f
         })
