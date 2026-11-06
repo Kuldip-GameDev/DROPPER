@@ -27,3 +27,5 @@ Rules for yourself:
 | 03 | `lowerBound` | binary search invariants |
 | 04 | `countWindowsAtLeast` | sliding window |
 | 05 | `reverseList` | linked lists, pointer rewiring |
+| 06 | `craft` / `store` / `totalPower` | `unique_ptr`, moving ownership |
+| 07 | `makeCounter` / `countAtLeast` / `sortLeaderboard` | lambdas, captures, comparators |
