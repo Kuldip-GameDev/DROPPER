@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Four "sorting bars": the visual heart of the app. 108dp canvas, 72dp safe zone (18..90). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:fillColor="#4CC9F0" android:pathData="M28,62h8a2,2 0,0 1,2 2v12h-12v-12a2,2 0,0 1,2 -2z" />
+    <path android:fillColor="#4CC9F0" android:pathData="M42,52h8a2,2 0,0 1,2 2v22h-12v-22a2,2 0,0 1,2 -2z" />
+    <path android:fillColor="#FFC857" android:pathData="M56,42h8a2,2 0,0 1,2 2v32h-12v-32a2,2 0,0 1,2 -2z" />
+    <path android:fillColor="#FFC857" android:pathData="M70,32h8a2,2 0,0 1,2 2v42h-12v-42a2,2 0,0 1,2 -2z" />
+    <path android:fillColor="#43AA8B" android:pathData="M24,79h58v3h-58z" />
+</vector>
