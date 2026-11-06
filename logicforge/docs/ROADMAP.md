@@ -5,7 +5,7 @@
 | M0 | Bootstrap: docs, ADRs, CI | done |
 | M1 | Core foundation: scene/trace/JSON, registry, dispatcher, CLI, first algorithms, snippet extractor | done |
 | M2 | Android shell: Gradle + NDK + JNI, Compose screens, renderers, APK in CI | planned |
-| M3 | Pointer & Lambda Lab | planned |
+| M3 | Pointer & Lambda Lab | in progress |
 | M4 | Slot Math Lab | planned |
 | M5 | Learning engine: quizzes, spaced repetition, XP, streaks, Topic Reels | planned |
 | M6 | Design patterns + hard-to-read C++ | planned |

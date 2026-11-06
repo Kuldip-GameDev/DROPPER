@@ -13,3 +13,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [S
 - `forge_cli` terminal tool (`list`, `trace`, `call`, `dump-traces`).
 - Snippet extractor: code shown in the app is extracted from compiled sources; CI checks every trace's line labels.
 - Five exercises (koans): pointer swap, two-pointer reverse, lower bound, sliding window, reverse list.
+- Android app (Kotlin, Jetpack Compose): home, lesson player, Algorithm Lab, trace player with
+  play/step/scrub/speed, syntax-highlighted code panel that follows the trace, renderers for array, bar,
+  stack, graph and grid scenes. One JNI function carries UTF-8 JSON bytes to the C++ core.
+- 12 beginner lessons (Foundations track) with visuals, compiled code, quizzes, build exercises and
+  34 verified LeetCode/HackerRank practice links.
+- Lesson validation in CI and `scripts/verify_links.py` to check practice links against the real sites.

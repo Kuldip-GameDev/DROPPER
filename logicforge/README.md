@@ -67,10 +67,11 @@ ctest --test-dir build --output-on-failure
 
 ### Android app
 
-Requires JDK 17+, Android SDK (platform 35) and NDK `27.3.13750724`.
+Requires JDK 17+, Android SDK (platform 36, CMake 3.22.1) and NDK `27.3.13750724`.
+Kotlin + Jetpack Compose, AGP 8.13, Gradle 8.14 (wrapper included), minSdk 26.
 
 ```bash
-./gradlew assembleDebug
+./gradlew assembleDebug testDebugUnitTest
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
