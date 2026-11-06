@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "forge/slot/game.hpp"
+#include "forge/slot/machine.hpp"
 #include "forge/slot/rng.hpp"
 #include "forge/slot/weighted.hpp"
 
@@ -158,4 +159,18 @@ TEST_CASE("cluster finder and gravity") {
     std::sort(before.begin(), before.end());
     std::sort(after.begin(), after.end());
     CHECK(before == after);  // gravity moves symbols, never creates or destroys them
+}
+
+TEST_CASE("state machine: illegal events are rejected") {
+    SlotMachine m(lucky3(), 10);
+    std::vector<std::string> events;
+    m.subscribe([&](const std::string& e) { events.push_back(e); });
+    CHECK_FALSE(m.pressSpin(11));
+    CHECK_FALSE(m.reelsStopped({0, 0, 0}));
+    CHECK(m.pressSpin(1));
+    CHECK_FALSE(m.pressSpin(1));
+    CHECK(m.reelsStopped({2, 3, 9}));
+    CHECK((m.state() == State::WinShow));
+    CHECK(m.lastWin() == 40);
+    CHECK(m.freeSpins() == 3);
 }
