@@ -1,0 +1,83 @@
+name: LogicForge
+
+on:
+  push:
+    paths:
+      - 'logicforge/**'
+      - '.github/workflows/logicforge.yml'
+  pull_request:
+    paths:
+      - 'logicforge/**'
+      - '.github/workflows/logicforge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: logicforge-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: logicforge
+
+jobs:
+  core:
+    name: Core (C++20, ASan + UBSan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -S core -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DFORGE_SANITIZE=ON -DFORGE_WERROR=ON
+        env:
+          CXX: clang++
+
+      - name: Build
+        run: cmake --build build -j
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Check snippets and lessons
+        run: python3 scripts/extract_snippets.py --check
+
+  android:
+    name: Android APK
+    needs: core
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Install NDK
+        run: echo "y" | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;27.3.13750724" > /dev/null
+
+      - name: Build debug APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+          cp app/build/outputs/apk/debug/app-debug.apk logicforge.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: logicforge-apk
+          path: logicforge/logicforge.apk
+
+      - name: Publish to "logicforge-latest" pre-release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete logicforge-latest --yes --cleanup-tag || true
+          gh release create logicforge-latest logicforge.apk \
+            --title "LogicForge (latest build)" \
+            --notes "Debug build from ${GITHUB_SHA::7} on ${GITHUB_REF_NAME}. Sideload only." \
+            --target "$GITHUB_SHA" --prerelease
