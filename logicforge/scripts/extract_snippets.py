@@ -161,11 +161,38 @@ def check_lessons(algos: dict[str, dict] | None) -> list[str]:
                     if not str(link.get("url", "")).startswith(LINK_HOSTS):
                         problems.append(f"{at}: link '{link.get('url')}' is not a LeetCode/HackerRank problem URL")
     tracks_path = CONTENT / "tracks.json"
+    edges: list[tuple[str, str]] = []
     if tracks_path.exists():
         for track in json.loads(tracks_path.read_text(encoding="utf-8")).get("tracks", []):
-            for lesson_id in track.get("lessons", []):
+            lessons = track.get("lessons", [])
+            for lesson_id in lessons:
                 if lesson_id not in lesson_ids:
                     problems.append(f"content/tracks.json: track '{track.get('id')}' lists missing lesson '{lesson_id}'")
+            edges += list(zip(lessons, lessons[1:]))
+    for path in sorted(lessons_dir.glob("*.json")) if lessons_dir.exists() else []:
+        for req in json.loads(path.read_text(encoding="utf-8")).get("requires", []):
+            if req not in lesson_ids:
+                problems.append(f"{path.relative_to(ROOT).as_posix()}: requires unknown lesson '{req}'")
+            edges.append((req, path.stem))
+    # Kahn's algorithm, same as the app's skill plan: a cycle would leave lessons unreachable.
+    indegree = {n: 0 for n in lesson_ids}
+    after: dict[str, list[str]] = {n: [] for n in lesson_ids}
+    for a, b in edges:
+        if a in indegree and b in indegree:
+            after[a].append(b)
+            indegree[b] += 1
+    ready = [n for n, d in indegree.items() if d == 0]
+    seen = 0
+    while ready:
+        n = ready.pop()
+        seen += 1
+        for m in after[n]:
+            indegree[m] -= 1
+            if indegree[m] == 0:
+                ready.append(m)
+    if seen != len(lesson_ids):
+        stuck = sorted(n for n, d in indegree.items() if d > 0)
+        problems.append(f"lesson prerequisites form a cycle among: {', '.join(stuck)}")
     return problems
 
 

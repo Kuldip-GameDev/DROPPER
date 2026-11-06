@@ -3,6 +3,10 @@
   "title": "Weighted picks",
   "summary": "Make cherries common and sevens rare: three algorithms, three speeds.",
   "minutes": 9,
+  "requires": [
+    "dsa.binary_search",
+    "dsa.prefix_sums"
+  ],
   "cards": [
     {
       "type": "text",

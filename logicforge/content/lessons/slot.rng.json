@@ -3,6 +3,9 @@
   "title": "Randomness you can trust",
   "summary": "Pseudo-random generators, modulo bias, and how to test an RNG.",
   "minutes": 9,
+  "requires": [
+    "dsa.algorithms_and_big_o"
+  ],
   "cards": [
     {
       "type": "text",

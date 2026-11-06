@@ -3,6 +3,9 @@
   "title": "Game flow as a state machine",
   "summary": "States, events, and why \"ignore it\" is a feature.",
   "minutes": 8,
+  "requires": [
+    "lambda.in_practice"
+  ],
   "cards": [
     {
       "type": "text",

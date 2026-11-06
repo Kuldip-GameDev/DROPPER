@@ -3,6 +3,9 @@
   "title": "Ways, clusters and cascades",
   "summary": "243 ways by multiplication, cluster pays by BFS, cascades by gravity.",
   "minutes": 10,
+  "requires": [
+    "dsa.two_pointers"
+  ],
   "cards": [
     {
       "type": "visual",

@@ -3,6 +3,9 @@
   "title": "Linked lists and pointers",
   "summary": "Nodes connected by arrows. Reverse one with three pointers.",
   "minutes": 9,
+  "requires": [
+    "ptr.addresses"
+  ],
   "cards": [
     {
       "type": "text",
