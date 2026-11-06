@@ -88,11 +88,38 @@ void printGrid(const Json& s) {
     printVars(s);
 }
 
+void printMemory(const Json& s) {
+    for (const auto& f : s["stack"]) {
+        std::cout << "    [stack] " << f["function"].get<std::string>() << "()\n";
+        for (const auto& c : f["locals"]) {
+            std::cout << "      " << colourFor(c["mark"].get<std::string>()) << c["type"].get<std::string>() << " "
+                      << c["name"].get<std::string>() << " = " << c["value"].get<std::string>() << "\033[0m  @"
+                      << c["addr"].get<std::string>() << "\n";
+        }
+    }
+    for (const auto& b : s["heap"]) {
+        std::cout << "    [heap]  " << b["label"].get<std::string>() << " @" << b["addr"].get<std::string>() << "\n";
+        for (const auto& c : b["cells"]) {
+            std::cout << "      " << c["name"].get<std::string>() << " = " << c["value"].get<std::string>() << "\n";
+        }
+    }
+    for (const auto& a : s["arrows"]) {
+        std::cout << "    " << colourFor(a["mark"].get<std::string>()) << a["from"].get<std::string>() << " --> "
+                  << a["to"].get<std::string>() << " " << a["label"].get<std::string>() << "\033[0m\n";
+    }
+    if (!s["output"].empty()) {
+        std::cout << "    console:";
+        for (const auto& l : s["output"]) std::cout << " | " << l.get<std::string>();
+        std::cout << "\n";
+    }
+}
+
 void printScene(const Json& s) {
     const auto kind = s.value("kind", "");
     if (kind == "array") printArray(s);
     else if (kind == "graph") printGraph(s);
     else if (kind == "grid") printGrid(s);
+    else if (kind == "memory") printMemory(s);
     else std::cout << "    " << s.dump() << "\n";
 }
 

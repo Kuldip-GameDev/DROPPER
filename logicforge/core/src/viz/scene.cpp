@@ -371,4 +371,86 @@ Json GridScene::toJson() const {
     return j;
 }
 
+// --------------------------------------------------------------- MemoryScene
+
+namespace {
+Json cellToJson(const MemoryScene::Cell& c) {
+    return {{"name", c.name}, {"type", c.type}, {"value", c.value}, {"addr", c.addr},
+            {"mark", std::string(toString(c.mark))}};
+}
+}  // namespace
+
+MemoryScene& MemoryScene::title(std::string t) {
+    title_ = std::move(t);
+    return *this;
+}
+
+MemoryScene& MemoryScene::frame(std::string function) {
+    stack_.push_back(Frame{std::move(function), {}});
+    return *this;
+}
+
+MemoryScene& MemoryScene::local(std::string name, std::string type, std::string value,
+                                std::string addr, Mark m) {
+    if (stack_.empty()) frame("main");
+    stack_.back().locals.push_back(Cell{std::move(name), std::move(type), std::move(value), std::move(addr), m});
+    return *this;
+}
+
+MemoryScene& MemoryScene::block(std::string addr, std::string label, Mark m, bool freed) {
+    heap_.push_back(Block{std::move(addr), std::move(label), {}, m, freed});
+    return *this;
+}
+
+MemoryScene& MemoryScene::cell(std::string name, std::string type, std::string value,
+                               std::string addr, Mark m) {
+    if (heap_.empty()) throw std::logic_error("MemoryScene::cell called before block()");
+    heap_.back().cells.push_back(Cell{std::move(name), std::move(type), std::move(value), std::move(addr), m});
+    return *this;
+}
+
+MemoryScene& MemoryScene::arrow(std::string from, std::string to, Mark m, std::string label) {
+    arrows_.push_back(Arrow{std::move(from), std::move(to), m, std::move(label)});
+    return *this;
+}
+
+MemoryScene& MemoryScene::output(std::vector<std::string> lines) {
+    output_ = std::move(lines);
+    return *this;
+}
+
+MemoryScene& MemoryScene::var(std::string name, Json value) {
+    vars_.emplace_back(std::move(name), std::move(value));
+    return *this;
+}
+
+Json MemoryScene::toJson() const {
+    Json j;
+    j["kind"] = "memory";
+    j["title"] = title_;
+    Json stack = Json::array();
+    for (const auto& f : stack_) {
+        Json locals = Json::array();
+        for (const auto& c : f.locals) locals.push_back(cellToJson(c));
+        stack.push_back({{"function", f.function}, {"locals", locals}});
+    }
+    j["stack"] = stack;
+    Json heap = Json::array();
+    for (const auto& b : heap_) {
+        Json cells = Json::array();
+        for (const auto& c : b.cells) cells.push_back(cellToJson(c));
+        heap.push_back({{"addr", b.addr}, {"label", b.label}, {"cells", cells},
+                        {"mark", std::string(toString(b.mark))}, {"freed", b.freed}});
+    }
+    j["heap"] = heap;
+    Json arrows = Json::array();
+    for (const auto& a : arrows_) {
+        arrows.push_back({{"from", a.from}, {"to", a.to}, {"mark", std::string(toString(a.mark))}, {"label", a.label}});
+    }
+    j["arrows"] = arrows;
+    j["output"] = output_;
+    j["vars"] = varsToJson(vars_);
+    return j;
+}
+
 }  // namespace forge::viz

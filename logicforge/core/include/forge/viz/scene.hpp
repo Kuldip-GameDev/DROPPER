@@ -165,4 +165,61 @@ private:
     std::string title_;
 };
 
+// ---------------------------------------------------------------------------
+// MemoryScene: the Pointer & Lambda Lab picture. Stack frames on the left,
+// heap blocks on the right, arrows from pointers to what they point at.
+// Addresses are "friendly" (0x7ff0, 0x5000...) but come from REAL pointer
+// values at runtime, see memlab/address_book.hpp.
+// ---------------------------------------------------------------------------
+class MemoryScene {
+public:
+    struct Cell {
+        std::string name;
+        std::string type;
+        std::string value;
+        std::string addr;
+        Mark mark = Mark::None;
+    };
+    struct Frame {
+        std::string function;
+        std::vector<Cell> locals;
+    };
+    struct Block {
+        std::string addr;
+        std::string label;
+        std::vector<Cell> cells;
+        Mark mark = Mark::None;
+        bool freed = false;
+    };
+    struct Arrow {
+        std::string from;  // address of the pointer itself
+        std::string to;    // address it points at
+        Mark mark = Mark::None;
+        std::string label;
+    };
+
+    MemoryScene& title(std::string t);
+    // Starts a new stack frame; following local() calls go into it.
+    MemoryScene& frame(std::string function);
+    MemoryScene& local(std::string name, std::string type, std::string value, std::string addr,
+                       Mark m = Mark::None);
+    // Starts a new heap block; following cell() calls go into it.
+    MemoryScene& block(std::string addr, std::string label, Mark m = Mark::None, bool freed = false);
+    MemoryScene& cell(std::string name, std::string type, std::string value, std::string addr,
+                      Mark m = Mark::None);
+    MemoryScene& arrow(std::string from, std::string to, Mark m = Mark::None, std::string label = "");
+    MemoryScene& output(std::vector<std::string> lines);
+    MemoryScene& var(std::string name, Json value);
+
+    Json toJson() const;
+
+private:
+    std::string title_;
+    std::vector<Frame> stack_;
+    std::vector<Block> heap_;
+    std::vector<Arrow> arrows_;
+    std::vector<std::string> output_;
+    std::vector<std::pair<std::string, Json>> vars_;
+};
+
 }  // namespace forge::viz
