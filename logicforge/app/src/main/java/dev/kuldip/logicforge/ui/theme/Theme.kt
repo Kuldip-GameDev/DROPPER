@@ -1,6 +1,7 @@
 package dev.kuldip.logicforge.ui.theme
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
@@ -82,5 +83,9 @@ val CodeStyle = TextStyle(fontFamily = Mono, fontSize = 13.sp, lineHeight = 19.s
 
 @Composable
 fun LogicForgeTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = scheme, typography = typography, content = content)
+    MaterialTheme(colorScheme = scheme, typography = typography) {
+        // A Surface sets the default text colour for everything inside it. Without it,
+        // Text outside a Scaffold falls back to black, which is invisible on this background.
+        Surface(color = ForgeColors.Background, contentColor = ForgeColors.Text, content = content)
+    }
 }
