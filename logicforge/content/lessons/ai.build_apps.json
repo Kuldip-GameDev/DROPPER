@@ -1,0 +1,50 @@
+{
+  "id": "ai.build_apps",
+  "title": "Building an AI-powered app",
+  "summary": "Architecture, keys, cost and trust, the parts that matter in production.",
+  "minutes": 8,
+  "requires": [
+    "ai.language_models"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "The basic shape",
+      "body": "**Your app → your server → the model provider's API → your server → your app.**\n\n- Never put an API key inside an APK. Apps can be unpacked and the key extracted. Keep keys on a server you control, or let users paste their own key and store it encrypted (Android Keystore).\n- Your server can add rate limits, logging, caching and abuse protection."
+    },
+    {
+      "type": "text",
+      "title": "What changes compared to normal code",
+      "body": "- **Cost and latency per call**: every request is billed by the amount of text in and out, and takes noticeable time. Stream long answers so users see progress.\n- **Non-determinism**: the same input can give different outputs. Test with many examples, not one.\n- **Trust**: ground answers in your own data (retrieval), ask for structured output (JSON) you can validate, and show users when content is AI-generated."
+    },
+    {
+      "type": "text",
+      "title": "A LogicForge-shaped example",
+      "body": "An \"explain this code\" button could send a snippet to a model and show the answer. A safer design asks the model to answer in the app's diagram language (the English → Diagram sandbox), so the output is constrained and checkable before it's shown. That's the plan in ADR-0004."
+    },
+    {
+      "type": "quiz",
+      "question": "Where should the API key for a paid AI service live?",
+      "choices": [
+        "In the APK's strings.xml",
+        "Hard-coded in Kotlin",
+        "On a server you control (or entered by the user and stored encrypted)",
+        "In the app's assets"
+      ],
+      "answer": 2,
+      "explain": "Anything shipped in the APK can be extracted. Keys belong on a backend, or with the user who pays for them."
+    },
+    {
+      "type": "quiz",
+      "question": "Why ask a model for JSON instead of free text, when your app will act on the answer?",
+      "choices": [
+        "JSON is shorter",
+        "You can validate it before using it",
+        "Models are better at JSON",
+        "It's cheaper"
+      ],
+      "answer": 1,
+      "explain": "Structured output can be parsed and checked against a schema; free text can't be trusted to have the shape your code expects."
+    }
+  ]
+}

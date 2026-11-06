@@ -81,6 +81,17 @@
         "hard.templates",
         "hard.stl"
       ]
+    },
+    {
+      "id": "ai",
+      "title": "How AI works",
+      "subtitle": "Gradient descent, a neural network and a language model, built from scratch in C++.",
+      "lessons": [
+        "ai.learning",
+        "ai.neural_net",
+        "ai.language_models",
+        "ai.build_apps"
+      ]
     }
   ]
 }

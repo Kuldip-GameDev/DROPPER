@@ -1,0 +1,40 @@
+{
+  "id": "ai.learning",
+  "title": "What \"learning\" means",
+  "summary": "Adjust numbers to make an error smaller: gradient descent.",
+  "minutes": 7,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Learning = reducing an error",
+      "body": "When people say a model \"learns\", they mean something very concrete: it has **numbers** (weights), a way to measure how **wrong** it is (the **loss**), and a rule to nudge the numbers so the loss shrinks.\n\nThat rule is almost always **gradient descent**: find which direction is downhill, take a small step, repeat."
+    },
+    {
+      "type": "visual",
+      "algo": "ai.gradient_descent",
+      "body": "Here the \"model\" has one number, x, and the loss is a simple curve with its lowest point at x = 3."
+    },
+    {
+      "type": "code",
+      "snippet": "ai.gradient_descent",
+      "highlight": "step"
+    },
+    {
+      "type": "text",
+      "title": "The learning rate",
+      "body": "- Too small: training crawls.\n- Too big: every step overshoots and training **diverges** (try learning rate 105 in the Algorithm Lab).\n\nChoosing it well is one of the most important practical decisions when training real models."
+    },
+    {
+      "type": "quiz",
+      "question": "At x = 5 the slope of the loss is +4. Which way does gradient descent move x?",
+      "choices": [
+        "Towards larger x",
+        "Towards smaller x",
+        "It stays",
+        "Randomly"
+      ],
+      "answer": 1,
+      "explain": "x -= rate × slope. A positive slope means the loss rises to the right, so we step left."
+    }
+  ]
+}

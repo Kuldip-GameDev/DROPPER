@@ -1,0 +1,44 @@
+{
+  "id": "ai.language_models",
+  "title": "How language models generate text",
+  "summary": "Predict the next piece, pick one at random, repeat.",
+  "minutes": 10,
+  "requires": [
+    "ai.neural_net",
+    "slot.weighted"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "The whole trick",
+      "body": "A language model does one thing: given the text so far, it estimates how likely each possible **next token** is. Then a token is **picked at random**, weighted by those probabilities, appended, and the process repeats.\n\nThe tiny model below uses characters as tokens and only looks **one** character back."
+    },
+    {
+      "type": "visual",
+      "algo": "ai.bigram"
+    },
+    {
+      "type": "code",
+      "snippet": "ai.bigram",
+      "highlight": "pick",
+      "body": "Training is counting, and generating is a weighted pick: the same linear scan as a slot machine's virtual reel."
+    },
+    {
+      "type": "text",
+      "title": "What real LLMs add",
+      "body": "- **Tokens**: pieces of words, not single characters.\n- A **neural network** instead of a count table, so it can generalise to text it never saw.\n- **Long context**: a mechanism called attention lets each prediction weigh thousands of earlier tokens.\n- **Temperature**: a knob that sharpens or flattens the probabilities before the weighted pick.\n\nBecause the output is sampled from \"likely next tokens\", a fluent answer is not automatically a true one. That's where **hallucinations** come from, and why this app's lessons are written and verified rather than generated (ADR-0004)."
+    },
+    {
+      "type": "quiz",
+      "question": "The model gives 'e' a count of 30 and 'a' a count of 10 after 'th'. With a weighted pick, how often is 'e' chosen?",
+      "choices": [
+        "Always",
+        "75% of the time",
+        "50% of the time",
+        "30% of the time"
+      ],
+      "answer": 1,
+      "explain": "30 / (30 + 10) = 0.75. Weighted, not \"always the biggest\": that randomness is why the same prompt can give different answers."
+    }
+  ]
+}

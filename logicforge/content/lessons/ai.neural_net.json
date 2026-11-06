@@ -1,0 +1,44 @@
+{
+  "id": "ai.neural_net",
+  "title": "A neural network, from scratch",
+  "summary": "13 numbers learn XOR through backpropagation.",
+  "minutes": 10,
+  "requires": [
+    "ai.learning"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "Neurons are tiny formulas",
+      "body": "A **neuron** multiplies each input by a weight, adds them up with a bias, and squashes the result into 0..1 with the **sigmoid** function. Stack neurons in layers and you get a **neural network**.\n\nXOR (1 if exactly one input is 1) can't be solved by one neuron, because no single straight line separates its answers. A hidden layer fixes that."
+    },
+    {
+      "type": "visual",
+      "algo": "ai.xor_network",
+      "body": "Every edge label is a weight. Watch them change, and the predictions move towards 0, 1, 1, 0."
+    },
+    {
+      "type": "code",
+      "snippet": "ai.backprop",
+      "highlight": "delta_hidden",
+      "body": "**Backpropagation** is the chain rule from calculus applied backwards: the output's error is shared out to each weight in proportion to how much that weight contributed. This app's tests check these updates against a numerical estimate of the gradient, so the maths is verified, not just plausible."
+    },
+    {
+      "type": "text",
+      "title": "From 13 numbers to billions",
+      "body": "Large AI models use the same ingredients: weighted sums, non-linear functions, a loss, backpropagation and gradient descent. The differences are scale (billions of weights), architecture (how layers connect) and data (enormous training sets)."
+    },
+    {
+      "type": "quiz",
+      "question": "Why can't a single neuron learn XOR?",
+      "choices": [
+        "It's too slow",
+        "XOR's answers can't be separated by one straight line",
+        "It has no bias",
+        "Sigmoid can't output 1"
+      ],
+      "answer": 1,
+      "explain": "One neuron draws one line (a linear boundary). XOR needs two, which the hidden layer provides."
+    }
+  ]
+}
