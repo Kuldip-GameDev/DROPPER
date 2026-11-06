@@ -1,0 +1,10 @@
+# Based on Google style, tuned for readability on a phone screen.
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 100
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortLambdasOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: WithoutElse
+DerivePointerAlignment: false
+PointerAlignment: Left
+SortIncludes: CaseSensitive

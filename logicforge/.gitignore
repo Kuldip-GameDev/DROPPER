@@ -1,0 +1,23 @@
+# C++ / CMake
+build/
+build-*/
+cmake-build-*/
+compile_commands.json
+
+# Gradle / Android
+.gradle/
+.kotlin/
+app/build/
+app/.cxx/
+local.properties
+*.apk
+*.aab
+captures/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Generated at build time (see scripts/extract_snippets.py)
+app/src/main/assets/generated/
