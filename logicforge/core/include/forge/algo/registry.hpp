@@ -83,3 +83,7 @@ void registerLambdaLab(algo::Registry& r);
 namespace forge::slot {
 void registerSlotLab(algo::Registry& r);
 }  // namespace forge::slot
+
+namespace forge::patterns {
+void registerPatterns(algo::Registry& r);
+}  // namespace forge::patterns

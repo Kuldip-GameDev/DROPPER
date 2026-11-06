@@ -31,6 +31,7 @@ const Registry& Registry::builtin() {
         memlab::registerPointerLab(r);
         memlab::registerLambdaLab(r);
         slot::registerSlotLab(r);
+        patterns::registerPatterns(r);
         return r;
     }();
     return instance;
