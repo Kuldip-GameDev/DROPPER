@@ -1,0 +1,36 @@
+{
+  "id": "pat.game_loop",
+  "title": "The game loop",
+  "summary": "Fixed timestep: the same physics on a slow phone and a fast one.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Variable frames, fixed physics",
+      "body": "Rendered frames take different times: 8 ms on a flagship, 50 ms on an old phone. If physics advanced by \"however long the frame took\", jumps would reach different heights on different devices.\n\n**Fixed timestep**: bank the real time in an accumulator, then advance the simulation in steps of exactly `dt`."
+    },
+    {
+      "type": "visual",
+      "algo": "pattern.game_loop",
+      "body": "Change the frame times in the Algorithm Lab to see when 0, 1 or several updates happen."
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.game_loop",
+      "highlight": "step",
+      "body": "`alpha` says how far we are between two simulation states, so rendering can blend them and stay smooth even with a 20 ms physics tick."
+    },
+    {
+      "type": "quiz",
+      "question": "dt = 20 ms. The accumulator holds 5 ms and the next frame takes 37 ms. How many updates run?",
+      "choices": [
+        "1",
+        "2",
+        "3",
+        "0"
+      ],
+      "answer": 1,
+      "explain": "5 + 37 = 42 ms banked: two 20 ms steps (40 ms), 2 ms carried to the next frame."
+    }
+  ]
+}

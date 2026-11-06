@@ -1,0 +1,52 @@
+{
+  "id": "pat.event_queue",
+  "title": "Event queue",
+  "summary": "Decouple when something happens from when it's handled.",
+  "minutes": 7,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Later, in order",
+      "body": "Gameplay code shouldn't stop to play a sound or animate a banner. It **posts an event** and moves on; another system processes the queue later.\n\nA fixed-size **ring buffer** makes this allocation-free: an array with a head and a tail that wrap around."
+    },
+    {
+      "type": "visual",
+      "algo": "pattern.event_queue"
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.event_queue",
+      "highlight": "push",
+      "body": "`(tail + 1) % N` is the same circular-array trick as a reel strip. Tracking `count` separately avoids the classic \"is head == tail full or empty?\" ambiguity."
+    },
+    {
+      "type": "quiz",
+      "question": "Capacity 6, head = 4, size = 3. Which indices hold events?",
+      "choices": [
+        "4, 5, 6",
+        "4, 5, 0",
+        "1, 2, 3",
+        "3, 4, 5"
+      ],
+      "answer": 1,
+      "explain": "Start at head and wrap: 4, 5, then (5 + 1) % 6 = 0."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Design Circular Queue",
+          "url": "https://leetcode.com/problems/design-circular-queue/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Implement Queue using Stacks",
+          "url": "https://leetcode.com/problems/implement-queue-using-stacks/",
+          "level": "Easy"
+        }
+      ]
+    }
+  ]
+}

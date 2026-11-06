@@ -1,0 +1,38 @@
+{
+  "id": "pat.flyweight_singleton",
+  "title": "Flyweight, and why to avoid Singletons",
+  "summary": "Share heavy data; pass dependencies in.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "visual",
+      "algo": "pattern.flyweight",
+      "title": "Flyweight",
+      "body": "Ten thousand trees, one mesh. The per-tree data is only what differs: position, scale and a pointer to the shared model. The sizes shown are real `sizeof` values on this phone."
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.flyweight",
+      "highlight": "shared"
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.singleton",
+      "highlight": "inject",
+      "title": "The Singleton problem",
+      "body": "A Singleton is a global with a nicer name. Any function can depend on it invisibly, and tests can't replace it. Passing the dependency in (`SpinButton(Audio&)`) makes it visible, and the tests in this repo hand in a fake `Audio` to check the button."
+    },
+    {
+      "type": "quiz",
+      "question": "What does the flyweight version store per tree?",
+      "choices": [
+        "A full copy of the mesh",
+        "Only what differs (position, scale) plus a pointer to shared data",
+        "Nothing",
+        "A smaller texture"
+      ],
+      "answer": 1,
+      "explain": "That's the whole idea: intrinsic data is shared once, extrinsic data lives in each instance."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "pat.command",
+  "title": "Command: undo, redo, replays",
+  "summary": "Turn every action into an object.",
+  "minutes": 8,
+  "requires": [
+    "ptr.smart_pointers"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "Actions as objects",
+      "body": "Instead of `movePlayer(1, 0)`, create a `MoveCommand(1, 0)` object and call `execute()`. Because the action is now **data**, you can store it, undo it, replay it, send it over the network, or remap which button creates it.\n\nUndo needs each command to remember enough to reverse itself."
+    },
+    {
+      "type": "visual",
+      "algo": "pattern.command",
+      "body": "Watch the two stacks: undo and redo. Step 8 is the subtle rule."
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.command",
+      "highlight": "undo",
+      "body": "Commands are owned by `std::unique_ptr` and **moved** between the stacks: exactly the ownership model from the smart-pointer lesson."
+    },
+    {
+      "type": "quiz",
+      "question": "You undo twice, then make a new move. What happens to the redo stack?",
+      "choices": [
+        "It keeps both commands",
+        "It is cleared",
+        "It gets the new move",
+        "It is merged with undo"
+      ],
+      "answer": 1,
+      "explain": "The new move starts a different future; the old redo history no longer makes sense, so it's cleared. Every editor works this way."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Design Browser History",
+          "url": "https://leetcode.com/problems/design-browser-history/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Min Stack",
+          "url": "https://leetcode.com/problems/min-stack/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

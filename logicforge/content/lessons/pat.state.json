@@ -1,0 +1,39 @@
+{
+  "id": "pat.state",
+  "title": "State pattern",
+  "summary": "Inputs mean different things in different states.",
+  "minutes": 7,
+  "requires": [
+    "slot.state_machine"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "The bug-prone way",
+      "body": "`if (jumpPressed && !isJumping && !isDucking) ...` Every new move adds flags, and the combinations explode. Bugs like double-jumps hide in those combinations."
+    },
+    {
+      "type": "visual",
+      "algo": "pattern.state",
+      "body": "Each node is a class. An input either changes the state or is ignored, decided by the current state alone."
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.state",
+      "highlight": "switch",
+      "body": "The Slot Lab machine used an `enum` and `if`s: perfect for 5 states. Classes pay off when each state has its own data and per-frame logic."
+    },
+    {
+      "type": "quiz",
+      "question": "The hero is Ducking and JUMP is pressed. With this design, what happens?",
+      "choices": [
+        "The hero jumps",
+        "Nothing: Ducking ignores JUMP",
+        "The game crashes",
+        "The hero dives"
+      ],
+      "answer": 1,
+      "explain": "Ducking::handle only reacts to releasing DOWN. Any other input returns nullptr: stay in the same state."
+    }
+  ]
+}

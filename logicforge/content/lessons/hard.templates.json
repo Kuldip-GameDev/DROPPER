@@ -1,0 +1,38 @@
+{
+  "id": "hard.templates",
+  "title": "Templates, concepts and CRTP",
+  "summary": "Generic code that's still readable.",
+  "minutes": 9,
+  "cards": [
+    {
+      "type": "code",
+      "snippet": "hard.templates",
+      "title": "From simple to scary",
+      "body": "`maxOf` works for any type with `<`. `sum(xs...)` uses a **fold expression**. `Scorable` is a **concept**: a named requirement. `Shape<Square>` is **CRTP**: static polymorphism without virtual calls. The core's `cat(...)` helper and the `Rng32` concept use the same tools."
+    },
+    {
+      "type": "quiz",
+      "question": "`sum(2, 3, 4)` with `(xs + ... + 0)` expands to...",
+      "choices": [
+        "2 + (3 + (4 + 0))",
+        "((0 + 2) + 3) + 4",
+        "2 * 3 * 4",
+        "It doesn't compile"
+      ],
+      "answer": 0,
+      "explain": "A right fold with an init value: the pack expands from the right with 0 at the end. The result is 9 either way here, but the shape matters for non-associative operators."
+    },
+    {
+      "type": "quiz",
+      "question": "What does a concept give you over an unconstrained template?",
+      "choices": [
+        "Faster code",
+        "Clear errors and documented requirements",
+        "Virtual functions",
+        "Smaller binaries"
+      ],
+      "answer": 1,
+      "explain": "Without a concept, passing the wrong type fails deep inside the template with pages of errors. With one, the compiler says which requirement isn't met."
+    }
+  ]
+}

@@ -46,6 +46,33 @@
         "dsa.floyd_cycle",
         "dsa.stacks"
       ]
+    },
+    {
+      "id": "patterns",
+      "title": "Design patterns for games",
+      "subtitle": "Command, State, Object Pool, Game Loop, Event Queue, Flyweight: compiled, tested and visual.",
+      "lessons": [
+        "pat.why",
+        "pat.command",
+        "pat.strategy_observer",
+        "pat.state",
+        "pat.object_pool",
+        "pat.game_loop",
+        "pat.event_queue",
+        "pat.flyweight_singleton"
+      ]
+    },
+    {
+      "id": "hardcpp",
+      "title": "Hard-to-read C++",
+      "subtitle": "Declarations, precedence, bit tricks, templates and pipelines, decoded.",
+      "lessons": [
+        "hard.declarations",
+        "hard.precedence",
+        "hard.bits",
+        "hard.templates",
+        "hard.stl"
+      ]
     }
   ]
 }

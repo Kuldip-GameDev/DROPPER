@@ -1,0 +1,44 @@
+{
+  "id": "hard.precedence",
+  "title": "Precedence and evaluation order",
+  "summary": "*p++, 6 & 3 == 2, and the order C++ doesn't promise.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "code",
+      "snippet": "hard.precedence",
+      "title": "Operators that surprise",
+      "body": "Postfix `++` binds tighter than `*`, so `*p++` is `*(p++)`. And `==` binds tighter than `&`, so `6 & 3 == 2` is `6 & (3 == 2)`. GCC and Clang warn about the last two with `-Wall`."
+    },
+    {
+      "type": "quiz",
+      "question": "`int a[] = {1, 2, 3}; int* p = a; int v = *++p;` What is v?",
+      "choices": [
+        "1",
+        "2",
+        "3",
+        "Undefined"
+      ],
+      "answer": 1,
+      "explain": "Prefix ++ moves p to a[1] first, then * reads it: 2."
+    },
+    {
+      "type": "code",
+      "snippet": "hard.evaluation_order",
+      "title": "Unspecified evaluation order",
+      "body": "The arguments of a function call may be evaluated in any order. While building this app, two RNG calls inside one `printf` printed their values in reverse, which is exactly this rule. If order matters, use separate statements."
+    },
+    {
+      "type": "quiz",
+      "question": "`log(next(), next());` Which value does the first parameter receive?",
+      "choices": [
+        "Always the first next() call",
+        "Always the second",
+        "Either: the order is unspecified",
+        "It doesn't compile"
+      ],
+      "answer": 2,
+      "explain": "Each argument is evaluated fully, but which one first is up to the compiler. Write `auto a = next(); auto b = next(); log(a, b);`."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "pat.why",
+  "title": "Why patterns?",
+  "summary": "Names for solutions that keep big game codebases sane.",
+  "minutes": 5,
+  "cards": [
+    {
+      "type": "text",
+      "title": "A shared vocabulary",
+      "body": "A **design pattern** is a named, proven shape for solving a common design problem. Saying \"make it a Command\" or \"use an object pool\" tells a teammate a whole design in three words.\n\nPatterns are not rules. Each one solves a **specific pain**. Use it when you feel that pain, not before."
+    },
+    {
+      "type": "text",
+      "title": "You've already used four",
+      "body": "- **Observer**: the slot machine's `subscribe()` callbacks (Lambda Lab).\n- **State**: the slot machine's IDLE / SPINNING / ... states (Slot Lab).\n- **Factory + Registry**: the core's algorithm registry turns an id like \"sort.bubble\" into a runnable algorithm.\n- **Memento**: every visual frame is a full snapshot, so stepping back is free.\n\nThis track adds the ones game programmers reach for most."
+    },
+    {
+      "type": "quiz",
+      "question": "When should you introduce a design pattern?",
+      "choices": [
+        "Always, in every class",
+        "When you feel the specific problem it solves",
+        "Only in big companies",
+        "Never: patterns are outdated"
+      ],
+      "answer": 1,
+      "explain": "Every pattern adds indirection. It pays for itself only when it removes a real pain: undo, allocation spikes, tangled state logic..."
+    }
+  ]
+}

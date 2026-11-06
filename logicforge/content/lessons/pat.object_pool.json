@@ -1,0 +1,38 @@
+{
+  "id": "pat.object_pool",
+  "title": "Object pool",
+  "summary": "No allocations in the middle of a frame.",
+  "minutes": 7,
+  "requires": [
+    "ptr.heap"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "Why pool?",
+      "body": "A shooter may create and destroy hundreds of bullets per second. Calling `new`/`delete` that often costs time, can cause unpredictable spikes, and fragments memory.\n\nAn **object pool** allocates all objects once and recycles them."
+    },
+    {
+      "type": "visual",
+      "algo": "pattern.object_pool",
+      "body": "The free slots form a linked list stored inside the pool's own array: a linked list with zero allocations."
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.object_pool",
+      "highlight": "acquire"
+    },
+    {
+      "type": "quiz",
+      "question": "Why are acquire() and release() O(1)?",
+      "choices": [
+        "They search for a free slot",
+        "They only touch the head of the free list",
+        "The pool is sorted",
+        "They use a hash map"
+      ],
+      "answer": 1,
+      "explain": "Taking or returning a slot is a push/pop on the front of a linked list: a couple of assignments, no searching."
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "id": "hard.declarations",
+  "title": "Reading scary declarations",
+  "summary": "int (*p)[3], int* const, function pointers: read from the name outwards.",
+  "minutes": 7,
+  "requires": [
+    "ptr.arrays"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "Start at the name",
+      "body": "Read from the **variable name** outwards: go right first (`[]` = array of, `()` = function), then left (`*` = pointer to). Parentheses change the order.\n\n- `int* ptrs[3]`: ptrs is an **array of 3** pointers to int.\n- `int (*pArr)[3]`: pArr is a **pointer** to an array of 3 ints.\n- `int (*fn)(int)`: fn is a pointer to a function taking int, returning int."
+    },
+    {
+      "type": "code",
+      "snippet": "hard.declarations",
+      "title": "All of them, compiled",
+      "body": "The return value (29) is checked by a test, so every comment here is true."
+    },
+    {
+      "type": "quiz",
+      "question": "What is `x` in `double* x[4];`?",
+      "choices": [
+        "A pointer to an array of 4 doubles",
+        "An array of 4 pointers to double",
+        "A function returning double*",
+        "A double"
+      ],
+      "answer": 1,
+      "explain": "From the name: `x[4]` (array of 4), then `*` (pointers), then `double`."
+    },
+    {
+      "type": "quiz",
+      "question": "Which declaration lets you change the int but never re-point the pointer?",
+      "choices": [
+        "const int* p",
+        "int const* p",
+        "int* const p",
+        "const int* const p"
+      ],
+      "answer": 2,
+      "explain": "const applies to what's on its left: in `int* const p` that's the pointer. The first two are the same type (pointer to const int)."
+    }
+  ]
+}

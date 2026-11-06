@@ -1,0 +1,37 @@
+{
+  "id": "pat.strategy_observer",
+  "title": "Strategy and Observer",
+  "summary": "Swap algorithms at runtime; notify without knowing who listens.",
+  "minutes": 7,
+  "cards": [
+    {
+      "type": "visual",
+      "algo": "pattern.strategy",
+      "title": "Strategy: same call, different algorithm",
+      "body": "A `PayRule` interface with two implementations. The code that settles a spin never changes when designers switch pay models."
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.strategy",
+      "highlight": "settle",
+      "body": "Lighter alternative in modern C++: a `std::function` holding a lambda. Use an interface when the strategy has several methods or its own state."
+    },
+    {
+      "type": "text",
+      "title": "Observer, recap",
+      "body": "The Lambda Lab's callbacks are the Observer pattern: the subject keeps a list of `std::function` listeners and calls them on events. Sound, UI and analytics react to \"win\" without the game logic knowing they exist.\n\nWatch out: a listener that captured `this` by reference must be removed before that object dies, or the callback dangles."
+    },
+    {
+      "type": "quiz",
+      "question": "Which change does Strategy make easy?",
+      "choices": [
+        "Adding a new pay model without editing the settle code",
+        "Making the game faster",
+        "Saving memory",
+        "Undoing moves"
+      ],
+      "answer": 0,
+      "explain": "New behaviour arrives as a new class (or lambda) behind the same interface. The calling code stays untouched: the Open/Closed principle."
+    }
+  ]
+}

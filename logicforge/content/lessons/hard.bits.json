@@ -1,0 +1,69 @@
+{
+  "id": "hard.bits",
+  "title": "Bit tricks",
+  "summary": "x & (x - 1), flags, and counting bits.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "One idea behind many tricks",
+      "body": "Subtracting 1 flips the lowest set bit and every bit below it: `12 = 1100`, `11 = 1011`. So `x & (x - 1)` **clears the lowest set bit**: `1100 & 1011 = 1000`.\n\n- Power of two? It has exactly one set bit, so clearing it gives 0.\n- Count bits: clear the lowest bit until nothing is left.\n- Flags: give each property (wild, scatter, sticky) one bit of an `unsigned`."
+    },
+    {
+      "type": "code",
+      "snippet": "hard.bit_tricks",
+      "body": "The tests compare these against C++20's `<bit>` functions (`std::popcount`, `std::has_single_bit`) on 1,000 random numbers."
+    },
+    {
+      "type": "quiz",
+      "question": "What is `40 & 39`?",
+      "choices": [
+        "0",
+        "32",
+        "39",
+        "8"
+      ],
+      "answer": 1,
+      "explain": "40 = 101000, 39 = 100111. AND keeps only the shared top bit: 100000 = 32. (40 isn't a power of two, so the result isn't 0.)"
+    },
+    {
+      "type": "quiz",
+      "question": "flags = 0b0101. Is bit 2 set?",
+      "choices": [
+        "Yes",
+        "No"
+      ],
+      "answer": 0,
+      "explain": "(0b0101 >> 2) & 1 = 0b01 & 1 = 1. Bits are numbered from 0 on the right."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Number of 1 Bits",
+          "url": "https://leetcode.com/problems/number-of-1-bits/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Power of Two",
+          "url": "https://leetcode.com/problems/power-of-two/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Counting Bits",
+          "url": "https://leetcode.com/problems/counting-bits/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Single Number",
+          "url": "https://leetcode.com/problems/single-number/",
+          "level": "Easy"
+        }
+      ]
+    }
+  ]
+}

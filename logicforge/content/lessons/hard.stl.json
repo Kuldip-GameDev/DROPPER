@@ -1,0 +1,31 @@
+{
+  "id": "hard.stl",
+  "title": "Dense STL and ranges",
+  "summary": "Read one-line pipelines without panic.",
+  "minutes": 6,
+  "cards": [
+    {
+      "type": "code",
+      "snippet": "hard.stl_pipeline",
+      "title": "A pipeline",
+      "body": "Read `|` as \"then\": sort the wins, then keep those over 100, then take three. Views are **lazy**: nothing is filtered until the loop pulls values."
+    },
+    {
+      "type": "text",
+      "title": "How to read dense code",
+      "body": "- Find the data first (`wins`), then follow each step in order.\n- Name intermediate results while learning: `auto big = ...` is easier than one giant expression.\n- `std::greater<>{}` is a ready-made comparator meaning \"a > b\": the same job as a lambda."
+    },
+    {
+      "type": "quiz",
+      "question": "`wins = {500, 150, 120, 90, 300}` sorted biggest first, filter > 100, take 2. What's left?",
+      "choices": [
+        "500, 300",
+        "500, 150",
+        "150, 120",
+        "90, 120"
+      ],
+      "answer": 0,
+      "explain": "Sorted: 500, 300, 150, 120, 90. Over 100: 500, 300, 150, 120. Take 2: 500, 300."
+    }
+  ]
+}
