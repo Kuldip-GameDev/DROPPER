@@ -36,6 +36,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [S
 - Design patterns: Command, Object Pool, fixed-timestep Game Loop, Event Queue, State, Flyweight, Strategy,
   Singleton vs dependency injection; 8-lesson track.
 - Hard-to-read C++: compiled, tested examples and a 5-lesson track.
+- More DSA: BST, traversals, binary heap, hash set, BFS grid pathfinding, Dijkstra, coin change, LCS and
+  N-Queens, each with a visual trace and brute-force-checked tests; 8 more Foundations lessons.
 
 ### Fixed
 - Text outside a Scaffold rendered black on the dark background (found by the screenshot tests).

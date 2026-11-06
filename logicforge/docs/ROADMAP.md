@@ -11,7 +11,7 @@
 | M6 | Design patterns + hard-to-read C++ | done |
 | M7 | English → Diagram sandbox | planned |
 | M8 | How AI works (MLP, backprop, bigram model) | planned |
-| M9 | More DSA: trees, heaps, hashing, graphs, DP, backtracking | planned |
+| M9 | More DSA: trees, heaps, hashing, graphs, DP, backtracking | done |
 
 ## Later (not scheduled)
 
