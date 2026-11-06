@@ -1,0 +1,66 @@
+{
+  "id": "dsa.bst",
+  "title": "Binary search trees",
+  "summary": "Binary search, but for data that changes.",
+  "minutes": 8,
+  "requires": [
+    "ptr.smart_pointers"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "Sorted, but cheap to insert",
+      "body": "A sorted array finds things fast (binary search) but inserting shifts everything: O(n). A **binary search tree** keeps the same \"go left or right\" idea in a structure where inserting is cheap.\n\nRule: everything in a node's **left** subtree is smaller, everything on the **right** is bigger or equal."
+    },
+    {
+      "type": "visual",
+      "algo": "tree.bst"
+    },
+    {
+      "type": "code",
+      "snippet": "tree.bst",
+      "highlight": "place",
+      "body": "`std::unique_ptr<TreeNode>&`: a reference to the owning pointer. When we reach an empty spot we assign straight into it, so no parent bookkeeping is needed."
+    },
+    {
+      "type": "text",
+      "title": "The catch: balance",
+      "body": "Insert 1, 2, 3, 4, 5 in that order and every node goes right: the \"tree\" is a linked list and search is O(n). Self-balancing trees (red-black, AVL) fix this; `std::map` and `std::set` are usually red-black trees."
+    },
+    {
+      "type": "quiz",
+      "question": "Insert 5, 2, 8, 1 into an empty BST. What is the left child of 2?",
+      "choices": [
+        "5",
+        "8",
+        "1",
+        "Nothing"
+      ],
+      "answer": 2,
+      "explain": "5 is the root. 2 < 5 goes left. 8 > 5 goes right. 1 < 5, then 1 < 2: left of 2."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Search in a Binary Search Tree",
+          "url": "https://leetcode.com/problems/search-in-a-binary-search-tree/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Insert into a Binary Search Tree",
+          "url": "https://leetcode.com/problems/insert-into-a-binary-search-tree/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Validate Binary Search Tree",
+          "url": "https://leetcode.com/problems/validate-binary-search-tree/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

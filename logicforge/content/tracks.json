@@ -31,7 +31,7 @@
     {
       "id": "dsa",
       "title": "Foundations: algorithms",
-      "subtitle": "From \"what is an algorithm?\" to linked lists. Every step is visual.",
+      "subtitle": "From \"what is an algorithm?\" to trees, heaps, hashing, graphs, dynamic programming and backtracking.",
       "lessons": [
         "dsa.algorithms_and_big_o",
         "dsa.bubble_sort",
@@ -44,7 +44,15 @@
         "dsa.prefix_sums",
         "dsa.linked_lists",
         "dsa.floyd_cycle",
-        "dsa.stacks"
+        "dsa.stacks",
+        "dsa.bst",
+        "dsa.traversals",
+        "dsa.heaps",
+        "dsa.hashing",
+        "dsa.bfs",
+        "dsa.dijkstra",
+        "dsa.dp",
+        "dsa.backtracking"
       ]
     },
     {

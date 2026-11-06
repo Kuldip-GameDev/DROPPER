@@ -1,0 +1,53 @@
+{
+  "id": "dsa.traversals",
+  "title": "Tree traversals",
+  "summary": "In-order, pre-order, level-order: same nodes, different jobs.",
+  "minutes": 7,
+  "cards": [
+    {
+      "type": "visual",
+      "algo": "tree.traversals"
+    },
+    {
+      "type": "code",
+      "snippet": "tree.traversals",
+      "highlight": "visit_in",
+      "body": "The recursive versions differ only in where `push_back` sits. Level-order swaps recursion for a **queue**, which is exactly BFS."
+    },
+    {
+      "type": "quiz",
+      "question": "Which traversal of a BST prints the values in sorted order?",
+      "choices": [
+        "Pre-order",
+        "In-order",
+        "Level-order",
+        "None"
+      ],
+      "answer": 1,
+      "explain": "Left subtree (smaller), node, right subtree (bigger): ascending order."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Binary Tree Inorder Traversal",
+          "url": "https://leetcode.com/problems/binary-tree-inorder-traversal/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Binary Tree Level Order Traversal",
+          "url": "https://leetcode.com/problems/binary-tree-level-order-traversal/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Maximum Depth of Binary Tree",
+          "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/",
+          "level": "Easy"
+        }
+      ]
+    }
+  ]
+}

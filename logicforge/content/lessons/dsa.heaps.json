@@ -1,0 +1,57 @@
+{
+  "id": "dsa.heaps",
+  "title": "Heaps and priority queues",
+  "summary": "Always know the smallest element, in O(log n).",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "The most urgent thing first",
+      "body": "An AI agent picks its most urgent task; an event system fires the earliest timer; Dijkstra settles the closest town. All of these need \"give me the smallest\" over and over.\n\nA **binary heap** stores a tree in a plain array: children of index `i` live at `2i+1` and `2i+2`. No pointers at all."
+    },
+    {
+      "type": "visual",
+      "algo": "heap.binary_heap"
+    },
+    {
+      "type": "code",
+      "snippet": "heap.binary_heap",
+      "highlight": "sift_up"
+    },
+    {
+      "type": "quiz",
+      "question": "In a heap stored in an array, where is the parent of index 9?",
+      "choices": [
+        "3",
+        "4",
+        "5",
+        "18"
+      ],
+      "answer": 1,
+      "explain": "(9 - 1) / 2 = 4 (integer division)."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Kth Largest Element in a Stream",
+          "url": "https://leetcode.com/problems/kth-largest-element-in-a-stream/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Last Stone Weight",
+          "url": "https://leetcode.com/problems/last-stone-weight/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Top K Frequent Elements",
+          "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

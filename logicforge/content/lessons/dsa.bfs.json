@@ -1,0 +1,61 @@
+{
+  "id": "dsa.bfs",
+  "title": "BFS pathfinding",
+  "summary": "Shortest paths on a grid: how enemies find the player.",
+  "minutes": 8,
+  "requires": [
+    "slot.ways_clusters"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "Rings of equal distance",
+      "body": "Breadth-first search explores everything 1 step away, then 2, then 3. The first time it reaches the goal, it has found a **shortest** path, because every shorter distance was explored first.\n\nIt's the same BFS as cluster pays in the Slot Lab, plus a `parent` table to rebuild the route."
+    },
+    {
+      "type": "visual",
+      "algo": "graph.bfs_grid",
+      "body": "Edit the maze in the Algorithm Lab: `.` floor, `#` wall, rows separated by `/`."
+    },
+    {
+      "type": "code",
+      "snippet": "graph.bfs_grid",
+      "highlight": "enqueue"
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the first time BFS reaches the goal guaranteed to be a shortest path?",
+      "choices": [
+        "Because it goes towards the goal",
+        "Because cells are explored in order of distance",
+        "Because of the walls",
+        "It isn't guaranteed"
+      ],
+      "answer": 1,
+      "explain": "The queue processes all distance-d cells before any distance-(d+1) cell. If a shorter route existed, it would have reached the goal earlier. (This needs equal step costs; otherwise use Dijkstra.)"
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Shortest Path in Binary Matrix",
+          "url": "https://leetcode.com/problems/shortest-path-in-binary-matrix/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Number of Islands",
+          "url": "https://leetcode.com/problems/number-of-islands/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Rotting Oranges",
+          "url": "https://leetcode.com/problems/rotting-oranges/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

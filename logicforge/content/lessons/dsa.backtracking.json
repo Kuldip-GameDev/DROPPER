@@ -1,0 +1,59 @@
+{
+  "id": "dsa.backtracking",
+  "title": "Backtracking",
+  "summary": "Try, recurse, undo: the shape behind puzzles and solvers.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Choose, explore, un-choose",
+      "body": "Backtracking builds a solution step by step. At each step it tries a choice, goes deeper, and if that leads nowhere it **undoes** the choice and tries the next. Sudoku solvers, puzzle generators and level validators work this way."
+    },
+    {
+      "type": "visual",
+      "algo": "backtrack.nqueens",
+      "body": "Red = undo. Try n = 6 in the Algorithm Lab: many more dead ends."
+    },
+    {
+      "type": "code",
+      "snippet": "backtrack.nqueens",
+      "highlight": "undo",
+      "body": "The `colOf[row] = -1` line is the whole technique: restore the state exactly as it was before trying."
+    },
+    {
+      "type": "quiz",
+      "question": "Why check only rows ABOVE the current one in `safe()`?",
+      "choices": [
+        "Rows below are empty: we fill one row at a time",
+        "To save memory",
+        "Queens can't attack downwards",
+        "It's a bug"
+      ],
+      "answer": 0,
+      "explain": "Queens are placed top to bottom, so only earlier rows contain queens."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Subsets",
+          "url": "https://leetcode.com/problems/subsets/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Permutations",
+          "url": "https://leetcode.com/problems/permutations/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "N-Queens",
+          "url": "https://leetcode.com/problems/n-queens/",
+          "level": "Hard"
+        }
+      ]
+    }
+  ]
+}

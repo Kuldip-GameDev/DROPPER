@@ -1,0 +1,59 @@
+{
+  "id": "dsa.hashing",
+  "title": "Hash tables",
+  "summary": "O(1) lookups: turn a key into a bucket number.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Lockers with a formula",
+      "body": "If the locker number could be **computed** from the key, you'd go straight to it. A **hash function** does that: key → number → bucket.\n\nDifferent keys can land in the same bucket (a **collision**). Chaining keeps a short list per bucket; growing the table keeps the lists short."
+    },
+    {
+      "type": "visual",
+      "algo": "hash.chaining",
+      "body": "Watch the rehash step: when the table grows, every key's bucket changes, because `% size` changed."
+    },
+    {
+      "type": "code",
+      "snippet": "hash.chaining",
+      "highlight": "grow",
+      "body": "`std::unordered_map` and `std::unordered_set` work like this. Average O(1); a terrible hash that sends everything to one bucket degrades to O(n)."
+    },
+    {
+      "type": "quiz",
+      "question": "Why does the table grow when keys / buckets > 0.75?",
+      "choices": [
+        "To save memory",
+        "To keep each bucket's list short, so lookups stay O(1) on average",
+        "Because modulo needs it",
+        "To sort the keys"
+      ],
+      "answer": 1,
+      "explain": "More keys per bucket means longer lists to scan. Growing spreads keys over more buckets."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Two Sum",
+          "url": "https://leetcode.com/problems/two-sum/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Contains Duplicate",
+          "url": "https://leetcode.com/problems/contains-duplicate/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Design HashSet",
+          "url": "https://leetcode.com/problems/design-hashset/",
+          "level": "Easy"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "id": "dsa.dijkstra",
+  "title": "Dijkstra's algorithm",
+  "summary": "Shortest routes when steps have different costs.",
+  "minutes": 9,
+  "requires": [
+    "dsa.heaps"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "When steps cost different amounts",
+      "body": "Swamp tiles cost more than road tiles; some roads are longer than others. BFS assumes every step costs 1, so it can't handle this.\n\n**Dijkstra** always settles the closest unsettled node next. A min-heap (priority queue) finds that node in O(log n)."
+    },
+    {
+      "type": "visual",
+      "algo": "graph.dijkstra"
+    },
+    {
+      "type": "code",
+      "snippet": "graph.dijkstra",
+      "highlight": "stale",
+      "body": "Instead of updating entries inside the heap, we push a new entry and skip outdated ones when they come out (`d > dist[u]`). Simple and fast. Edge weights must not be negative."
+    },
+    {
+      "type": "text",
+      "title": "A bug this lesson found in itself",
+      "body": "The road parser first read `emplace_back(idOf(from), idOf(to), w)`. GCC evaluated the second `idOf` first, so the towns were numbered in the wrong order and the start town changed. That is the unspecified evaluation order from the Hard-to-read C++ track. The fix is two separate statements."
+    },
+    {
+      "type": "quiz",
+      "question": "A is settled at 0. Edges: A–B 4, A–C 1, C–B 2. What is B's final distance?",
+      "choices": [
+        "4",
+        "3",
+        "2",
+        "6"
+      ],
+      "answer": 1,
+      "explain": "C is settled next at 1, and 1 + 2 = 3 beats the direct road of 4."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Network Delay Time",
+          "url": "https://leetcode.com/problems/network-delay-time/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Path With Minimum Effort",
+          "url": "https://leetcode.com/problems/path-with-minimum-effort/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}
