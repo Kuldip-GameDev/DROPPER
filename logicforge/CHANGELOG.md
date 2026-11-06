@@ -23,3 +23,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [S
   (address-of, references, pass-by, pointer arithmetic, `T**`, new/delete, leaks, dangling pointers,
   unique/shared/weak_ptr, lambda captures, `mutable`, dangling captures, comparators, callbacks).
 - 8-lesson Pointer & Lambda track and two new exercises (smart pointers, lambdas).
+- Slot Math Lab: PCG32/xorshift/LCG, unbiased bounded draws, chi-square, three weighted-pick algorithms
+  (linear, binary search, Vose alias), reel windows, paylines, 243 ways, exact RTP by enumeration,
+  Monte Carlo convergence, cluster flood fill, cascades and a game-flow state machine; plot renderer.
+- 6-lesson Slot Math track and two new exercises (weighted pick, exact RTP).
