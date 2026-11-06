@@ -8,7 +8,7 @@
 | M3 | Pointer & Lambda Lab | done |
 | M4 | Slot Math Lab | done |
 | M5 | Learning engine: quizzes, spaced repetition, XP, streaks, Topic Reels | done |
-| M6 | Design patterns + hard-to-read C++ | planned |
+| M6 | Design patterns + hard-to-read C++ | done |
 | M7 | English → Diagram sandbox | planned |
 | M8 | How AI works (MLP, backprop, bigram model) | planned |
 | M9 | More DSA: trees, heaps, hashing, graphs, DP, backtracking | planned |

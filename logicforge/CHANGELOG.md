@@ -33,6 +33,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [S
   also available as a visual algorithm.
 - App: progress header, Continue card, review sessions, Topic Reel animation, profile with achievements.
 - Screenshot tests (Robolectric + Roborazzi) that run the real C++ core on the desktop JVM.
+- Design patterns: Command, Object Pool, fixed-timestep Game Loop, Event Queue, State, Flyweight, Strategy,
+  Singleton vs dependency injection; 8-lesson track.
+- Hard-to-read C++: compiled, tested examples and a 5-lesson track.
 
 ### Fixed
 - Text outside a Scaffold rendered black on the dark background (found by the screenshot tests).
