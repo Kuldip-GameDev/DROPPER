@@ -19,3 +19,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [S
 - 12 beginner lessons (Foundations track) with visuals, compiled code, quizzes, build exercises and
   34 verified LeetCode/HackerRank practice links.
 - Lesson validation in CI and `scripts/verify_links.py` to check practice links against the real sites.
+- Pointer & Lambda Lab: 15 scenarios of real, running C++ drawn as stack frames, heap blocks and arrows
+  (address-of, references, pass-by, pointer arithmetic, `T**`, new/delete, leaks, dangling pointers,
+  unique/shared/weak_ptr, lambda captures, `mutable`, dangling captures, comparators, callbacks).
+- 8-lesson Pointer & Lambda track and two new exercises (smart pointers, lambdas).
