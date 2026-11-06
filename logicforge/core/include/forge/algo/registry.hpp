@@ -70,6 +70,7 @@ void registerSearching(Registry& r);
 void registerArrayPatterns(Registry& r);
 void registerLinkedList(Registry& r);
 void registerStack(Registry& r);
+void registerGraphs(Registry& r);
 
 }  // namespace forge::algo
 

@@ -27,6 +27,7 @@ const Registry& Registry::builtin() {
         registerArrayPatterns(r);
         registerLinkedList(r);
         registerStack(r);
+        registerGraphs(r);
         memlab::registerPointerLab(r);
         memlab::registerLambdaLab(r);
         slot::registerSlotLab(r);
