@@ -96,7 +96,7 @@ fun VisualizerScreen(algoId: String, onBack: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-            Button(onClick = {
+            if (algo.fields.isNotEmpty()) Button(onClick = {
                 val parsed = InputCodec.parse(algo, inputs)
                 if (parsed.isFailure) error = parsed.exceptionOrNull()?.message
                 else scope.launch { run(parsed.getOrNull()) }
@@ -110,9 +110,10 @@ fun VisualizerScreen(algoId: String, onBack: () -> Unit) {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ComplexityChips(algo: AlgoInfo) {
+    if (algo.time.isEmpty() && algo.space.isEmpty()) return
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        AssistChip(onClick = {}, label = { Text("Time: ${algo.time}") })
-        AssistChip(onClick = {}, label = { Text("Space: ${algo.space}") })
+        if (algo.time.isNotEmpty()) AssistChip(onClick = {}, label = { Text("Time: ${algo.time}") })
+        if (algo.space.isNotEmpty()) AssistChip(onClick = {}, label = { Text("Space: ${algo.space}") })
     }
 }
 

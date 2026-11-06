@@ -108,3 +108,37 @@ data class GridSceneData(
     fun cell(r: Int, c: Int): String = cells.getOrElse(r * cols + c) { "" }
     fun markAt(r: Int, c: Int): String = marks[(r * cols + c).toString()] ?: "none"
 }
+
+@Serializable
+data class MemCell(
+    val name: String = "",
+    val type: String = "",
+    val value: String = "",
+    val addr: String = "",
+    val mark: String = "none",
+)
+
+@Serializable
+data class MemFrame(val function: String, val locals: List<MemCell> = emptyList())
+
+@Serializable
+data class MemBlock(
+    val addr: String,
+    val label: String = "",
+    val cells: List<MemCell> = emptyList(),
+    val mark: String = "none",
+    val freed: Boolean = false,
+)
+
+@Serializable
+data class MemArrow(val from: String, val to: String, val mark: String = "none", val label: String = "")
+
+@Serializable
+data class MemorySceneData(
+    val title: String = "",
+    val stack: List<MemFrame> = emptyList(),
+    val heap: List<MemBlock> = emptyList(),
+    val arrows: List<MemArrow> = emptyList(),
+    val output: List<String> = emptyList(),
+    val vars: List<Var> = emptyList(),
+)
