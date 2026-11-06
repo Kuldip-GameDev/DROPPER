@@ -25,6 +25,8 @@ const Registry& Registry::builtin() {
         registerSorting(r);
         registerSearching(r);
         registerArrayPatterns(r);
+        registerLinkedList(r);
+        registerStack(r);
         return r;
     }();
     return instance;
