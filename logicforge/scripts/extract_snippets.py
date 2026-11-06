@@ -123,6 +123,52 @@ def lesson_snippet_refs() -> list[tuple[str, str]]:
     return refs
 
 
+CARD_TYPES = {"text", "visual", "code", "quiz", "build", "practice"}
+LINK_HOSTS = ("https://leetcode.com/problems/", "https://www.hackerrank.com/challenges/")
+
+
+def check_lessons(algos: dict[str, dict] | None) -> list[str]:
+    """Structural checks on content/: the app must never crash on a lesson."""
+    problems: list[str] = []
+    lessons_dir = CONTENT / "lessons"
+    lesson_ids: set[str] = set()
+    for path in sorted(lessons_dir.glob("*.json")) if lessons_dir.exists() else []:
+        where = path.relative_to(ROOT).as_posix()
+        lesson = json.loads(path.read_text(encoding="utf-8"))
+        if lesson.get("id") != path.stem:
+            problems.append(f"{where}: id '{lesson.get('id')}' must match the file name '{path.stem}'")
+        lesson_ids.add(path.stem)
+        for key in ("title", "cards"):
+            if not lesson.get(key):
+                problems.append(f"{where}: missing '{key}'")
+        for i, card in enumerate(lesson.get("cards", []), start=1):
+            kind = card.get("type")
+            at = f"{where} card {i}"
+            if kind not in CARD_TYPES:
+                problems.append(f"{at}: unknown card type '{kind}'")
+            if kind == "quiz":
+                choices = card.get("choices", [])
+                if len(choices) < 2 or not 0 <= card.get("answer", -1) < len(choices):
+                    problems.append(f"{at}: quiz needs >= 2 choices and a valid 'answer' index")
+                if not card.get("explain"):
+                    problems.append(f"{at}: quiz needs an 'explain' (learners learn from the why)")
+            if kind == "visual" and algos is not None and card.get("algo") not in algos:
+                problems.append(f"{at}: unknown algorithm '{card.get('algo')}'")
+            if kind == "build" and not (ROOT / "exercises" / f"{card.get('exercise')}.cpp").exists():
+                problems.append(f"{at}: exercise '{card.get('exercise')}' does not exist in exercises/")
+            if kind == "practice":
+                for link in card.get("links", []):
+                    if not str(link.get("url", "")).startswith(LINK_HOSTS):
+                        problems.append(f"{at}: link '{link.get('url')}' is not a LeetCode/HackerRank problem URL")
+    tracks_path = CONTENT / "tracks.json"
+    if tracks_path.exists():
+        for track in json.loads(tracks_path.read_text(encoding="utf-8")).get("tracks", []):
+            for lesson_id in track.get("lessons", []):
+                if lesson_id not in lesson_ids:
+                    problems.append(f"content/tracks.json: track '{track.get('id')}' lists missing lesson '{lesson_id}'")
+    return problems
+
+
 def check(snippets: dict[str, dict], traces_path: Path | None) -> list[str]:
     problems: list[str] = []
 
@@ -139,11 +185,13 @@ def check(snippets: dict[str, dict], traces_path: Path | None) -> list[str]:
         if sid not in snippets:
             problems.append(f"{where}: unknown snippet '{sid}'")
 
+    algos: dict[str, dict] | None = None
     if traces_path is not None:
+        algos = {item["id"]: item for item in json.loads((traces_path.parent / "algos.json").read_text(encoding="utf-8"))}
+    problems += check_lessons(algos)
+
+    if traces_path is not None and algos is not None:
         traces = json.loads(traces_path.read_text(encoding="utf-8"))
-        algos = {}
-        for item in json.loads((traces_path.parent / "algos.json").read_text(encoding="utf-8")):
-            algos[item["id"]] = item
         for algo_id, trace in traces.items():
             sid = algos.get(algo_id, {}).get("snippet", "")
             if sid not in snippets:
