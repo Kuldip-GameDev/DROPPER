@@ -59,6 +59,24 @@ android {
     packaging {
         resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all { test ->
+            // Screenshot tests render real screens with the REAL C++ core, built for this
+            // computer by scripts/build_host_jni.sh. They are opt-in (they download a large
+            // Robolectric runtime):  ./gradlew testDebugUnitTest -Pscreenshots
+            if (!project.hasProperty("screenshots")) test.exclude("**/ScreenshotTest*")
+            test.systemProperty("logicforge.hostlib", rootProject.file("build-host-jni/liblogicforge.so").absolutePath)
+            test.systemProperty("roborazzi.test.record", "true")
+            test.systemProperty("logicforge.screenshots.dir", rootProject.file("docs/screenshots").absolutePath)
+            // Optional: -ProbolectricDeps=/dir/with/android-all-jars to run fully offline.
+            project.findProperty("robolectricDeps")?.let {
+                test.systemProperty("robolectric.offline", "true")
+                test.systemProperty("robolectric.dependency.dir", it.toString())
+            }
+        }
+    }
 }
 
 kotlin {
@@ -118,4 +136,11 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling)
 
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.roborazzi.compose)
+    testImplementation(libs.androidx.test.junit)
+    testImplementation(platform(libs.compose.bom))
+    testImplementation(libs.compose.ui.test.junit4)
+    debugImplementation(libs.compose.ui.test.manifest)
 }

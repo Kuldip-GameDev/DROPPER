@@ -19,3 +19,4 @@ captures/
 .vscode/
 *.iml
 
+build-host-jni/

@@ -6,8 +6,17 @@ project(logicforge_jni LANGUAGES CXX)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../../core ${CMAKE_BINARY_DIR}/core)
 
 add_library(logicforge SHARED jni_bridge.cpp)
-target_link_libraries(logicforge PRIVATE forge_core log)
+target_link_libraries(logicforge PRIVATE forge_core)
 # Only export the JNI entry points; keeps the .so small.
 set_target_properties(logicforge PROPERTIES CXX_VISIBILITY_PRESET hidden)
-# Strip unused code and support 16 KB memory pages (required on newer Android devices).
-target_link_options(logicforge PRIVATE -Wl,--gc-sections -Wl,-z,max-page-size=16384)
+
+if(ANDROID)
+    target_link_libraries(logicforge PRIVATE log)
+    # Strip unused code and support 16 KB memory pages (required on newer Android devices).
+    target_link_options(logicforge PRIVATE -Wl,--gc-sections -Wl,-z,max-page-size=16384)
+else()
+    # Host build (desktop JVM) for Robolectric screenshot tests: needs the JDK's JNI headers.
+    find_package(JNI REQUIRED)
+    target_include_directories(logicforge PRIVATE ${JNI_INCLUDE_DIRS})
+    set_target_properties(forge_core PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
