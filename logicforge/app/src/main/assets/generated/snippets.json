@@ -1,4 +1,60 @@
 {
+ "lambda.callbacks": {
+  "code": "void callbacksDemo() {\n    int totalWon = 0;\n    std::vector<std::function<void(int)>> onWin;  // \"call these when a spin wins\"\n    onWin.push_back([&totalWon](int amount) { totalWon += amount; });\n    onWin.push_back([&out](int amount) {\n        if (amount >= 100) out << \"BIG WIN: \" << amount << '\\n';\n    });\n    for (int amount : {20, 150}) {\n        for (auto& listener : onWin) listener(amount);  // notify everyone\n    }\n    out << \"total \" << totalWon << '\\n';\n}",
+  "lines": {
+   "declare": 3,
+   "add_total": 4,
+   "add_banner": 7,
+   "notify": 9,
+   "print": 11
+  },
+  "file": "core/src/memlab/lambdas.cpp",
+  "sourceLine": 126
+ },
+ "lambda.capture": {
+  "code": "void captureDemo() {\n    int coins = 10;\n    auto byValue = [coins] { return coins; };  // COPIES coins right now\n    auto byRef = [&coins] { return coins; };  // REFERS to coins\n    coins = 50;\n    out << byValue() << ' ' << byRef() << '\\n';  // prints \"10 50\"\n}",
+  "lines": {
+   "declare": 2,
+   "by_value": 3,
+   "by_ref": 4,
+   "change": 5,
+   "call": 6
+  },
+  "file": "core/src/memlab/lambdas.cpp",
+  "sourceLine": 24
+ },
+ "lambda.dangling": {
+  "code": "std::function<int()> makeCounterBroken() {\n    int count = 0;\n    return [&count] { return ++count; };  // BUG: count dies when we return\n}\n\nstd::function<int()> makeCounterFixed() {\n    int count = 0;\n    return [count]() mutable { return ++count; };  // the lambda keeps its own copy\n}\n\nvoid danglingDemo() {\n    auto broken = makeCounterBroken();  // holds a reference to a DEAD variable\n    // broken();  // undefined behaviour: garbage, a crash, or \"works\" today and fails later\n    auto fixed = makeCounterFixed();\n    out << fixed() << ' ' << fixed() << '\\n';  // \"1 2\"\n}",
+  "lines": {
+   "bad_capture": 3,
+   "good_capture": 8,
+   "call_broken": 12,
+   "call_fixed": 14,
+   "use_fixed": 15
+  },
+  "file": "core/src/memlab/lambdas.cpp",
+  "sourceLine": 70
+ },
+ "lambda.mutable": {
+  "code": "void mutableDemo() {\n    int spins = 0;\n    auto counter = [spins]() mutable { return ++spins; };  // gets its OWN copy of spins\n    int first = counter();   // 1\n    int second = counter();  // 2\n    out << first << ' ' << second << ' ' << spins << '\\n';  // \"1 2 0\"\n}",
+  "lines": {
+   "make": 3,
+   "call1": 4,
+   "call2": 5,
+   "print": 6
+  },
+  "file": "core/src/memlab/lambdas.cpp",
+  "sourceLine": 45
+ },
+ "lambda.sort": {
+  "code": "void sortDemo(viz::Recorder& rec) {\n    std::vector<Player> players = {{\"Ava\", 320}, {\"Ben\", 980}, {\"Cy\", 540}, {\"Dee\", 760}};\n    int comparisons = 0;\n    std::sort(players.begin(), players.end(), [&comparisons](const Player& a, const Player& b) {\n        ++comparisons;              // captured by reference: we can count calls\n        return a.score > b.score;   // true means \"a goes before b\"\n    });\n}",
+  "lines": {
+   "data": 3,
+   "compare": 6
+  },
+  "file": "core/src/memlab/lambdas.cpp",
+  "sourceLine": 112
+ },
  "list.cycle": {
   "code": "// Floyd's \"tortoise and hare\": if there is a loop, the fast pointer\n// eventually laps the slow one, like runners on a circular track.\nbool hasCycle(ListNode* head, Recorder& rec) {\n    ListNode* slow = head;\n    ListNode* fast = head;\n    while (fast != nullptr && fast->next != nullptr) {\n        slow = slow->next;        // 1 step\n        fast = fast->next->next;  // 2 steps\n        if (slow == fast) return true;  // they met: there is a loop\n    }\n    return false;  // fast reached the end: no loop\n}",
   "lines": {
@@ -21,6 +77,120 @@
   },
   "file": "core/src/algo/linked_list.cpp",
   "sourceLine": 68
+ },
+ "mem.address_of": {
+  "code": "void addressOf() {\n    int score = 42;\n    int* p = &score;  // p stores the ADDRESS of score\n    out << *p << '\\n';  // *p means \"the int that p points to\"\n    *p = 100;  // write THROUGH the pointer\n    out << score << '\\n';\n}",
+  "lines": {
+   "declare": 2,
+   "take_address": 3,
+   "read": 4,
+   "write": 5,
+   "print": 6
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 17
+ },
+ "mem.array_pointer": {
+  "code": "void arrayPointer() {\n    int reel[4] = {7, 3, 9, 5};  // four ints, side by side in memory\n    int* p = reel;  // the array name turns into a pointer to its FIRST element\n    out << *p << '\\n';  // 7\n    p = p + 2;  // moves 2 INTS forward, i.e. 2 * sizeof(int) bytes\n    out << *p << '\\n';     // 9\n    out << p[1] << '\\n';   // p[1] means *(p + 1), which is reel[3] = 5\n    // p + 2 would be \"one past the end\": you may point there, but never read it.\n}",
+  "lines": {
+   "declare": 2,
+   "decay": 3,
+   "read_first": 4,
+   "advance": 5,
+   "index": 7
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 95
+ },
+ "mem.heap": {
+  "code": "void heapBasics() {\n    int* coins = new int(250);  // a box on the HEAP; coins holds its address\n    *coins += 50;\n    delete coins;  // give the memory back\n    coins = nullptr;  // good habit: now it clearly points at nothing\n}",
+  "lines": {
+   "new": 2,
+   "use": 3,
+   "delete": 4,
+   "reset": 5
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 136
+ },
+ "mem.leak": {
+  "code": "void leakDemo() {\n    int* bonus = new int(10);\n    bonus = new int(20);  // the first box is now unreachable: LEAKED\n    delete bonus;  // frees only the second box\n}",
+  "lines": {
+   "first_new": 2,
+   "overwrite": 3,
+   "delete_second": 4
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 153
+ },
+ "mem.pointer_to_pointer": {
+  "code": "void pointerToPointer() {\n    int lives = 3;\n    int* p = &lives;\n    int** pp = &p;  // pp points at p, which points at lives\n    **pp = 5;  // follow TWO arrows: lives becomes 5\n    int extra = 9;\n    *pp = &extra;  // change WHERE p points, through pp\n}",
+  "lines": {
+   "p": 3,
+   "pp": 4,
+   "write": 5,
+   "redirect": 7
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 116
+ },
+ "mem.reference": {
+  "code": "void reference() {\n    int hp = 10;\n    int& ref = hp;  // ref is ANOTHER NAME for hp, not a new box\n    ref -= 3;  // this changes hp\n    int* ptr = &hp;  // a pointer IS a separate box that holds an address\n    *ptr -= 2;\n    // A reference must be initialised, can't be null and can't be re-pointed.\n    // A pointer can be nullptr and can be changed to point somewhere else.\n}",
+  "lines": {
+   "declare": 2,
+   "bind": 3,
+   "through_ref": 4,
+   "pointer": 5,
+   "through_ptr": 6
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 37
+ },
+ "mem.shared_ptr": {
+  "code": "void sharedPtrDemo() {\n    auto texture = std::make_shared<int>(64);  // one owner\n    {\n        std::shared_ptr<int> sprite = texture;  // a second owner\n    }  // sprite is destroyed: one owner left\n    texture.reset();  // the last owner lets go, so the int is deleted\n}",
+  "lines": {
+   "make": 2,
+   "copy": 4,
+   "scope_end": 5,
+   "reset": 6
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 204
+ },
+ "mem.swap": {
+  "code": "void swapByValue(int a, int b) {\n    int tmp = a;\n    a = b;\n    b = tmp;\n}  // the frame, and the copies in it, disappear here\n\nvoid swapByPointer(int* a, int* b) {\n    int tmp = *a;\n    *a = *b;\n    *b = tmp;\n}\n\nvoid passByDemo() {\n    int x = 1, y = 2;\n    swapByValue(x, y);\n    swapByPointer(&x, &y);\n}",
+  "lines": {
+   "copy_args": 1,
+   "swap_copies": 4,
+   "receive_ptrs": 7,
+   "swap_through": 10,
+   "start": 14,
+   "call_value": 15,
+   "call_pointer": 16
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 59
+ },
+ "mem.unique_ptr": {
+  "code": "void uniquePtrDemo() {\n    {\n        std::unique_ptr<int> gold = std::make_unique<int>(500);  // gold OWNS the int\n        std::unique_ptr<int> vault = std::move(gold);  // ownership MOVES; gold is now empty\n        // std::unique_ptr<int> copy = vault;  // won't compile: an owner can't be copied\n    }  // vault is destroyed here, and its destructor deletes the int\n}",
+  "lines": {
+   "make": 3,
+   "move": 4,
+   "scope_end": 6
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 171
+ },
+ "mem.weak_ptr": {
+  "code": "struct Hero {\n    int id = 0;\n    std::shared_ptr<Hero> ally;  // owning link\n    std::weak_ptr<Hero> rival;   // NON-owning link\n};\n\nvoid weakPtrDemo() {\n    {\n        auto a = std::make_shared<Hero>();\n        auto b = std::make_shared<Hero>();\n        a->id = 1;\n        b->id = 2;\n        a->ally = b;  // b now has 2 owners\n        b->rival = a;  // weak: a still has just 1 owner\n        // If rival were a shared_ptr, a and b would own each other.\n        // Their counts could never reach 0, so neither would ever be freed: a leak.\n    }  // a's count hits 0, a is freed, which releases b, so b is freed too\n}",
+  "lines": {
+   "make": 12,
+   "ally": 13,
+   "rival": 14,
+   "scope_end": 17
+  },
+  "file": "core/src/memlab/pointers.cpp",
+  "sourceLine": 224
  },
  "pattern.prefix_sums": {
   "code": "std::vector<int> prefixSums(const std::vector<int>& a, Recorder& rec) {\n    std::vector<int> prefix(a.size() + 1, 0);  // prefix[i] = sum of the first i values\n    for (std::size_t i = 0; i < a.size(); ++i) {\n        prefix[i + 1] = prefix[i] + a[i];\n    }\n    return prefix;\n}\n\n// Sum of a[l..r] = (sum of first r+1 values) - (sum of first l values).\nint rangeSum(const std::vector<int>& prefix, int l, int r) {\n    return prefix[r + 1] - prefix[l];  // O(1), no loop!\n}",

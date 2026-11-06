@@ -32,7 +32,7 @@ std::string localValue(const Json& scene, const std::string& name) {
     return "";
 }
 
-[[maybe_unused]] bool hasDanglingArrow(const Json& scene) {
+bool hasDanglingArrow(const Json& scene) {
     for (const auto& a : scene["arrows"])
         if (a["mark"] == "error" && a["label"] == "dangling") return true;
     return false;
@@ -122,6 +122,21 @@ TEST_CASE("shared_ptr and weak_ptr report real owner counts") {
     REQUIRE(last["heap"].size() == 2);
     CHECK(last["heap"][0]["freed"] == true);
     CHECK(last["heap"][1]["freed"] == true);
+}
+
+TEST_CASE("lambda scenarios print what real C++ prints") {
+    CHECK(output(run("lambda.capture")) == std::vector<std::string>{"10 50"});
+    CHECK(output(run("lambda.mutable")) == std::vector<std::string>{"1 2 0"});
+    CHECK(output(run("lambda.dangling")) == std::vector<std::string>{"1 2"});
+    CHECK(output(run("lambda.callbacks")) == std::vector<std::string>{"BIG WIN: 150", "total 170"});
+}
+
+TEST_CASE("the broken counter is drawn as dangling") {
+    const auto r = run("lambda.dangling");
+    bool dangling = false;
+    for (const auto& f : r.rec.frames())
+        if (f.line == "call_broken") dangling = hasDanglingArrow(f.scene);
+    CHECK(dangling);
 }
 
 TEST_CASE("Lab requires a running session") {

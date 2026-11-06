@@ -28,6 +28,7 @@ const Registry& Registry::builtin() {
         registerLinkedList(r);
         registerStack(r);
         memlab::registerPointerLab(r);
+        memlab::registerLambdaLab(r);
         return r;
     }();
     return instance;
