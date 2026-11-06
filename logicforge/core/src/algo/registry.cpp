@@ -23,6 +23,8 @@ const Registry& Registry::builtin() {
     static const Registry instance = [] {
         Registry r;
         registerSorting(r);
+        registerSearching(r);
+        registerArrayPatterns(r);
         return r;
     }();
     return instance;

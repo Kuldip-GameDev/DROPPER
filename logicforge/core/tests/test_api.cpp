@@ -26,7 +26,7 @@ TEST_CASE("api: algo.list has unique ids and complete info") {
     const Api api;
     const Json list = Json::parse(api.callJson("algo.list", ""));
     REQUIRE(list.is_array());
-    REQUIRE(list.size() >= 6);
+    REQUIRE(list.size() >= 11);
     std::set<std::string> ids;
     for (const auto& a : list) {
         CHECK(ids.insert(a["id"].get<std::string>()).second);
