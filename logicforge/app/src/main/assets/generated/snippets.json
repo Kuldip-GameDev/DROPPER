@@ -1,0 +1,159 @@
+{
+ "list.cycle": {
+  "code": "// Floyd's \"tortoise and hare\": if there is a loop, the fast pointer\n// eventually laps the slow one, like runners on a circular track.\nbool hasCycle(ListNode* head, Recorder& rec) {\n    ListNode* slow = head;\n    ListNode* fast = head;\n    while (fast != nullptr && fast->next != nullptr) {\n        slow = slow->next;        // 1 step\n        fast = fast->next->next;  // 2 steps\n        if (slow == fast) return true;  // they met: there is a loop\n    }\n    return false;  // fast reached the end: no loop\n}",
+  "lines": {
+   "slow_step": 7,
+   "fast_step": 8,
+   "met": 9,
+   "no_cycle": 11
+  },
+  "file": "core/src/algo/linked_list.cpp",
+  "sourceLine": 86
+ },
+ "list.reverse": {
+  "code": "ListNode* reverseList(ListNode* head, Recorder& rec) {\n    ListNode* prev = nullptr;  // the reversed part starts empty\n    ListNode* curr = head;     // the part still to reverse\n    while (curr != nullptr) {\n        ListNode* next = curr->next;  // 1. remember the rest of the list\n        curr->next = prev;  // 2. flip the arrow backwards\n        prev = curr;  // 3. move prev forward\n        curr = next;  // 4. move curr forward\n    }\n    return prev;  // the old tail is the new head\n}",
+  "lines": {
+   "save_next": 5,
+   "flip": 6,
+   "advance_prev": 7,
+   "advance_curr": 8,
+   "done": 10
+  },
+  "file": "core/src/algo/linked_list.cpp",
+  "sourceLine": 68
+ },
+ "pattern.prefix_sums": {
+  "code": "std::vector<int> prefixSums(const std::vector<int>& a, Recorder& rec) {\n    std::vector<int> prefix(a.size() + 1, 0);  // prefix[i] = sum of the first i values\n    for (std::size_t i = 0; i < a.size(); ++i) {\n        prefix[i + 1] = prefix[i] + a[i];\n    }\n    return prefix;\n}\n\n// Sum of a[l..r] = (sum of first r+1 values) - (sum of first l values).\nint rangeSum(const std::vector<int>& prefix, int l, int r) {\n    return prefix[r + 1] - prefix[l];  // O(1), no loop!\n}",
+  "lines": {
+   "build": 4,
+   "query": 11
+  },
+  "file": "core/src/algo/array_patterns.cpp",
+  "sourceLine": 61
+ },
+ "pattern.sliding_window": {
+  "code": "int maxWindowSum(const std::vector<int>& a, int k, Recorder& rec) {\n    int windowSum = 0;\n    for (int i = 0; i < k; ++i) windowSum += a[i];  // the first window\n    int best = windowSum;\n    for (int right = k; right < static_cast<int>(a.size()); ++right) {\n        windowSum += a[right] - a[right - k];  // add the new value, drop the old one\n        best = std::max(best, windowSum);\n    }\n    return best;\n}",
+  "lines": {
+   "first_window": 3,
+   "slide": 6,
+   "best": 7
+  },
+  "file": "core/src/algo/array_patterns.cpp",
+  "sourceLine": 34
+ },
+ "pattern.two_pointers": {
+  "code": "std::pair<int, int> pairWithSum(const std::vector<int>& a, int target, Recorder& rec) {\n    int left = 0;\n    int right = static_cast<int>(a.size()) - 1;\n    while (left < right) {\n        int sum = a[left] + a[right];\n        if (sum == target) return {left, right};\n        if (sum < target) ++left;  // need a bigger sum\n        else --right;              // need a smaller sum\n    }\n    return {-1, -1};\n}",
+  "lines": {
+   "sum": 5,
+   "found": 6,
+   "move_left": 7,
+   "move_right": 8,
+   "none": 10
+  },
+  "file": "core/src/algo/array_patterns.cpp",
+  "sourceLine": 18
+ },
+ "search.binary": {
+  "code": "int binarySearch(const std::vector<int>& a, int target, Recorder& rec) {\n    int lo = 0;\n    int hi = static_cast<int>(a.size()) - 1;\n    while (lo <= hi) {\n        int mid = lo + (hi - lo) / 2;  // same as (lo+hi)/2 but cannot overflow\n        if (a[mid] == target) {\n            return mid;\n        }\n        if (a[mid] < target) {\n            lo = mid + 1;  // target is bigger: throw away the left half\n        } else {\n            hi = mid - 1;  // target is smaller: throw away the right half\n        }\n    }\n    return -1;\n}",
+  "lines": {
+   "mid": 5,
+   "found": 6,
+   "go_right": 10,
+   "go_left": 12,
+   "not_found": 15
+  },
+  "file": "core/src/algo/searching.cpp",
+  "sourceLine": 27
+ },
+ "search.linear": {
+  "code": "int linearSearch(const std::vector<int>& a, int target, Recorder& rec) {\n    for (std::size_t i = 0; i < a.size(); ++i) {\n        if (a[i] == target) return static_cast<int>(i);\n    }\n    return -1;\n}",
+  "lines": {
+   "check": 3,
+   "not_found": 5
+  },
+  "file": "core/src/algo/searching.cpp",
+  "sourceLine": 16
+ },
+ "sort.bubble": {
+  "code": "void bubbleSort(std::vector<int>& a, Recorder& rec) {\n    const std::size_t n = a.size();\n    for (std::size_t pass = 0; pass + 1 < n; ++pass) {\n        bool swapped = false;\n        for (std::size_t j = 0; j + 1 < n - pass; ++j) {\n            if (a[j] > a[j + 1]) {\n                std::swap(a[j], a[j + 1]);\n                swapped = true;\n            }\n        }\n        if (!swapped) break;  // nothing moved: already sorted\n    }\n}",
+  "lines": {
+   "pass": 3,
+   "compare": 6,
+   "swap": 7,
+   "early_exit": 11
+  },
+  "file": "core/src/algo/sorting.cpp",
+  "sourceLine": 33
+ },
+ "sort.heap": {
+  "code": "// Push a[root] down until both children are smaller (max-heap rule).\nvoid siftDown(std::vector<int>& a, std::size_t root, std::size_t size, Recorder& rec) {\n    while (true) {\n        std::size_t largest = root;\n        std::size_t left = 2 * root + 1, right = 2 * root + 2;\n        if (left < size && a[left] > a[largest]) largest = left;\n        if (right < size && a[right] > a[largest]) largest = right;\n        if (largest == root) return;\n        std::swap(a[root], a[largest]);\n        root = largest;\n    }\n}\n\nvoid heapSort(std::vector<int>& a, Recorder& rec) {\n    const std::size_t n = a.size();\n    for (std::size_t i = n / 2; i-- > 0;) siftDown(a, i, n, rec);\n    for (std::size_t end = n; end-- > 1;) {\n        std::swap(a[0], a[end]);  // biggest goes to the back\n        siftDown(a, 0, end, rec);\n    }\n}",
+  "lines": {
+   "children": 5,
+   "heap_ok": 8,
+   "swap": 9,
+   "build_heap": 16,
+   "extract_max": 18
+  },
+  "file": "core/src/algo/sorting.cpp",
+  "sourceLine": 152
+ },
+ "sort.insertion": {
+  "code": "void insertionSort(std::vector<int>& a, Recorder& rec) {\n    for (std::size_t i = 1; i < a.size(); ++i) {\n        int key = a[i];  // the card we are inserting\n        std::size_t j = i;\n        while (j > 0 && a[j - 1] > key) {\n            a[j] = a[j - 1];  // shift the bigger one right\n            --j;\n        }\n        a[j] = key;  // drop the card into the gap\n    }\n}",
+  "lines": {
+   "take": 3,
+   "compare": 5,
+   "shift": 6,
+   "insert": 9
+  },
+  "file": "core/src/algo/sorting.cpp",
+  "sourceLine": 73
+ },
+ "sort.merge": {
+  "code": "// Sorts a[lo, hi)  (\"hi\" is one past the end, like end() in the STL).\nvoid mergeSort(std::vector<int>& a, std::size_t lo, std::size_t hi, std::vector<int>& tmp,\n               Recorder& rec) {\n    if (hi - lo < 2) return;  // 0 or 1 items: already sorted\n    std::size_t mid = lo + (hi - lo) / 2;\n    mergeSort(a, lo, mid, tmp, rec);  // sort the left half\n    mergeSort(a, mid, hi, tmp, rec);  // sort the right half\n\n    std::size_t i = lo, j = mid, k = lo;  // merge two sorted halves\n    while (i < mid && j < hi) {\n        if (a[i] <= a[j]) tmp[k++] = a[i++];\n        else tmp[k++] = a[j++];\n    }\n    while (i < mid) tmp[k++] = a[i++];  // copy leftovers\n    while (j < hi) tmp[k++] = a[j++];\n    std::copy(tmp.begin() + lo, tmp.begin() + hi, a.begin() + lo);\n}\n\nvoid mergeSort(std::vector<int>& a, Recorder& rec) {\n    std::vector<int> tmp(a.size());  // one buffer, reused by every merge\n    mergeSort(a, 0, a.size(), tmp, rec);\n}",
+  "lines": {
+   "base": 4,
+   "split": 5,
+   "take_left": 11,
+   "take_right": 12,
+   "copy_back": 16
+  },
+  "file": "core/src/algo/sorting.cpp",
+  "sourceLine": 91
+ },
+ "sort.quick": {
+  "code": "// Lomuto partition: the last element is the pivot.\nint partition(std::vector<int>& a, int lo, int hi, Recorder& rec) {\n    int pivot = a[hi];\n    int store = lo;     // next slot for a value smaller than the pivot\n    for (int j = lo; j < hi; ++j) {\n        if (a[j] < pivot) {\n            std::swap(a[store], a[j]);\n            ++store;\n        }\n    }\n    std::swap(a[store], a[hi]);  // pivot lands in its final place\n    return store;\n}\n\nvoid quickSort(std::vector<int>& a, int lo, int hi, Recorder& rec) {\n    if (lo >= hi) return;\n    int p = partition(a, lo, hi, rec);\n    quickSort(a, lo, p - 1, rec);  // left of the pivot\n    quickSort(a, p + 1, hi, rec);  // right of the pivot\n}\n\nvoid quickSort(std::vector<int>& a, Recorder& rec) {\n    quickSort(a, 0, static_cast<int>(a.size()) - 1, rec);\n}",
+  "lines": {
+   "pivot": 3,
+   "compare": 6,
+   "swap": 7,
+   "place_pivot": 11,
+   "base": 16,
+   "recurse": 18
+  },
+  "file": "core/src/algo/sorting.cpp",
+  "sourceLine": 120
+ },
+ "sort.selection": {
+  "code": "void selectionSort(std::vector<int>& a, Recorder& rec) {\n    const std::size_t n = a.size();\n    for (std::size_t i = 0; i + 1 < n; ++i) {\n        std::size_t minIdx = i;  // best candidate so far\n        for (std::size_t j = i + 1; j < n; ++j) {\n            if (a[j] < a[minIdx]) {\n                minIdx = j;\n            }\n        }\n        std::swap(a[i], a[minIdx]);  // put the smallest in place\n    }\n}",
+  "lines": {
+   "pick": 4,
+   "compare": 6,
+   "new_min": 7,
+   "swap": 10
+  },
+  "file": "core/src/algo/sorting.cpp",
+  "sourceLine": 53
+ },
+ "stack.balanced": {
+  "code": "bool isBalanced(const std::string& text, Recorder& rec) {\n    std::vector<char> stack;  // a vector makes a perfect stack: push_back / back / pop_back\n    for (std::size_t i = 0; i < text.size(); ++i) {\n        char c = text[i];\n        if (c == '(' || c == '[' || c == '{') {\n            stack.push_back(c);  // remember the opener\n        } else if (c == ')' || c == ']' || c == '}') {\n            if (stack.empty()) return false;  // a closer with nothing open\n            char open = stack.back();\n            stack.pop_back();\n            bool match = (open == '(' && c == ')') || (open == '[' && c == ']') ||\n                         (open == '{' && c == '}');\n            if (!match) return false;\n        }\n    }\n    return stack.empty();  // leftovers mean something was never closed\n}",
+  "lines": {
+   "push": 6,
+   "empty": 8,
+   "pop": 10,
+   "mismatch": 13,
+   "end": 16
+  },
+  "file": "core/src/algo/stack.cpp",
+  "sourceLine": 28
+ }
+}

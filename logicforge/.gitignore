@@ -19,5 +19,3 @@ captures/
 .vscode/
 *.iml
 
-# Generated at build time (see scripts/extract_snippets.py)
-app/src/main/assets/generated/

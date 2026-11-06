@@ -24,15 +24,13 @@ defaults:
 
 jobs:
   core:
-    name: Core (C++20, ASan + UBSan)
+    name: Core (C++20, GCC, ASan + UBSan)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Configure
-        run: cmake -S core -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DFORGE_SANITIZE=ON -DFORGE_WERROR=ON
-        env:
-          CXX: clang++
+        run: cmake -S core -B build -DCMAKE_BUILD_TYPE=Debug -DFORGE_SANITIZE=ON -DFORGE_WERROR=ON
 
       - name: Build
         run: cmake --build build -j
@@ -40,8 +38,11 @@ jobs:
       - name: Test
         run: ctest --test-dir build --output-on-failure
 
-      - name: Check snippets and lessons
-        run: python3 scripts/extract_snippets.py --check
+      - name: Check snippets, lessons and trace line labels
+        run: |
+          ./build/forge_cli list --json > build/algos.json
+          ./build/forge_cli dump-traces > build/traces.json
+          python3 scripts/extract_snippets.py --check --traces build/traces.json
 
   android:
     name: Android APK
