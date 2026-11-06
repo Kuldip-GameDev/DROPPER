@@ -453,4 +453,60 @@ Json MemoryScene::toJson() const {
     return j;
 }
 
+// ----------------------------------------------------------------- PlotScene
+
+PlotScene& PlotScene::title(std::string t) {
+    title_ = std::move(t);
+    return *this;
+}
+
+PlotScene& PlotScene::axes(std::string xLabel, std::string yLabel) {
+    xLabel_ = std::move(xLabel);
+    yLabel_ = std::move(yLabel);
+    return *this;
+}
+
+PlotScene& PlotScene::bar(std::string label, double value, Mark m) {
+    bars_.push_back(Bar{std::move(label), value, m});
+    return *this;
+}
+
+PlotScene& PlotScene::line(std::string name, std::vector<std::pair<double, double>> points, Mark m) {
+    lines_.push_back(Line{std::move(name), std::move(points), m});
+    return *this;
+}
+
+PlotScene& PlotScene::reference(double y, std::string label) {
+    refs_.emplace_back(y, std::move(label));
+    return *this;
+}
+
+PlotScene& PlotScene::var(std::string name, Json value) {
+    vars_.emplace_back(std::move(name), std::move(value));
+    return *this;
+}
+
+Json PlotScene::toJson() const {
+    Json j;
+    j["kind"] = "plot";
+    j["title"] = title_;
+    j["xLabel"] = xLabel_;
+    j["yLabel"] = yLabel_;
+    Json bars = Json::array();
+    for (const auto& b : bars_) bars.push_back({{"label", b.label}, {"value", b.value}, {"mark", std::string(toString(b.mark))}});
+    j["bars"] = bars;
+    Json lines = Json::array();
+    for (const auto& l : lines_) {
+        Json pts = Json::array();
+        for (const auto& [x, y] : l.points) pts.push_back({x, y});
+        lines.push_back({{"name", l.name}, {"points", pts}, {"mark", std::string(toString(l.mark))}});
+    }
+    j["lines"] = lines;
+    Json refs = Json::array();
+    for (const auto& [y, label] : refs_) refs.push_back({{"y", y}, {"label", label}});
+    j["references"] = refs;
+    j["vars"] = varsToJson(vars_);
+    return j;
+}
+
 }  // namespace forge::viz

@@ -222,4 +222,38 @@ private:
     std::vector<std::pair<std::string, Json>> vars_;
 };
 
+// ---------------------------------------------------------------------------
+// PlotScene: bar charts and line charts (RNG histograms, RTP convergence,
+// training loss). Values are plain doubles; the renderer scales them.
+// ---------------------------------------------------------------------------
+class PlotScene {
+public:
+    PlotScene& title(std::string t);
+    PlotScene& axes(std::string xLabel, std::string yLabel);
+    PlotScene& bar(std::string label, double value, Mark m = Mark::None);
+    PlotScene& line(std::string name, std::vector<std::pair<double, double>> points, Mark m = Mark::Active);
+    // A horizontal reference line, e.g. the expected value or the exact RTP.
+    PlotScene& reference(double y, std::string label);
+    PlotScene& var(std::string name, Json value);
+
+    Json toJson() const;
+
+private:
+    struct Bar {
+        std::string label;
+        double value;
+        Mark mark;
+    };
+    struct Line {
+        std::string name;
+        std::vector<std::pair<double, double>> points;
+        Mark mark;
+    };
+    std::string title_, xLabel_, yLabel_;
+    std::vector<Bar> bars_;
+    std::vector<Line> lines_;
+    std::vector<std::pair<double, std::string>> refs_;
+    std::vector<std::pair<std::string, Json>> vars_;
+};
+
 }  // namespace forge::viz
