@@ -29,3 +29,5 @@ Rules for yourself:
 | 05 | `reverseList` | linked lists, pointer rewiring |
 | 06 | `craft` / `store` / `totalPower` | `unique_ptr`, moving ownership |
 | 07 | `makeCounter` / `countAtLeast` / `sortLeaderboard` | lambdas, captures, comparators |
+| 08 | `runningTotals` / `pickWeighted` | prefix sums + binary search (virtual reels) |
+| 09 | `exactRtp` / `hitFrequency` | slot maths by counting |
