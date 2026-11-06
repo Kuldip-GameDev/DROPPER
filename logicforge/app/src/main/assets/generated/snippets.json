@@ -1,4 +1,32 @@
 {
+ "ai.backprop": {
+  "code": "// One training step = forward pass (make a guess) + backward pass\n// (work out how much each weight is to blame, nudge it the other way).\ndouble trainStep(Net& n, const double x[2], double target, double lr) {\n    double h[3];\n    for (int j = 0; j < 3; ++j) {\n        h[j] = sigmoid(n.w1[j][0] * x[0] + n.w1[j][1] * x[1] + n.b1[j]);  // hidden layer\n    }\n    const double out = sigmoid(n.w2[0] * h[0] + n.w2[1] * h[1] + n.w2[2] * h[2] + n.b2);\n    // Chain rule: error times the slope of the sigmoid, sigmoid(z)' = s * (1 - s).\n    const double dOut = (out - target) * out * (1 - out);\n    for (int j = 0; j < 3; ++j) {\n        const double dHidden = dOut * n.w2[j] * h[j] * (1 - h[j]);  // blame flows back\n        n.w2[j] -= lr * dOut * h[j];  // gradient descent on every weight\n        n.w1[j][0] -= lr * dHidden * x[0];\n        n.w1[j][1] -= lr * dHidden * x[1];\n        n.b1[j] -= lr * dHidden;\n    }\n    n.b2 -= lr * dOut;\n    return 0.5 * (out - target) * (out - target);\n}",
+  "lines": {
+   "hidden": 6,
+   "output": 8,
+   "delta_out": 10,
+   "delta_hidden": 12
+  },
+  "file": "core/src/ai/ai.cpp",
+  "sourceLine": 48
+ },
+ "ai.bigram": {
+  "code": "// A language model in its simplest form: count which character follows\n// which. \"Predict the next character\" = a weighted pick from those counts.\nvoid Bigram::train(const std::string& text) {\n    for (std::size_t i = 0; i + 1 < text.size(); ++i) {\n        ++counts_[index(text[i])][index(text[i + 1])];  // \"after this, came that\"\n    }\n}\n\nchar Bigram::sample(char current, std::uint64_t r) const {\n    const auto& row = counts_[index(current)];\n    for (int i = 0; i < 27; ++i) {  // the same linear weighted pick as a slot reel\n        if (r < row[i]) return symbol(i);\n        r -= row[i];\n    }\n    return ' ';\n}",
+  "lines": {
+   "count": 5,
+   "pick": 12
+  },
+  "file": "core/src/ai/ai.cpp",
+  "sourceLine": 79
+ },
+ "ai.gradient_descent": {
+  "code": "// To find the lowest point of a curve: look at the slope where you stand,\n// take a step DOWNHILL, repeat. The learning rate is the step size.\nstd::vector<double> gradientDescent(double start, double learningRate, int steps) {\n    std::vector<double> xs = {start};\n    double x = start;\n    for (int i = 0; i < steps; ++i) {\n        x -= learningRate * slope(x);  // slope > 0: go left; slope < 0: go right\n        xs.push_back(x);\n    }\n    return xs;\n}",
+  "lines": {
+   "step": 7
+  },
+  "file": "core/src/ai/ai.cpp",
+  "sourceLine": 14
+ },
  "backtrack.nqueens": {
   "code": "// Backtracking: try a choice, go deeper, and UNDO it if it leads nowhere.\nstatic bool safe(const std::vector<int>& colOf, int row, int col) {\n    for (int r = 0; r < row; ++r) {\n        // same column, or same diagonal (row distance == column distance)\n        if (colOf[r] == col || std::abs(colOf[r] - col) == row - r) return false;\n    }\n    return true;\n}\n\nstatic bool place(int row, int n, std::vector<int>& colOf) {\n    if (row == n) return true;  // every row has a queen: solved\n    for (int col = 0; col < n; ++col) {\n        if (!safe(colOf, row, col)) continue;\n        colOf[row] = col;  // try it\n        if (place(row + 1, n, colOf)) return true;\n        colOf[row] = -1;  // dead end: undo and try the next column\n    }\n    return false;\n}\n\nbool solveQueens(int n, std::vector<int>& colOf) {\n    colOf.assign(n, -1);\n    return place(0, n, colOf);\n}",
   "lines": {

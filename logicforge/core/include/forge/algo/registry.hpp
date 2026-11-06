@@ -90,3 +90,7 @@ void registerSlotLab(algo::Registry& r);
 namespace forge::patterns {
 void registerPatterns(algo::Registry& r);
 }  // namespace forge::patterns
+
+namespace forge::ai {
+void registerAi(algo::Registry& r);
+}  // namespace forge::ai
