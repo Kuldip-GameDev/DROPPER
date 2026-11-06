@@ -72,3 +72,9 @@ void registerLinkedList(Registry& r);
 void registerStack(Registry& r);
 
 }  // namespace forge::algo
+
+// The Pointer & Lambda Lab registers its scenarios in the same registry.
+namespace forge::memlab {
+void registerPointerLab(algo::Registry& r);
+void registerLambdaLab(algo::Registry& r);
+}  // namespace forge::memlab
