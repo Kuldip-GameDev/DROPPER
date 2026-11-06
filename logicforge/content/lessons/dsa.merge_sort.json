@@ -1,0 +1,94 @@
+{
+  "id": "dsa.merge_sort",
+  "title": "Merge sort",
+  "summary": "Divide and conquer: split, sort the halves, merge.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Divide and conquer",
+      "body": "Sorting 8 values is hard. Sorting 1 value is free: it's already sorted.\n\n**Merge sort** keeps splitting the list in half until each piece has one value. Then it **merges** pieces back together, two sorted halves at a time."
+    },
+    {
+      "type": "text",
+      "title": "Merging is easy",
+      "body": "Two sorted piles: `[2, 5]` and `[1, 9]`. Look at the top of each, take the smaller one, repeat.\n\n1 (from right), 2 (left), 5 (left), 9 (right). Done: `[1, 2, 5, 9]`. Each value is looked at once."
+    },
+    {
+      "type": "visual",
+      "algo": "sort.merge",
+      "input": {
+        "array": [
+          8,
+          3,
+          5,
+          1,
+          9,
+          2,
+          7,
+          4
+        ]
+      },
+      "body": "The underlined window is the range being worked on. Green flashes mean \"this range is merged and sorted\"."
+    },
+    {
+      "type": "code",
+      "snippet": "sort.merge",
+      "highlight": "take_left",
+      "title": "The code",
+      "body": "The function calls **itself** on each half. That's **recursion**. The base case `hi - lo < 2` stops it.\n\n`[lo, hi)` means lo is included and hi is not, exactly like `begin()`/`end()` in the STL. It makes the maths with sizes clean."
+    },
+    {
+      "type": "text",
+      "title": "Why O(n log n)?",
+      "body": "Halving 8 values gives 3 levels of splits (8 → 4 → 2 → 1). In general that's **log₂ n** levels.\n\nOn each level, merging touches all n values once. n work × log n levels = **O(n log n)**. For a million values: ~20 million steps instead of bubble sort's ~500 billion.\n\nThe cost: merging needs an extra buffer of n values, so **O(n) extra memory**."
+    },
+    {
+      "type": "quiz",
+      "question": "You have 1,024 values. How many levels of halving does merge sort need to reach single values?",
+      "choices": [
+        "2",
+        "10",
+        "512",
+        "1,024"
+      ],
+      "answer": 1,
+      "explain": "2¹⁰ = 1,024, so log₂(1,024) = 10 levels."
+    },
+    {
+      "type": "quiz",
+      "question": "Merge sort's worst case on 1,000 values is roughly...",
+      "choices": [
+        "1,000 × 10 steps",
+        "1,000 × 1,000 steps",
+        "1,000 steps",
+        "10 steps"
+      ],
+      "answer": 0,
+      "explain": "n log n ≈ 1,000 × 10. Unlike quicksort, merge sort has no bad inputs. Its worst case is still O(n log n)."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Merge Sorted Array",
+          "url": "https://leetcode.com/problems/merge-sorted-array/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Merge Two Sorted Lists",
+          "url": "https://leetcode.com/problems/merge-two-sorted-lists/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Sort an Array",
+          "url": "https://leetcode.com/problems/sort-an-array/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

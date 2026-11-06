@@ -1,0 +1,67 @@
+{
+  "id": "dsa.algorithms_and_big_o",
+  "title": "What is an algorithm?",
+  "summary": "Recipes for computers, and how we measure their speed.",
+  "minutes": 6,
+  "cards": [
+    {
+      "type": "text",
+      "title": "A recipe for a computer",
+      "body": "An **algorithm** is a list of steps that solves a problem, like a recipe.\n\nYour game has 1,000,000 players. Someone types a name. How do you find that player? The steps you choose decide whether it takes a blink or a coffee break."
+    },
+    {
+      "type": "text",
+      "title": "The simplest idea",
+      "body": "Check every player, one by one, from the start. Stop when you find the name.\n\nThis is **linear search**. It always works, but it can be slow. Watch it on a small list."
+    },
+    {
+      "type": "visual",
+      "algo": "search.linear",
+      "input": {
+        "array": [
+          7,
+          3,
+          9,
+          1,
+          5
+        ],
+        "target": 1
+      },
+      "body": "Press play. Each step checks one box."
+    },
+    {
+      "type": "text",
+      "title": "Count the steps, not the seconds",
+      "body": "Phones get faster every year, so we don't measure algorithms in seconds. We **count steps**.\n\n- 5 players: up to 5 checks.\n- 1,000 players: up to 1,000 checks.\n- n players: up to **n** checks.\n\nWhen steps grow in step with n, we write **O(n)** and say \"order n\". This is **Big-O notation**: it describes how the work grows as the input grows."
+    },
+    {
+      "type": "text",
+      "title": "Why it matters",
+      "body": "An O(n) search over 1,000,000 players can take 1,000,000 checks.\n\nIn a few lessons you will learn **binary search**, which needs only about 20 checks for the same list. Same computer, same data, about 50,000 times less work. Choosing the algorithm is the real optimisation."
+    },
+    {
+      "type": "quiz",
+      "question": "Linear search looks for a name in a list of 400 players. The name is **not** in the list. How many checks does it make?",
+      "choices": [
+        "1",
+        "20",
+        "200",
+        "400"
+      ],
+      "answer": 3,
+      "explain": "It has to look at every player before it can be sure the name is missing: 400 checks. That's the **worst case**, and Big-O usually describes the worst case."
+    },
+    {
+      "type": "quiz",
+      "question": "List A has 10 items, list B has 10,000. Linear search on B does at most how many times more checks than on A?",
+      "choices": [
+        "The same",
+        "10 times",
+        "1,000 times",
+        "10,000 times"
+      ],
+      "answer": 2,
+      "explain": "10,000 / 10 = 1,000. With O(n), work grows **in proportion** to the input."
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "id": "dsa.sliding_window",
+  "title": "Sliding window",
+  "summary": "Keep a running total instead of re-adding everything.",
+  "minutes": 6,
+  "cards": [
+    {
+      "type": "text",
+      "title": "The question",
+      "body": "A player's scores over 8 rounds: `2 1 5 1 3 2 9 1`. What's the best total over any **3 rounds in a row**?\n\nThe slow way adds up every group of 3 from scratch. With window size k that's about **n × k** additions."
+    },
+    {
+      "type": "text",
+      "title": "Slide, don't restart",
+      "body": "When the window moves one step right, only two things change: one value **enters**, one value **leaves**.\n\nSo: `sum = sum + entering - leaving`. One addition and one subtraction per step, which is **O(n)** total."
+    },
+    {
+      "type": "visual",
+      "algo": "pattern.sliding_window",
+      "input": {
+        "array": [
+          2,
+          1,
+          5,
+          1,
+          3,
+          2,
+          9,
+          1
+        ],
+        "k": 3
+      }
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.sliding_window",
+      "highlight": "slide",
+      "title": "The code"
+    },
+    {
+      "type": "text",
+      "title": "In games",
+      "body": "Sliding windows are everywhere in real-time code: an FPS counter averaged over the last 60 frames, detecting a \"hot streak\" in recent spins, smoothing analogue stick input."
+    },
+    {
+      "type": "quiz",
+      "question": "Window size 4 over 1,000 values. Roughly how many additions does the sliding version make?",
+      "choices": [
+        "~1,000",
+        "~4,000",
+        "~250",
+        "~1,000,000"
+      ],
+      "answer": 0,
+      "explain": "4 to build the first window, then one add and one subtract per step: about 1,000 steps. The naive way is about 4,000."
+    },
+    {
+      "type": "build",
+      "exercise": "ex_04_sliding_window",
+      "title": "Build it: count good windows",
+      "body": "Count windows of size k whose sum is at least a target. Same slide, plus one `if`."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Maximum Average Subarray I",
+          "url": "https://leetcode.com/problems/maximum-average-subarray-i/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Minimum Size Subarray Sum",
+          "url": "https://leetcode.com/problems/minimum-size-subarray-sum/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Longest Substring Without Repeating Characters",
+          "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

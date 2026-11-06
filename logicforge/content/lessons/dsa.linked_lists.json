@@ -1,0 +1,102 @@
+{
+  "id": "dsa.linked_lists",
+  "title": "Linked lists and pointers",
+  "summary": "Nodes connected by arrows. Reverse one with three pointers.",
+  "minutes": 9,
+  "cards": [
+    {
+      "type": "text",
+      "title": "A treasure hunt",
+      "body": "An array is a row of lockers side by side. A **linked list** is a treasure hunt: each clue (a **node**) holds a value and tells you where the next clue is. That \"where\" is a **pointer**: a memory address.\n\nThe last node points to `nullptr`, which means \"nothing here\"."
+    },
+    {
+      "type": "text",
+      "title": "Who owns the memory?",
+      "body": "In this app's code the nodes live in a `std::vector`, which **owns** them. The `next` pointers only **point**; they don't own anything.\n\nAlways ask \"who owns this memory, and who frees it?\" It's the single most important question in C++."
+    },
+    {
+      "type": "visual",
+      "algo": "list.reverse",
+      "input": {
+        "array": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "body": "Watch the arrows flip one at a time. The labels above the nodes show where `prev`, `curr` and `next` point."
+    },
+    {
+      "type": "code",
+      "snippet": "list.reverse",
+      "highlight": "save_next",
+      "title": "The code",
+      "body": "The order of the four lines is everything. If you flip `curr->next` **before** saving it, the rest of the list is lost forever. That's a **memory leak** (with `new`) or just a broken list."
+    },
+    {
+      "type": "text",
+      "title": "Arrays vs lists in games",
+      "body": "Lists can insert or remove a node in O(1) if you already have a pointer to the spot. Arrays need O(n) shifting.\n\nBut arrays keep values **next to each other** in memory, and the CPU loves that (its cache loads neighbours for free). List nodes can be scattered, so walking a list is often much slower in practice. That's why game engines prefer arrays and use lists mainly for things like **free lists** in object pools."
+    },
+    {
+      "type": "quiz",
+      "question": "In `reverseList`, what goes wrong if you swap the first two lines inside the loop (flip `curr->next = prev` before saving `next`)?",
+      "choices": [
+        "Nothing",
+        "You lose the pointer to the rest of the list",
+        "It reverses twice",
+        "It becomes O(n²)"
+      ],
+      "answer": 1,
+      "explain": "After `curr->next = prev`, the old `curr->next` is overwritten and nothing else remembers where the rest of the list was."
+    },
+    {
+      "type": "quiz",
+      "question": "Getting the 500th element: array vs linked list?",
+      "choices": [
+        "Both O(1)",
+        "Array O(1), list O(n)",
+        "Array O(n), list O(1)",
+        "Both O(n)"
+      ],
+      "answer": 1,
+      "explain": "An array computes the address directly (`start + 500 × size`). A list must follow 500 arrows."
+    },
+    {
+      "type": "build",
+      "exercise": "ex_05_reverse_list",
+      "title": "Build it: reverse a list",
+      "body": "Write `reverseList` yourself. Draw the boxes and arrows on paper for 3 nodes before typing anything."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Reverse Linked List",
+          "url": "https://leetcode.com/problems/reverse-linked-list/",
+          "level": "Easy"
+        },
+        {
+          "site": "HackerRank",
+          "title": "Reverse a linked list",
+          "url": "https://www.hackerrank.com/challenges/reverse-a-linked-list/problem",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Middle of the Linked List",
+          "url": "https://leetcode.com/problems/middle-of-the-linked-list/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Merge Two Sorted Lists",
+          "url": "https://leetcode.com/problems/merge-two-sorted-lists/",
+          "level": "Easy"
+        }
+      ]
+    }
+  ]
+}

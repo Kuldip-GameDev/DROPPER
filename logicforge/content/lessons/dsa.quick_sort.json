@@ -1,0 +1,76 @@
+{
+  "id": "dsa.quick_sort",
+  "title": "Quick sort",
+  "summary": "Pick a pivot, partition, repeat. Fast on average, with a catch.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Pick a pivot",
+      "body": "Choose one value, the **pivot**. Move everything smaller to its left and everything bigger to its right. Now the pivot is in its **final position** forever.\n\nThen do the same on the left part and the right part. That's quicksort."
+    },
+    {
+      "type": "visual",
+      "algo": "sort.quick",
+      "input": {
+        "array": [
+          7,
+          2,
+          9,
+          4,
+          3,
+          8,
+          5
+        ]
+      },
+      "body": "Gold = the pivot. `store` marks where the next small value will go."
+    },
+    {
+      "type": "code",
+      "snippet": "sort.quick",
+      "highlight": "swap",
+      "title": "The code (Lomuto partition)",
+      "body": "`partition` uses the last element as the pivot. `store` grows the \"smaller than pivot\" zone from the left. At the end, the pivot swaps into `store`, its final spot."
+    },
+    {
+      "type": "text",
+      "title": "The catch",
+      "body": "If the pivot splits the range roughly in half, quicksort is **O(n log n)** and very fast in practice (no extra buffer, cache friendly).\n\nBut with \"last element\" as pivot, an **already sorted** list is the worst input: every partition peels off just one value. That's n levels of n work: **O(n²)**.\n\nReal libraries defend against this: `std::sort` uses **introsort**, which switches to heap sort if the recursion gets too deep."
+    },
+    {
+      "type": "quiz",
+      "question": "Using the last element as pivot, which input makes this quicksort slowest?",
+      "choices": [
+        "Random order",
+        "Already sorted",
+        "All different values",
+        "Exactly two values"
+      ],
+      "answer": 1,
+      "explain": "On sorted input the pivot is always the biggest value, so each partition only removes one element. That gives O(n²)."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "HackerRank",
+          "title": "Quicksort 1 - Partition",
+          "url": "https://www.hackerrank.com/challenges/quicksort1/problem",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Kth Largest Element in an Array",
+          "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Sort an Array",
+          "url": "https://leetcode.com/problems/sort-an-array/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

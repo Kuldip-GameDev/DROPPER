@@ -1,0 +1,76 @@
+{
+  "id": "dsa.floyd_cycle",
+  "title": "Tortoise and hare",
+  "summary": "Detect a loop in a linked list with two pointers and no extra memory.",
+  "minutes": 6,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Runners on a track",
+      "body": "Two runners start together. One runs twice as fast. On a straight road, the fast one reaches the end and they never meet again. On a **circular** track, the fast one eventually **laps** the slow one.\n\nSame with pointers: `slow` moves 1 node per step, `fast` moves 2. If they ever point at the same node, the list loops."
+    },
+    {
+      "type": "visual",
+      "algo": "list.cycle",
+      "input": {
+        "array": [
+          3,
+          2,
+          0,
+          -4,
+          7,
+          9
+        ],
+        "cycleTo": 1
+      },
+      "body": "The curved arrow under the nodes is the loop back."
+    },
+    {
+      "type": "code",
+      "snippet": "list.cycle",
+      "highlight": "fast_step",
+      "title": "The code",
+      "body": "`fast != nullptr && fast->next != nullptr` is checked **before** `fast->next->next`. Reading through a null pointer is undefined behaviour, usually an instant crash."
+    },
+    {
+      "type": "text",
+      "title": "Why it's clever",
+      "body": "The obvious solution remembers every visited node in a set: O(n) extra memory. Floyd's algorithm uses **two pointers**: O(1) memory, still O(n) time.\n\nThe trick works on anything that follows \"next\" links. It's also used to find the cycle length of a **pseudo-random number generator**, which matters when you pick an RNG for a game."
+    },
+    {
+      "type": "quiz",
+      "question": "The list has no loop and 10 nodes. What stops the loop in `hasCycle`?",
+      "choices": [
+        "slow reaches nullptr",
+        "fast or fast->next becomes nullptr",
+        "slow == fast",
+        "A counter reaches 10"
+      ],
+      "answer": 1,
+      "explain": "fast runs ahead, so it reaches the end first. The while-condition then fails and the function returns false."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Linked List Cycle",
+          "url": "https://leetcode.com/problems/linked-list-cycle/",
+          "level": "Easy"
+        },
+        {
+          "site": "HackerRank",
+          "title": "Cycle Detection",
+          "url": "https://www.hackerrank.com/challenges/detect-whether-a-linked-list-contains-a-cycle/problem",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Linked List Cycle II",
+          "url": "https://leetcode.com/problems/linked-list-cycle-ii/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

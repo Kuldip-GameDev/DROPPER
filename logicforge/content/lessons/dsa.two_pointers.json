@@ -1,0 +1,99 @@
+{
+  "id": "dsa.two_pointers",
+  "title": "Two pointers",
+  "summary": "Two indices walking towards each other replace a slow nested loop.",
+  "minutes": 6,
+  "cards": [
+    {
+      "type": "text",
+      "title": "The slow way",
+      "body": "Find two numbers in a list that add up to a target. The obvious way: try every pair. With n numbers that's about n²/2 pairs, which is **O(n²)**."
+    },
+    {
+      "type": "text",
+      "title": "The clever way (sorted data)",
+      "body": "Put one finger on the smallest number (`left`) and one on the biggest (`right`).\n\n- Sum too small? Move `left` up to get a bigger number.\n- Sum too big? Move `right` down to get a smaller one.\n\nEach step rules out one number for good, so it takes at most n steps: **O(n)**."
+    },
+    {
+      "type": "visual",
+      "algo": "pattern.two_pointers",
+      "input": {
+        "array": [
+          1,
+          2,
+          4,
+          7,
+          11,
+          15
+        ],
+        "target": 15
+      }
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.two_pointers",
+      "highlight": "move_left",
+      "title": "The code",
+      "body": "`std::pair<int, int>` returns two values at once. `{-1, -1}` means \"no pair found\"."
+    },
+    {
+      "type": "quiz",
+      "question": "Array `[1, 3, 5, 8]`, target 9. `left` is at 1, `right` at 8. Sum = 9. What next?",
+      "choices": [
+        "Move left",
+        "Move right",
+        "Return the pair",
+        "Move both"
+      ],
+      "answer": 2,
+      "explain": "1 + 8 = 9 is exactly the target, so we're done."
+    },
+    {
+      "type": "quiz",
+      "question": "Why must the array be sorted for this trick?",
+      "choices": [
+        "For speed only",
+        "So that moving left up always makes the sum bigger (or equal)",
+        "So the pointers can't cross",
+        "It doesn't need to be"
+      ],
+      "answer": 1,
+      "explain": "The whole argument (\"too small, so move left up\") relies on values increasing from left to right."
+    },
+    {
+      "type": "build",
+      "exercise": "ex_02_reverse_two_pointers",
+      "title": "Build it: reverse in place",
+      "body": "Reversing an array is the simplest two-pointer algorithm: swap the ends, step inwards. Watch out for the empty vector."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Two Sum II - Input Array Is Sorted",
+          "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Squares of a Sorted Array",
+          "url": "https://leetcode.com/problems/squares-of-a-sorted-array/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Container With Most Water",
+          "url": "https://leetcode.com/problems/container-with-most-water/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "3Sum",
+          "url": "https://leetcode.com/problems/3sum/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

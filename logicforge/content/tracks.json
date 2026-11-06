@@ -1,0 +1,23 @@
+{
+  "tracks": [
+    {
+      "id": "dsa",
+      "title": "Foundations: algorithms",
+      "subtitle": "From \"what is an algorithm?\" to linked lists. Every step is visual.",
+      "lessons": [
+        "dsa.algorithms_and_big_o",
+        "dsa.bubble_sort",
+        "dsa.insertion_sort",
+        "dsa.merge_sort",
+        "dsa.quick_sort",
+        "dsa.binary_search",
+        "dsa.two_pointers",
+        "dsa.sliding_window",
+        "dsa.prefix_sums",
+        "dsa.linked_lists",
+        "dsa.floyd_cycle",
+        "dsa.stacks"
+      ]
+    }
+  ]
+}

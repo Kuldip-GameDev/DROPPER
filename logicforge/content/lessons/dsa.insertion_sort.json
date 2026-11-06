@@ -1,0 +1,74 @@
+{
+  "id": "dsa.insertion_sort",
+  "title": "Insertion sort",
+  "summary": "Sort like you sort playing cards in your hand.",
+  "minutes": 6,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Cards in your hand",
+      "body": "Pick up cards one at a time. Each new card slides left past bigger cards until it fits. The cards you are holding are **always sorted**.\n\nThat last sentence is the algorithm's **invariant**: a fact that stays true every step. Good programmers think in invariants."
+    },
+    {
+      "type": "visual",
+      "algo": "sort.insertion",
+      "input": {
+        "array": [
+          6,
+          3,
+          8,
+          2,
+          5
+        ]
+      },
+      "body": "Watch the `key`: it's the card being inserted. Bigger values shift right to make room."
+    },
+    {
+      "type": "code",
+      "snippet": "sort.insertion",
+      "highlight": "shift",
+      "title": "The code",
+      "body": "`while (j > 0 && a[j - 1] > key)` keeps shifting while the left neighbour is bigger. The order of the two conditions matters: `j > 0` is checked first, so `a[j - 1]` is never read at index -1."
+    },
+    {
+      "type": "text",
+      "title": "When insertion sort wins",
+      "body": "Worst case it's O(n²), like bubble sort. But on **nearly sorted** data each card only moves a little, so it's close to **O(n)**.\n\nThat's why many `std::sort` implementations switch to insertion sort for tiny ranges: less overhead than the clever algorithms."
+    },
+    {
+      "type": "quiz",
+      "question": "Insertion sort is given `[1, 2, 3, 5, 4]`. Roughly how much work does it do?",
+      "choices": [
+        "About n² steps",
+        "About n steps",
+        "About log n steps",
+        "It can't handle it"
+      ],
+      "answer": 1,
+      "explain": "Only the 4 is out of place and it moves one position. Every other card stops immediately. That's close to n steps."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "HackerRank",
+          "title": "Insertion Sort - Part 1",
+          "url": "https://www.hackerrank.com/challenges/insertionsort1/problem",
+          "level": "Easy"
+        },
+        {
+          "site": "HackerRank",
+          "title": "Insertion Sort - Part 2",
+          "url": "https://www.hackerrank.com/challenges/insertionsort2/problem",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Insertion Sort List",
+          "url": "https://leetcode.com/problems/insertion-sort-list/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

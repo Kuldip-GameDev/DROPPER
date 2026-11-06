@@ -1,0 +1,84 @@
+{
+  "id": "dsa.stacks",
+  "title": "Stacks",
+  "summary": "Last in, first out. Undo buttons, menus and bracket matching.",
+  "minutes": 6,
+  "cards": [
+    {
+      "type": "text",
+      "title": "A stack of plates",
+      "body": "You put plates on top and take them from the top. The last plate in is the first out: **LIFO**.\n\nGames use stacks everywhere: the **undo** history, a stack of menu screens (pause → settings → audio; Back pops one), and the **call stack** that remembers which function called which."
+    },
+    {
+      "type": "text",
+      "title": "Matching brackets",
+      "body": "Is `{[()()]}` balanced? Read left to right. Every **opener** goes on the stack. Every **closer** must match the opener on **top**. At the end, the stack must be empty."
+    },
+    {
+      "type": "visual",
+      "algo": "stack.balanced",
+      "input": {
+        "text": "{[()()]}"
+      },
+      "body": "Try changing the input in the Algorithm Lab to `([)]` and see where it fails."
+    },
+    {
+      "type": "code",
+      "snippet": "stack.balanced",
+      "highlight": "pop",
+      "title": "The code",
+      "body": "A `std::vector<char>` is a perfect stack: `push_back` adds on top, `back()` reads the top, `pop_back()` removes it. All O(1)."
+    },
+    {
+      "type": "quiz",
+      "question": "Is `([)]` balanced?",
+      "choices": [
+        "Yes",
+        "No: `)` arrives while `[` is on top"
+      ],
+      "answer": 1,
+      "explain": "When `)` arrives, the top of the stack is `[`. They don't match, so it's not balanced, even though the counts are equal."
+    },
+    {
+      "type": "quiz",
+      "question": "Pause menu → Settings → Audio. The player presses Back twice. Where are they?",
+      "choices": [
+        "Audio",
+        "Settings",
+        "Pause menu",
+        "The game"
+      ],
+      "answer": 2,
+      "explain": "Each Back pops one screen: Audio is popped, then Settings, leaving the Pause menu on top."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Valid Parentheses",
+          "url": "https://leetcode.com/problems/valid-parentheses/",
+          "level": "Easy"
+        },
+        {
+          "site": "HackerRank",
+          "title": "Balanced Brackets",
+          "url": "https://www.hackerrank.com/challenges/balanced-brackets/problem",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Min Stack",
+          "url": "https://leetcode.com/problems/min-stack/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Daily Temperatures",
+          "url": "https://leetcode.com/problems/daily-temperatures/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

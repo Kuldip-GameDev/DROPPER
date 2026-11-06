@@ -1,0 +1,87 @@
+{
+  "id": "dsa.bubble_sort",
+  "title": "Bubble sort",
+  "summary": "Your first sorting algorithm: swap neighbours until nothing moves.",
+  "minutes": 7,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Why sort at all?",
+      "body": "Games sort constantly: leaderboards by score, sprites by depth so far things draw first, loot by rarity.\n\nSorted data is also **searchable** fast (binary search needs it). Sorting is the gateway skill."
+    },
+    {
+      "type": "text",
+      "title": "The idea",
+      "body": "Walk along the list and compare each pair of **neighbours**. If the left one is bigger, swap them.\n\nAfter one full walk (a **pass**), the biggest value has \"bubbled\" all the way to the end. Repeat for the rest."
+    },
+    {
+      "type": "visual",
+      "algo": "sort.bubble",
+      "input": {
+        "array": [
+          5,
+          1,
+          4,
+          2,
+          8,
+          3
+        ]
+      },
+      "body": "Yellow = being compared. Purple = just swapped. Green = in its final place."
+    },
+    {
+      "type": "code",
+      "snippet": "sort.bubble",
+      "highlight": "compare",
+      "title": "The code",
+      "body": "Two loops: the outer one counts passes, the inner one walks the unsorted part. `rec` only records pictures for the app, so ignore it.\n\nThe `swapped` flag is a free speed-up: if a pass swaps nothing, the list is already sorted, so we stop."
+    },
+    {
+      "type": "text",
+      "title": "How fast is it?",
+      "body": "With n values, the first pass makes n-1 comparisons, the next n-2, and so on. In total that's about **n²/2** comparisons.\n\nSo bubble sort is **O(n²)**. Double the input and you get roughly 4x the work. For 1,000,000 items that is far too slow. Bubble sort is for learning, not for shipping."
+    },
+    {
+      "type": "quiz",
+      "question": "After the **first** pass of bubble sort on `[4, 2, 7, 1]`, which value is guaranteed to be in its final position?",
+      "choices": [
+        "4 at the start",
+        "1 at the start",
+        "7 at the end",
+        "Nothing is guaranteed yet"
+      ],
+      "answer": 2,
+      "explain": "Each pass carries the largest unsorted value to the end. 7 is the largest, so it ends at the last position."
+    },
+    {
+      "type": "quiz",
+      "question": "What does the `swapped` flag buy us on an already sorted list of n items?",
+      "choices": [
+        "Nothing",
+        "One pass, then stop: O(n)",
+        "It makes it O(log n)",
+        "It sorts in reverse"
+      ],
+      "answer": 1,
+      "explain": "The first pass makes no swaps, so the loop breaks. One pass of n-1 comparisons is O(n), the best case."
+    },
+    {
+      "type": "practice",
+      "body": "Practise the idea on real judges:",
+      "links": [
+        {
+          "site": "HackerRank",
+          "title": "Sorting: Bubble Sort",
+          "url": "https://www.hackerrank.com/challenges/ctci-bubble-sort/problem",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Sort Colors",
+          "url": "https://leetcode.com/problems/sort-colors/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

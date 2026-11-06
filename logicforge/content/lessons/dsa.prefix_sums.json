@@ -1,0 +1,81 @@
+{
+  "id": "dsa.prefix_sums",
+  "title": "Prefix sums",
+  "summary": "Pay once, then answer any range-sum question instantly.",
+  "minutes": 6,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Many questions, same data",
+      "body": "\"What's the total of values 2 to 5?\" Answering by looping costs O(n) **per question**. A thousand questions? A thousand loops."
+    },
+    {
+      "type": "text",
+      "title": "Running totals",
+      "body": "Build `prefix` where `prefix[i]` = sum of the **first i** values. So `prefix[0] = 0`.\n\nThen the sum of `a[l..r]` = `prefix[r + 1] - prefix[l]`: everything up to r, minus everything before l. **One subtraction**, no loop."
+    },
+    {
+      "type": "visual",
+      "algo": "pattern.prefix_sums",
+      "input": {
+        "array": [
+          3,
+          1,
+          4,
+          1,
+          5,
+          9
+        ],
+        "l": 1,
+        "r": 4
+      }
+    },
+    {
+      "type": "code",
+      "snippet": "pattern.prefix_sums",
+      "highlight": "query",
+      "title": "The code",
+      "body": "The prefix array has **n + 1** entries. The extra `prefix[0] = 0` removes a special case for ranges starting at 0."
+    },
+    {
+      "type": "text",
+      "title": "The slot connection",
+      "body": "Reel weights `[40, 30, 20, 10]` become running totals `[40, 70, 90, 100]`. Pick a random number from 0 to 99, then find the first running total bigger than it (binary search!). That's how weighted symbols are picked. Prefix sums and binary search together."
+    },
+    {
+      "type": "quiz",
+      "question": "`prefix = [0, 3, 4, 8, 9, 14]`. What is the sum of `a[1..3]`?",
+      "choices": [
+        "6",
+        "8",
+        "9",
+        "14"
+      ],
+      "answer": 0,
+      "explain": "prefix[3 + 1] - prefix[1] = 9 - 3 = 6. (The values were 1, 4, 1.)"
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Range Sum Query - Immutable",
+          "url": "https://leetcode.com/problems/range-sum-query-immutable/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Find Pivot Index",
+          "url": "https://leetcode.com/problems/find-pivot-index/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Subarray Sum Equals K",
+          "url": "https://leetcode.com/problems/subarray-sum-equals-k/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}
