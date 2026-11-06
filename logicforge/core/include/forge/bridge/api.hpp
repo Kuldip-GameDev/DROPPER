@@ -5,6 +5,7 @@
 // through Api::call / Api::callJson. One door means one place to test,
 // log and secure. See docs/adr/0002-json-jni-bridge.md.
 #include <functional>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -35,6 +36,9 @@ public:
 private:
     std::unordered_map<std::string, Handler> handlers_;
 };
+
+// Registers learn.* methods (progress, reviews, Topic Reel, skill plan).
+void registerLearnApi(Api& api);
 
 const char* version();
 

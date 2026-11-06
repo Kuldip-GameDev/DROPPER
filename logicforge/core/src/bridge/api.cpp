@@ -33,6 +33,8 @@ Api::Api() {
         out["result"] = std::move(result);
         return out;
     });
+
+    registerLearnApi(*this);
 }
 
 void Api::on(std::string method, Handler handler) {

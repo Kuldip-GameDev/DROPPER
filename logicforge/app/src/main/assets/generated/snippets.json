@@ -1,4 +1,15 @@
 {
+ "graph.topo_sort": {
+  "code": "// Kahn's algorithm: repeatedly take something that has no unmet\n// prerequisites (in-degree 0), output it, and \"cross it off\" for others.\nstd::vector<std::string> topoSort(const std::vector<std::string>& nodes,\n                                  const std::vector<std::pair<std::string, std::string>>& edges,\n                                  Recorder& rec) {\n    std::map<std::string, int> indegree;            // how many things must come first\n    std::map<std::string, std::vector<std::string>> after;\n    for (const auto& n : nodes) indegree[n] = 0;\n    for (const auto& [a, b] : edges) {\n        after[a].push_back(b);\n        ++indegree[b];\n    }\n    std::deque<std::string> ready;  // in-degree 0: can go right now\n    for (const auto& n : nodes)\n        if (indegree[n] == 0) ready.push_back(n);\n    std::vector<std::string> order;\n    while (!ready.empty()) {\n        const std::string n = ready.front();\n        ready.pop_front();\n        order.push_back(n);\n        for (const auto& next : after[n]) {\n            if (--indegree[next] == 0) ready.push_back(next);  // last blocker gone\n        }\n    }\n    if (order.size() != nodes.size()) return {};  // leftovers wait on each other: a cycle\n    return order;\n}",
+  "lines": {
+   "count": 11,
+   "take": 20,
+   "unlock": 22,
+   "cycle": 25
+  },
+  "file": "core/src/algo/graphs.cpp",
+  "sourceLine": 93
+ },
  "lambda.callbacks": {
   "code": "void callbacksDemo() {\n    int totalWon = 0;\n    std::vector<std::function<void(int)>> onWin;  // \"call these when a spin wins\"\n    onWin.push_back([&totalWon](int amount) { totalWon += amount; });\n    onWin.push_back([&out](int amount) {\n        if (amount >= 100) out << \"BIG WIN: \" << amount << '\\n';\n    });\n    for (int amount : {20, 150}) {\n        for (auto& listener : onWin) listener(amount);  // notify everyone\n    }\n    out << \"total \" << totalWon << '\\n';\n}",
   "lines": {
@@ -54,6 +65,12 @@
   },
   "file": "core/src/memlab/lambdas.cpp",
   "sourceLine": 112
+ },
+ "learn.due_reviews": {
+  "code": "// The review queue is a priority queue (a heap): the most overdue card\n// first; among equally overdue cards, the lowest box (weakest) first.\nstd::vector<std::string> Progress::dueReviews(long today, std::size_t limit) const {\n    std::lock_guard lock(mutex_);\n    using Item = std::tuple<long, int, std::string>;  // due day, box, card id\n    auto later = [](const Item& a, const Item& b) { return a > b; };  // makes a MIN-heap\n    std::priority_queue<Item, std::vector<Item>, decltype(later)> heap(later);\n    for (const auto& [id, card] : data_.cards) {\n        if (card.due <= today) heap.emplace(card.due, card.box, id);\n    }\n    std::vector<std::string> out;\n    while (!heap.empty() && out.size() < limit) {\n        out.push_back(std::get<2>(heap.top()));\n        heap.pop();\n    }\n    return out;\n}",
+  "lines": {},
+  "file": "core/src/learn/progress.cpp",
+  "sourceLine": 274
  },
  "list.cycle": {
   "code": "// Floyd's \"tortoise and hare\": if there is a loop, the fast pointer\n// eventually laps the slow one, like runners on a circular track.\nbool hasCycle(ListNode* head, Recorder& rec) {\n    ListNode* slow = head;\n    ListNode* fast = head;\n    while (fast != nullptr && fast->next != nullptr) {\n        slow = slow->next;        // 1 step\n        fast = fast->next->next;  // 2 steps\n        if (slow == fast) return true;  // they met: there is a loop\n    }\n    return false;  // fast reached the end: no loop\n}",
