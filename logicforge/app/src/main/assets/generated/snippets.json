@@ -1,4 +1,50 @@
 {
+ "backtrack.nqueens": {
+  "code": "// Backtracking: try a choice, go deeper, and UNDO it if it leads nowhere.\nstatic bool safe(const std::vector<int>& colOf, int row, int col) {\n    for (int r = 0; r < row; ++r) {\n        // same column, or same diagonal (row distance == column distance)\n        if (colOf[r] == col || std::abs(colOf[r] - col) == row - r) return false;\n    }\n    return true;\n}\n\nstatic bool place(int row, int n, std::vector<int>& colOf) {\n    if (row == n) return true;  // every row has a queen: solved\n    for (int col = 0; col < n; ++col) {\n        if (!safe(colOf, row, col)) continue;\n        colOf[row] = col;  // try it\n        if (place(row + 1, n, colOf)) return true;\n        colOf[row] = -1;  // dead end: undo and try the next column\n    }\n    return false;\n}\n\nbool solveQueens(int n, std::vector<int>& colOf) {\n    colOf.assign(n, -1);\n    return place(0, n, colOf);\n}",
+  "lines": {
+   "try": 14,
+   "undo": 16
+  },
+  "file": "core/src/algo/dp_backtracking.cpp",
+  "sourceLine": 50
+ },
+ "dp.coin_change": {
+  "code": "// dp[x] = the fewest coins that make amount x. Build it up from 0:\n// small answers are reused to build bigger ones (that's dynamic programming).\nint coinChange(const std::vector<int>& coins, int amount) {\n    const int INF = amount + 1;  // more coins than any real answer could need\n    std::vector<int> dp(amount + 1, INF);\n    dp[0] = 0;  // zero coins make zero\n    for (int x = 1; x <= amount; ++x) {\n        for (int c : coins) {\n            if (c <= x) dp[x] = std::min(dp[x], dp[x - c] + 1);  // use coin c last\n        }\n    }\n    return dp[amount] >= INF ? -1 : dp[amount];\n}",
+  "lines": {
+   "relax": 9,
+   "answer": 12
+  },
+  "file": "core/src/algo/dp_backtracking.cpp",
+  "sourceLine": 19
+ },
+ "dp.lcs": {
+  "code": "// Longest common subsequence: dp[i][j] = answer for the first i letters\n// of a and the first j letters of b.\nint lcsLength(const std::string& a, const std::string& b) {\n    std::vector<std::vector<int>> dp(a.size() + 1, std::vector<int>(b.size() + 1, 0));\n    for (std::size_t i = 1; i <= a.size(); ++i) {\n        for (std::size_t j = 1; j <= b.size(); ++j) {\n            if (a[i - 1] == b[j - 1]) dp[i][j] = dp[i - 1][j - 1] + 1;  // letters match: extend\n            else dp[i][j] = std::max(dp[i - 1][j], dp[i][j - 1]);  // drop one letter\n        }\n    }\n    return dp[a.size()][b.size()];\n}",
+  "lines": {
+   "match": 7,
+   "skip": 8
+  },
+  "file": "core/src/algo/dp_backtracking.cpp",
+  "sourceLine": 35
+ },
+ "graph.bfs_grid": {
+  "code": "// Shortest path on a grid where every step costs 1 = breadth-first search.\n// BFS explores in rings: everything 1 step away, then 2 steps, then 3...\nstd::vector<Cell> bfsPath(const std::vector<std::string>& grid, Cell start, Cell goal) {\n    const int rows = static_cast<int>(grid.size()), cols = static_cast<int>(grid[0].size());\n    std::vector<std::vector<int>> dist(rows, std::vector<int>(cols, -1));\n    std::vector<std::vector<Cell>> parent(rows, std::vector<Cell>(cols, {-1, -1}));\n    std::queue<Cell> todo;\n    dist[start.first][start.second] = 0;\n    todo.push(start);\n    const int dr[4] = {-1, 1, 0, 0}, dc[4] = {0, 0, -1, 1};\n    while (!todo.empty()) {\n        const auto [r, c] = todo.front();\n        todo.pop();\n        if (Cell{r, c} == goal) break;  // the first time we reach it is the shortest way\n        for (int d = 0; d < 4; ++d) {\n            const int nr = r + dr[d], nc = c + dc[d];\n            if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;\n            if (grid[nr][nc] == '#' || dist[nr][nc] != -1) continue;  // wall, or already seen\n            dist[nr][nc] = dist[r][c] + 1;\n            parent[nr][nc] = {r, c};  // remember how we got here\n            todo.push({nr, nc});\n        }\n    }\n    std::vector<Cell> path;  // walk the parents back from the goal\n    if (dist[goal.first][goal.second] == -1) return path;\n    for (Cell at = goal; at != Cell{-1, -1}; at = parent[at.first][at.second]) path.push_back(at);\n    std::reverse(path.begin(), path.end());\n    return path;\n}",
+  "lines": {
+   "visit": 12,
+   "enqueue": 20,
+   "path": 26
+  },
+  "file": "core/src/algo/hash_graphs.cpp",
+  "sourceLine": 54
+ },
+ "graph.dijkstra": {
+  "code": "// Shortest paths when edges have different costs. Always settle the\n// closest unsettled node next, using a min-priority-queue.\nstd::vector<long long> dijkstra(const std::vector<std::vector<std::pair<int, int>>>& adj,\n                                int source) {\n    const long long INF = LLONG_MAX;\n    std::vector<long long> dist(adj.size(), INF);\n    using Item = std::pair<long long, int>;  // (distance so far, node)\n    std::priority_queue<Item, std::vector<Item>, std::greater<>> pq;  // smallest distance on top\n    dist[source] = 0;\n    pq.push({0, source});\n    while (!pq.empty()) {\n        const auto [d, u] = pq.top();\n        pq.pop();\n        if (d > dist[u]) continue;  // an old, longer entry: skip it\n        for (const auto& [v, w] : adj[u]) {\n            if (dist[u] + w < dist[v]) {  // found a shorter way to v\n                dist[v] = dist[u] + w;\n                pq.push({dist[v], v});\n            }\n        }\n    }\n    return dist;\n}",
+  "lines": {
+   "stale": 14,
+   "relax": 16
+  },
+  "file": "core/src/algo/hash_graphs.cpp",
+  "sourceLine": 86
+ },
  "graph.topo_sort": {
   "code": "// Kahn's algorithm: repeatedly take something that has no unmet\n// prerequisites (in-degree 0), output it, and \"cross it off\" for others.\nstd::vector<std::string> topoSort(const std::vector<std::string>& nodes,\n                                  const std::vector<std::pair<std::string, std::string>>& edges,\n                                  Recorder& rec) {\n    std::map<std::string, int> indegree;            // how many things must come first\n    std::map<std::string, std::vector<std::string>> after;\n    for (const auto& n : nodes) indegree[n] = 0;\n    for (const auto& [a, b] : edges) {\n        after[a].push_back(b);\n        ++indegree[b];\n    }\n    std::deque<std::string> ready;  // in-degree 0: can go right now\n    for (const auto& n : nodes)\n        if (indegree[n] == 0) ready.push_back(n);\n    std::vector<std::string> order;\n    while (!ready.empty()) {\n        const std::string n = ready.front();\n        ready.pop_front();\n        order.push_back(n);\n        for (const auto& next : after[n]) {\n            if (--indegree[next] == 0) ready.push_back(next);  // last blocker gone\n        }\n    }\n    if (order.size() != nodes.size()) return {};  // leftovers wait on each other: a cycle\n    return order;\n}",
   "lines": {
@@ -45,6 +91,27 @@
   "lines": {},
   "file": "core/include/forge/hardcpp.hpp",
   "sourceLine": 34
+ },
+ "hash.chaining": {
+  "code": "// A hash set with \"separate chaining\": key -> bucket index -> a short list.\nstd::size_t HashSet::index(int key) const {\n    const auto m = static_cast<long long>(buckets_.size());\n    return static_cast<std::size_t>(((key % m) + m) % m);  // modulo that is never negative\n}\n\nbool HashSet::contains(int key) const {\n    for (int k : buckets_[index(key)])  // only ONE short list is searched\n        if (k == key) return true;\n    return false;\n}\n\nbool HashSet::insert(int key) {\n    if (contains(key)) return false;\n    // Keep the load factor (keys / buckets) at most 0.75, so chains stay short.\n    if ((size_ + 1) * 4 > buckets_.size() * 3) rehash(buckets_.size() * 2 + 1);\n    buckets_[index(key)].push_back(key);\n    ++size_;\n    return true;\n}\n\nvoid HashSet::rehash(std::size_t bucketCount) {\n    std::vector<std::vector<int>> old = std::move(buckets_);\n    buckets_.assign(bucketCount, {});\n    for (const auto& chain : old)\n        for (int k : chain) buckets_[index(k)].push_back(k);  // every key moves to its NEW bucket\n}",
+  "lines": {
+   "hash": 4,
+   "find": 8,
+   "grow": 16,
+   "insert": 17,
+   "rehash": 26
+  },
+  "file": "core/src/algo/hash_graphs.cpp",
+  "sourceLine": 24
+ },
+ "heap.binary_heap": {
+  "code": "// A min-heap stored in a plain array: the children of i are 2i+1 and 2i+2,\n// the parent of i is (i-1)/2. Rule: every parent <= its children.\nvoid heapPush(std::vector<int>& heap, int value) {\n    heap.push_back(value);  // add at the end...\n    std::size_t i = heap.size() - 1;\n    while (i > 0 && heap[(i - 1) / 2] > heap[i]) {  // ...then bubble up\n        std::swap(heap[(i - 1) / 2], heap[i]);\n        i = (i - 1) / 2;\n    }\n}\n\nint heapPop(std::vector<int>& heap) {\n    const int top = heap.front();\n    heap.front() = heap.back();  // move the last leaf to the root...\n    heap.pop_back();\n    std::size_t i = 0;\n    while (true) {  // ...then sink it down\n        const std::size_t l = 2 * i + 1, r = 2 * i + 2;\n        std::size_t smallest = i;\n        if (l < heap.size() && heap[l] < heap[smallest]) smallest = l;\n        if (r < heap.size() && heap[r] < heap[smallest]) smallest = r;\n        if (smallest == i) break;\n        std::swap(heap[i], heap[smallest]);\n        i = smallest;\n    }\n    return top;\n}",
+  "lines": {
+   "sift_up": 6,
+   "sift_down": 22
+  },
+  "file": "core/src/algo/trees_heaps.cpp",
+  "sourceLine": 99
  },
  "lambda.callbacks": {
   "code": "void callbacksDemo() {\n    int totalWon = 0;\n    std::vector<std::function<void(int)>> onWin;  // \"call these when a spin wins\"\n    onWin.push_back([&totalWon](int amount) { totalWon += amount; });\n    onWin.push_back([&out](int amount) {\n        if (amount >= 100) out << \"BIG WIN: \" << amount << '\\n';\n    });\n    for (int amount : {20, 150}) {\n        for (auto& listener : onWin) listener(amount);  // notify everyone\n    }\n    out << \"total \" << totalWon << '\\n';\n}",
@@ -584,5 +651,26 @@
   },
   "file": "core/src/algo/stack.cpp",
   "sourceLine": 28
+ },
+ "tree.bst": {
+  "code": "// Each node OWNS its children (unique_ptr), so deleting the root frees the whole tree.\n// insert takes a reference to the owning pointer, so it can fill an empty spot in place.\nvoid bstInsert(std::unique_ptr<TreeNode>& node, int value, const TreeNode* root, Recorder& rec) {\n    if (!node) {\n        node = std::make_unique<TreeNode>(TreeNode{value, nullptr, nullptr});  // empty spot\n        return;\n    }\n    if (value < node->value) bstInsert(node->left, value, root, rec);  // smaller: left subtree\n    else bstInsert(node->right, value, root, rec);  // bigger or equal: right subtree\n}\n\nconst TreeNode* bstFind(const TreeNode* node, int target) {\n    while (node != nullptr && node->value != target) {\n        node = target < node->value ? node->left.get() : node->right.get();\n    }\n    return node;  // nullptr if the value isn't in the tree\n}",
+  "lines": {
+   "place": 5,
+   "compare": 8,
+   "descend": 14,
+   "found": 16
+  },
+  "file": "core/src/algo/trees_heaps.cpp",
+  "sourceLine": 45
+ },
+ "tree.traversals": {
+  "code": "// Depth-first, recursively. The only difference is WHEN we visit the node.\nvoid inorder(const TreeNode* n, std::vector<int>& out) {\n    if (!n) return;\n    inorder(n->left.get(), out);\n    out.push_back(n->value);  // between the children: sorted order for a BST\n    inorder(n->right.get(), out);\n}\n\nvoid preorder(const TreeNode* n, std::vector<int>& out) {\n    if (!n) return;\n    out.push_back(n->value);  // before the children: copy/serialise a tree\n    preorder(n->left.get(), out);\n    preorder(n->right.get(), out);\n}\n\n// Breadth-first: a queue visits the tree level by level.\nstd::vector<int> levelOrder(const TreeNode* root) {\n    std::vector<int> out;\n    std::queue<const TreeNode*> todo;\n    if (root) todo.push(root);\n    while (!todo.empty()) {\n        const TreeNode* n = todo.front();\n        todo.pop();\n        out.push_back(n->value);\n        if (n->left) todo.push(n->left.get());\n        if (n->right) todo.push(n->right.get());\n    }\n    return out;\n}",
+  "lines": {
+   "visit_in": 5,
+   "visit_pre": 11,
+   "visit_level": 24
+  },
+  "file": "core/src/algo/trees_heaps.cpp",
+  "sourceLine": 67
  }
 }

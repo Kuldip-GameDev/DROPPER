@@ -71,6 +71,9 @@ void registerArrayPatterns(Registry& r);
 void registerLinkedList(Registry& r);
 void registerStack(Registry& r);
 void registerGraphs(Registry& r);
+void registerTreesHeaps(Registry& r);
+void registerHashGraphs(Registry& r);
+void registerDpBacktracking(Registry& r);
 
 }  // namespace forge::algo
 

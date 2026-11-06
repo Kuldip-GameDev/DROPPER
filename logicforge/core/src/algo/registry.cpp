@@ -28,6 +28,9 @@ const Registry& Registry::builtin() {
         registerLinkedList(r);
         registerStack(r);
         registerGraphs(r);
+        registerTreesHeaps(r);
+        registerHashGraphs(r);
+        registerDpBacktracking(r);
         memlab::registerPointerLab(r);
         memlab::registerLambdaLab(r);
         slot::registerSlotLab(r);
