@@ -142,3 +142,23 @@ data class MemorySceneData(
     val output: List<String> = emptyList(),
     val vars: List<Var> = emptyList(),
 )
+
+@Serializable
+data class PlotBar(val label: String, val value: Double, val mark: String = "none")
+
+@Serializable
+data class PlotLine(val name: String = "", val points: List<List<Double>> = emptyList(), val mark: String = "active")
+
+@Serializable
+data class PlotRef(val y: Double, val label: String = "")
+
+@Serializable
+data class PlotSceneData(
+    val title: String = "",
+    val xLabel: String = "",
+    val yLabel: String = "",
+    val bars: List<PlotBar> = emptyList(),
+    val lines: List<PlotLine> = emptyList(),
+    val references: List<PlotRef> = emptyList(),
+    val vars: List<Var> = emptyList(),
+)

@@ -22,6 +22,7 @@ import dev.kuldip.logicforge.core.ForgeJson
 import dev.kuldip.logicforge.core.GraphSceneData
 import dev.kuldip.logicforge.core.GridSceneData
 import dev.kuldip.logicforge.core.MemorySceneData
+import dev.kuldip.logicforge.core.PlotSceneData
 import dev.kuldip.logicforge.core.Var
 import dev.kuldip.logicforge.ui.theme.ForgeColors
 import dev.kuldip.logicforge.ui.theme.Mono
@@ -54,6 +55,11 @@ fun SceneView(scene: JsonObject, modifier: Modifier = Modifier) {
             "memory" -> {
                 val data = remember(scene) { ForgeJson.decodeFromJsonElement<MemorySceneData>(scene) }
                 MemoryView(data)
+                VarChips(data.vars)
+            }
+            "plot" -> {
+                val data = remember(scene) { ForgeJson.decodeFromJsonElement<PlotSceneData>(scene) }
+                PlotView(data)
                 VarChips(data.vars)
             }
             else -> Text("This visual needs a newer version of the app ($kind).", color = ForgeColors.TextDim)
