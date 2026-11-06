@@ -1,0 +1,72 @@
+{
+  "id": "ptr.smart_pointers",
+  "title": "Smart pointers",
+  "summary": "unique_ptr, shared_ptr and weak_ptr: ownership the compiler enforces.",
+  "minutes": 10,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Owners clean up",
+      "body": "A **smart pointer** is an object that owns heap memory and deletes it automatically in its destructor. This trick (tie a resource to an object's lifetime) is called **RAII**, and it's the heart of modern C++."
+    },
+    {
+      "type": "visual",
+      "algo": "mem.unique_ptr",
+      "title": "unique_ptr: exactly one owner"
+    },
+    {
+      "type": "code",
+      "snippet": "mem.unique_ptr",
+      "highlight": "move",
+      "title": "The code",
+      "body": "`std::move` doesn't move anything by itself. It says \"you may steal from this\". The unique_ptr move constructor then takes the address and leaves gold empty. A unique_ptr is usually the same size as a raw pointer: safety for free."
+    },
+    {
+      "type": "visual",
+      "algo": "mem.shared_ptr",
+      "title": "shared_ptr: counted owners",
+      "body": "Every copy adds an owner, every destroyed copy removes one. At zero, the object is deleted."
+    },
+    {
+      "type": "visual",
+      "algo": "mem.weak_ptr",
+      "title": "weak_ptr: look, don't own",
+      "body": "Two objects that own each other with shared_ptr would never reach a count of 0. A weak_ptr link breaks the cycle."
+    },
+    {
+      "type": "text",
+      "title": "Which one?",
+      "body": "- Default to **unique_ptr**. Most things have one clear owner (a level owns its entities).\n- **shared_ptr** only when ownership is truly shared. It costs a control block and atomic counting on every copy.\n- **weak_ptr** for back-links and observers: \"I want to reach it if it still exists.\"\n- Raw pointers and references are still fine for **non-owning** access."
+    },
+    {
+      "type": "quiz",
+      "question": "Does this compile?",
+      "code": "auto a = std::make_unique<int>(1);\nauto b = a;",
+      "choices": [
+        "Yes",
+        "No: a unique_ptr can't be copied"
+      ],
+      "answer": 1,
+      "explain": "Copying would create two owners. You must write `auto b = std::move(a);`, after which a is empty."
+    },
+    {
+      "type": "quiz",
+      "question": "What does this print?",
+      "code": "auto a = std::make_shared<int>(1);\nauto b = a;\n{ auto c = b; }\nstd::cout << a.use_count();",
+      "choices": [
+        "1",
+        "2",
+        "3",
+        "0"
+      ],
+      "answer": 1,
+      "explain": "a and b are owners. c was a third owner but died at the end of its block, leaving 2."
+    },
+    {
+      "type": "build",
+      "exercise": "ex_06_smart_pointers",
+      "title": "Build it: an inventory that owns its items",
+      "body": "Create items with `make_unique`, move them into a bag, and add up their power. No `new`, no `delete`."
+    }
+  ]
+}

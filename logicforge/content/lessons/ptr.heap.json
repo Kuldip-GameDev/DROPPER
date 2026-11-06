@@ -1,0 +1,60 @@
+{
+  "id": "ptr.heap",
+  "title": "The heap: new, delete, leaks",
+  "summary": "Memory that outlives a function, and the two classic bugs.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Stack vs heap",
+      "body": "**Stack**: automatic. Variables appear when declared and vanish when their function returns. Very fast, but small (typically a few megabytes) and short-lived.\n\n**Heap**: you ask for memory with `new` and it stays until **you** give it back with `delete`. Use it for things that must outlive a function, or are too big for the stack, like a level's map loaded at runtime."
+    },
+    {
+      "type": "visual",
+      "algo": "mem.heap",
+      "body": "Pay attention to step 3: the memory is gone, but the pointer doesn't know."
+    },
+    {
+      "type": "code",
+      "snippet": "mem.heap",
+      "highlight": "delete",
+      "title": "The code"
+    },
+    {
+      "type": "visual",
+      "algo": "mem.leak",
+      "title": "The other classic bug: leaks",
+      "body": "Here the program loses its only pointer to a heap box. (The Lab frees it quietly afterwards so your phone doesn't actually leak.)"
+    },
+    {
+      "type": "text",
+      "title": "Why this is hard by hand",
+      "body": "Every `new` needs **exactly one** `delete`, on every path, including early returns and exceptions. Miss one: **leak**. Do one too many: **double free**. Use after delete: **dangling pointer**.\n\nDoing this reliably by hand in a big game is close to impossible. Modern C++ hands the job to **smart pointers**, which is the next lesson."
+    },
+    {
+      "type": "quiz",
+      "question": "Which line creates a memory leak?",
+      "code": "int* a = new int(1);   // line 1\nint* b = a;            // line 2\na = new int(2);        // line 3\ndelete a;              // line 4\ndelete b;              // line 5",
+      "choices": [
+        "Line 3",
+        "Line 5",
+        "None: both boxes are freed",
+        "Line 2"
+      ],
+      "answer": 2,
+      "explain": "b kept the address of the first box, so line 5 frees it, and line 4 frees the second box. Nothing leaks. If line 2 were missing, line 3 would leak the first box."
+    },
+    {
+      "type": "quiz",
+      "question": "After `delete p;`, what does p contain?",
+      "choices": [
+        "nullptr",
+        "The same address as before",
+        "0",
+        "A new address"
+      ],
+      "answer": 1,
+      "explain": "delete frees the memory but doesn't touch p. It still holds the old address. That's why setting `p = nullptr;` afterwards is a common habit."
+    }
+  ]
+}

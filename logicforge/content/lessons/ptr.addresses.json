@@ -1,0 +1,55 @@
+{
+  "id": "ptr.addresses",
+  "title": "Addresses and pointers",
+  "summary": "Every variable lives at an address. A pointer stores one.",
+  "minutes": 7,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Lockers",
+      "body": "Memory is a long row of numbered lockers. Each variable gets a locker. The locker number is its **address**.\n\nA **pointer** is a variable that stores a locker number, not a score or a name. It tells you where something else lives."
+    },
+    {
+      "type": "visual",
+      "algo": "mem.address_of",
+      "body": "This is real C++ running on your phone. Values and arrows come from the actual program. Only the addresses are shortened, so `0x7ffd5e3a9c4c` becomes `0x7fec`."
+    },
+    {
+      "type": "code",
+      "snippet": "mem.address_of",
+      "highlight": "take_address",
+      "title": "The code",
+      "body": "In the Lab, `out` is the scenario's console. It works exactly like `std::cout`."
+    },
+    {
+      "type": "text",
+      "title": "Two symbols, two jobs",
+      "body": "- `&score` (in an expression): **the address of** score.\n- `int* p` (in a declaration): p is a **pointer to int**.\n- `*p` (in an expression): **follow the pointer**. Read or write the int it points at.\n\nThe `*` in `int* p` and the `*` in `*p = 100` are different jobs that happen to share a symbol. Many beginners get stuck exactly here, so read them separately."
+    },
+    {
+      "type": "quiz",
+      "question": "What does this print?",
+      "code": "int a = 5;\nint* p = &a;\n*p = *p + 1;\nstd::cout << a;",
+      "choices": [
+        "5",
+        "6",
+        "An address",
+        "It doesn't compile"
+      ],
+      "answer": 1,
+      "explain": "p points at a. `*p + 1` reads a (5) and adds 1; `*p = ...` writes 6 back into a."
+    },
+    {
+      "type": "quiz",
+      "question": "`int* p = &a;` What is stored inside p?",
+      "choices": [
+        "The value of a",
+        "The address of a",
+        "A copy of a",
+        "The type int"
+      ],
+      "answer": 1,
+      "explain": "A pointer's own value is an address. To get a's value you dereference: `*p`."
+    }
+  ]
+}

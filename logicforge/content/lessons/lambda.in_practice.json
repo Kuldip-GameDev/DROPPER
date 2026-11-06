@@ -1,0 +1,79 @@
+{
+  "id": "lambda.in_practice",
+  "title": "Lambdas in real code",
+  "summary": "Comparators, callbacks, and the dangling-capture trap.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "visual",
+      "algo": "lambda.sort",
+      "title": "Telling std::sort what \"less\" means",
+      "body": "The comparator returns true when a must come **before** b. Capturing `comparisons` by reference lets the lambda count how often std::sort calls it."
+    },
+    {
+      "type": "code",
+      "snippet": "lambda.sort",
+      "highlight": "compare"
+    },
+    {
+      "type": "visual",
+      "algo": "lambda.callbacks",
+      "title": "Callbacks: the Observer pattern",
+      "body": "`std::function<void(int)>` can store any lambda with that signature. The spin code calls them without knowing what they do. That's how UI, sound and achievements react to game events without tangling the code."
+    },
+    {
+      "type": "visual",
+      "algo": "lambda.dangling",
+      "title": "The trap: capturing a dead variable",
+      "body": "A lambda that outlives the variables it captured by reference holds a dangling reference, exactly like a dangling pointer."
+    },
+    {
+      "type": "code",
+      "snippet": "lambda.dangling",
+      "highlight": "bad_capture",
+      "body": "Rule of thumb: if the lambda will be **stored** or **returned** (callbacks, threads, `std::function` members), capture by **value**. Capture by reference only when the lambda is used immediately, like a std::sort comparator."
+    },
+    {
+      "type": "quiz",
+      "question": "A button stores `onClick` and calls it later. Which capture is safe if `score` is a local variable of the function that creates the button?",
+      "choices": [
+        "[&score]",
+        "[score]",
+        "Both",
+        "Neither"
+      ],
+      "answer": 1,
+      "explain": "The function creating the button will return long before the click. A reference to its local would dangle. A copy travels with the lambda."
+    },
+    {
+      "type": "practice",
+      "body": "Custom comparators are everywhere in interview problems:",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "K Closest Points to Origin",
+          "url": "https://leetcode.com/problems/k-closest-points-to-origin/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Custom Sort String",
+          "url": "https://leetcode.com/problems/custom-sort-string/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Sort Characters By Frequency",
+          "url": "https://leetcode.com/problems/sort-characters-by-frequency/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Largest Number",
+          "url": "https://leetcode.com/problems/largest-number/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

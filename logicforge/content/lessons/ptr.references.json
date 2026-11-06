@@ -1,0 +1,54 @@
+{
+  "id": "ptr.references",
+  "title": "References vs pointers",
+  "summary": "A reference is another name. A pointer is its own variable.",
+  "minutes": 6,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Nicknames",
+      "body": "If your friend Robert is also called Rob, there is still only **one** person. A **reference** works the same: `int& ref = hp;` gives hp a second name. No new box is created."
+    },
+    {
+      "type": "visual",
+      "algo": "mem.reference",
+      "body": "Notice the cell labelled `hp / ref`: one box, two names. The pointer gets its own box."
+    },
+    {
+      "type": "code",
+      "snippet": "mem.reference",
+      "highlight": "bind",
+      "title": "The code"
+    },
+    {
+      "type": "text",
+      "title": "When to use which",
+      "body": "- A **reference** must be set when it is created, can't be null, and can't be re-pointed. Use it by default for \"I need access to that object\".\n- A **pointer** can be `nullptr` (\"nothing\"), and can be changed to point elsewhere. Use it when \"maybe nothing\" or \"changes target\" is part of the meaning.\n- `const Player& p` is the standard way to pass a big object you only read: no copy, no changes."
+    },
+    {
+      "type": "quiz",
+      "question": "What does this print?",
+      "code": "int x = 1;\nint& r = x;\nr = 7;\nstd::cout << x;",
+      "choices": [
+        "1",
+        "7",
+        "An address",
+        "It doesn't compile"
+      ],
+      "answer": 1,
+      "explain": "r is another name for x. Assigning to r assigns to x."
+    },
+    {
+      "type": "quiz",
+      "question": "Which of these can legally be null?",
+      "choices": [
+        "int& r",
+        "int* p",
+        "Both",
+        "Neither"
+      ],
+      "answer": 1,
+      "explain": "A pointer can hold `nullptr`. A reference must always refer to a real object."
+    }
+  ]
+}

@@ -1,6 +1,21 @@
 {
   "tracks": [
     {
+      "id": "pointers",
+      "title": "Pointer & Lambda Lab",
+      "subtitle": "The hard parts of C++, made visible. Real code, real memory, real arrows.",
+      "lessons": [
+        "ptr.addresses",
+        "ptr.references",
+        "ptr.functions",
+        "ptr.arrays",
+        "ptr.heap",
+        "ptr.smart_pointers",
+        "lambda.basics",
+        "lambda.in_practice"
+      ]
+    },
+    {
       "id": "dsa",
       "title": "Foundations: algorithms",
       "subtitle": "From \"what is an algorithm?\" to linked lists. Every step is visual.",

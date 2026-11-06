@@ -1,0 +1,67 @@
+{
+  "id": "lambda.basics",
+  "title": "Lambdas: functions as values",
+  "summary": "Write a function inline, store it, and understand captures.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "A function you can hold",
+      "body": "`auto twice = [](int x) { return x * 2; };` creates a small function and stores it in a variable. `twice(4)` returns 8.\n\n- `[]` is the **capture list**: which outside variables the lambda may use.\n- `(int x)` are the parameters.\n- `{ ... }` is the body."
+    },
+    {
+      "type": "text",
+      "title": "Under the hood: it's an object",
+      "body": "The compiler turns every lambda into a tiny struct (a **closure**) with an `operator()`. Captured variables become its **members**. Once you see that, every capture rule makes sense."
+    },
+    {
+      "type": "visual",
+      "algo": "lambda.capture",
+      "body": "Look at the sizes: the by-value closure stores an int, the by-reference closure stores a way to reach coins."
+    },
+    {
+      "type": "code",
+      "snippet": "lambda.capture",
+      "highlight": "by_ref",
+      "title": "The code"
+    },
+    {
+      "type": "quiz",
+      "question": "What does this print?",
+      "code": "int n = 1;\nauto f = [n] { return n * 10; };\nn = 5;\nstd::cout << f();",
+      "choices": [
+        "10",
+        "50",
+        "1",
+        "5"
+      ],
+      "answer": 0,
+      "explain": "[n] copied n when the lambda was created (n was 1). Changing n later doesn't affect the copy."
+    },
+    {
+      "type": "visual",
+      "algo": "lambda.mutable",
+      "title": "mutable",
+      "body": "By default a lambda can't change its copies (its operator() is const). `mutable` lifts that."
+    },
+    {
+      "type": "quiz",
+      "question": "What does this print?",
+      "code": "int n = 0;\nauto f = [n]() mutable { return ++n; };\nf();\nf();\nstd::cout << f() << ' ' << n;",
+      "choices": [
+        "3 0",
+        "3 3",
+        "1 0",
+        "It doesn't compile"
+      ],
+      "answer": 0,
+      "explain": "The lambda's own copy goes 1, 2, 3. The outer n was never touched: 0."
+    },
+    {
+      "type": "build",
+      "exercise": "ex_07_lambdas",
+      "title": "Build it: counters, count_if and a leaderboard",
+      "body": "Three small functions, all built from lambdas. The counter needs a by-value capture and `mutable`."
+    }
+  ]
+}

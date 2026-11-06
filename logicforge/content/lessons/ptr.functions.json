@@ -1,0 +1,48 @@
+{
+  "id": "ptr.functions",
+  "title": "Functions, copies and pointers",
+  "summary": "Why swap(a, b) doesn't swap, and how to fix it.",
+  "minutes": 7,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Every call gets its own box set",
+      "body": "Calling a function pushes a new **stack frame**: fresh boxes for its parameters and local variables. When the function returns, the frame is thrown away.\n\nSo when you pass an `int`, the function gets a **copy**. Changing the copy changes nothing outside."
+    },
+    {
+      "type": "visual",
+      "algo": "mem.swap",
+      "body": "Watch the frames appear on top of main and disappear when each function returns."
+    },
+    {
+      "type": "code",
+      "snippet": "mem.swap",
+      "highlight": "call_pointer",
+      "title": "The code"
+    },
+    {
+      "type": "text",
+      "title": "Three ways to pass",
+      "body": "- `void f(int n)`: **by value**. A copy. Safe and simple for small things.\n- `void f(int* n)`: **by pointer**. The function can change the caller's variable through `*n`, and n may be `nullptr`.\n- `void f(int& n)`: **by reference**. Same power as a pointer, nicer syntax, never null. This is how `std::swap` works."
+    },
+    {
+      "type": "quiz",
+      "question": "What does this print?",
+      "code": "void bump(int n) { n++; }\n\nint lives = 3;\nbump(lives);\nstd::cout << lives;",
+      "choices": [
+        "3",
+        "4",
+        "0",
+        "Undefined"
+      ],
+      "answer": 0,
+      "explain": "bump received a copy of lives. The copy became 4 and was thrown away when bump returned."
+    },
+    {
+      "type": "build",
+      "exercise": "ex_01_swap_pointers",
+      "title": "Build it: swap through pointers",
+      "body": "Write `swapValues(int* a, int* b)`. Then try changing it to take references (`int&`) and update the tests. Which do you prefer?"
+    }
+  ]
+}

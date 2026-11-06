@@ -1,0 +1,81 @@
+{
+  "id": "ptr.arrays",
+  "title": "Arrays, pointer arithmetic and T**",
+  "summary": "p + 1 moves one element. Pointers to pointers. Reading const.",
+  "minutes": 9,
+  "cards": [
+    {
+      "type": "visual",
+      "algo": "mem.array_pointer",
+      "title": "Boxes in a row",
+      "body": "Array elements sit side by side. Look at the addresses: they go up by `sizeof(int)` each time."
+    },
+    {
+      "type": "code",
+      "snippet": "mem.array_pointer",
+      "highlight": "advance",
+      "title": "The code",
+      "body": "`p + 2` is scaled by the type: for `int*` it moves 2 × `sizeof(int)` bytes. For a `double*` it would move 2 × 8 bytes. And `p[i]` is literally defined as `*(p + i)`."
+    },
+    {
+      "type": "quiz",
+      "question": "What does this print?",
+      "code": "int a[] = {10, 20, 30, 40};\nint* p = a + 1;\nstd::cout << *(p + 2);",
+      "choices": [
+        "30",
+        "40",
+        "12",
+        "Undefined"
+      ],
+      "answer": 1,
+      "explain": "p points at a[1]. p + 2 points at a[3], which is 40."
+    },
+    {
+      "type": "visual",
+      "algo": "mem.pointer_to_pointer",
+      "title": "Pointers to pointers",
+      "body": "`int**` is just a pointer whose target happens to be another pointer. Follow the arrows."
+    },
+    {
+      "type": "text",
+      "title": "Reading const without fear",
+      "body": "Rule: `const` applies to the thing on its **left**. If nothing is on its left, it applies to the thing on its right.\n\n- `const int* p` (same as `int const* p`): the **int** is const. You can't do `*p = 5`, but you can re-point p.\n- `int* const p`: the **pointer** is const. You can do `*p = 5`, but not `p = &other`.\n- `const int* const p`: neither can change.\n\nRead right to left: `int* const p` is \"p is a const pointer to int\"."
+    },
+    {
+      "type": "quiz",
+      "question": "Given `int* const p = &a;`, which line is an error?",
+      "choices": [
+        "*p = 9;",
+        "p = &b;",
+        "int x = *p;",
+        "None of them"
+      ],
+      "answer": 1,
+      "explain": "The const is to the right of `*`, so the pointer itself is const. You may change the int (`*p = 9`) but not where p points."
+    },
+    {
+      "type": "practice",
+      "body": "Linked-list problems are pointer-rewiring practice in disguise:",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Remove Linked List Elements",
+          "url": "https://leetcode.com/problems/remove-linked-list-elements/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Swap Nodes in Pairs",
+          "url": "https://leetcode.com/problems/swap-nodes-in-pairs/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Design Linked List",
+          "url": "https://leetcode.com/problems/design-linked-list/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}
