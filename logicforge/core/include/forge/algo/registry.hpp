@@ -78,3 +78,7 @@ namespace forge::memlab {
 void registerPointerLab(algo::Registry& r);
 void registerLambdaLab(algo::Registry& r);
 }  // namespace forge::memlab
+
+namespace forge::slot {
+void registerSlotLab(algo::Registry& r);
+}  // namespace forge::slot

@@ -29,6 +29,7 @@ const Registry& Registry::builtin() {
         registerStack(r);
         memlab::registerPointerLab(r);
         memlab::registerLambdaLab(r);
+        slot::registerSlotLab(r);
         return r;
     }();
     return instance;

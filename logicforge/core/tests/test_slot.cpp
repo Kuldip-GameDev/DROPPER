@@ -7,6 +7,7 @@
 #include <random>
 #include <vector>
 
+#include "forge/algo/registry.hpp"
 #include "forge/slot/game.hpp"
 #include "forge/slot/machine.hpp"
 #include "forge/slot/rng.hpp"
@@ -161,16 +162,37 @@ TEST_CASE("cluster finder and gravity") {
     CHECK(before == after);  // gravity moves symbols, never creates or destroys them
 }
 
-TEST_CASE("state machine: illegal events are rejected") {
+TEST_CASE("state machine: scripted session, illegal events rejected") {
     SlotMachine m(lucky3(), 10);
     std::vector<std::string> events;
     m.subscribe([&](const std::string& e) { events.push_back(e); });
-    CHECK_FALSE(m.pressSpin(11));
-    CHECK_FALSE(m.reelsStopped({0, 0, 0}));
+    CHECK_FALSE(m.pressSpin(11));                // can't bet more than you have
+    CHECK_FALSE(m.reelsStopped({0, 0, 0}));      // not spinning
     CHECK(m.pressSpin(1));
-    CHECK_FALSE(m.pressSpin(1));
-    CHECK(m.reelsStopped({2, 3, 9}));
+    CHECK_FALSE(m.pressSpin(1));                 // already spinning
+    CHECK(m.reelsStopped({2, 3, 9}));            // three bells
     CHECK((m.state() == State::WinShow));
     CHECK(m.lastWin() == 40);
     CHECK(m.freeSpins() == 3);
+    CHECK(m.winShown());
+    CHECK((m.state() == State::FreeSpins));
+    CHECK(m.pressSpin(1));
+    CHECK(m.credits() == 10 - 1 + 40);           // free spin costs nothing
+    const bool sawBonus = std::find(events.begin(), events.end(), "bonus +3 free spins") != events.end();
+    CHECK(sawBonus);
+
+    // The visual session ends with 67 credits (see slot_viz.cpp script).
+    const auto* e = algo::Registry::builtin().find("slot.state_machine");
+    REQUIRE(e != nullptr);
+    viz::Recorder rec;
+    CHECK(e->run(Json::object(), rec)["credits"] == 67);
+}
+
+TEST_CASE("Monte Carlo converges towards the exact RTP") {
+    const auto* e = algo::Registry::builtin().find("slot.rtp_sim");
+    REQUIRE(e != nullptr);
+    viz::Recorder rec;
+    const Json r = e->run({{"spins", 500000}, {"seed", 1}}, rec);
+    // sd ~10 per spin: 4 standard errors at 500k spins is ~5.7 points.
+    CHECK(std::fabs(r["rtp"].get<double>() - 0.9495) < 0.057);
 }

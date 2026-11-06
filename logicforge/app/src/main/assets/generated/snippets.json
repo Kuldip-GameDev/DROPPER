@@ -244,6 +244,137 @@
   "file": "core/src/algo/searching.cpp",
   "sourceLine": 16
  },
+ "slot.alias": {
+  "code": "AliasTable::AliasTable(const std::vector<std::uint32_t>& weights)\n    : prob_(weights.size(), 0.0), alias_(weights.size(), 0) {\n    const std::size_t n = weights.size();\n    const double total = std::accumulate(weights.begin(), weights.end(), 0.0);\n    if (n == 0 || total <= 0) throw std::invalid_argument(\"AliasTable needs positive weights\");\n\n    // Scale so the average column height is exactly 1.\n    std::vector<double> scaled(n);\n    std::vector<std::size_t> small, large;\n    for (std::size_t i = 0; i < n; ++i) {\n        scaled[i] = static_cast<double>(weights[i]) * static_cast<double>(n) / total;\n        (scaled[i] < 1.0 ? small : large).push_back(i);\n    }\n    // Fill each short column to height 1 with a piece of a tall one.\n    while (!small.empty() && !large.empty()) {\n        const std::size_t s = small.back();\n        small.pop_back();\n        const std::size_t l = large.back();\n        prob_[s] = scaled[s];\n        alias_[s] = l;\n        scaled[l] -= 1.0 - scaled[s];  // l donated the gap\n        if (scaled[l] < 1.0) {\n            large.pop_back();\n            small.push_back(l);\n        }\n    }\n    // Leftovers are (up to rounding) exactly 1: they need no partner.\n    for (std::size_t i : large) { prob_[i] = 1.0; alias_[i] = i; }\n    for (std::size_t i : small) { prob_[i] = 1.0; alias_[i] = i; }\n}",
+  "lines": {
+   "pair": 19,
+   "donate": 21,
+   "leftovers": 29
+  },
+  "file": "core/src/slot/rng_weighted.cpp",
+  "sourceLine": 55
+ },
+ "slot.flood_fill": {
+  "code": "// Breadth-first search: start at one cell, visit its matching neighbours,\n// then THEIR neighbours... A queue keeps the \"to visit\" cells in order.\nstd::vector<std::vector<std::pair<int, int>>> findClusters(const Grid& grid, int minSize) {\n    const int rows = static_cast<int>(grid.size());\n    const int cols = rows ? static_cast<int>(grid[0].size()) : 0;\n    std::vector<std::vector<bool>> seen(rows, std::vector<bool>(cols, false));\n    std::vector<std::vector<std::pair<int, int>>> clusters;\n    const int dr[4] = {-1, 1, 0, 0}, dc[4] = {0, 0, -1, 1};  // up, down, left, right\n\n    for (int r = 0; r < rows; ++r) {\n        for (int c = 0; c < cols; ++c) {\n            if (seen[r][c] || grid[r][c] < 0) continue;\n            const int sym = grid[r][c];\n            std::vector<std::pair<int, int>> cluster;\n            std::queue<std::pair<int, int>> todo;\n            todo.push({r, c});\n            seen[r][c] = true;\n            while (!todo.empty()) {\n                auto [cr, cc] = todo.front();\n                todo.pop();\n                cluster.push_back({cr, cc});\n                for (int d = 0; d < 4; ++d) {\n                    const int nr = cr + dr[d], nc = cc + dc[d];\n                    if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) continue;  // off the grid\n                    if (seen[nr][nc] || grid[nr][nc] != sym) continue;\n                    seen[nr][nc] = true;  // mark when QUEUED, so nothing is queued twice\n                    todo.push({nr, nc});\n                }\n            }\n            if (static_cast<int>(cluster.size()) >= minSize) clusters.push_back(cluster);\n        }\n    }\n    return clusters;\n}",
+  "lines": {
+   "visit": 19,
+   "enqueue": 27,
+   "keep": 30
+  },
+  "file": "core/src/slot/game.cpp",
+  "sourceLine": 101
+ },
+ "slot.gravity": {
+  "code": "// Cascades: winning symbols vanish and everything above falls down.\n// Per column, a \"write\" index walks up from the bottom (two pointers!).\nint applyGravity(Grid& grid) {\n    const int rows = static_cast<int>(grid.size());\n    const int cols = rows ? static_cast<int>(grid[0].size()) : 0;\n    int empty = 0;\n    for (int c = 0; c < cols; ++c) {\n        int write = rows - 1;\n        for (int read = rows - 1; read >= 0; --read) {\n            if (grid[read][c] >= 0) grid[write--][c] = grid[read][c];\n        }\n        for (int r = write; r >= 0; --r) {\n            grid[r][c] = -1;  // these cells are now empty at the top\n            ++empty;\n        }\n    }\n    return empty;\n}",
+  "lines": {
+   "fall": 10
+  },
+  "file": "core/src/slot/game.cpp",
+  "sourceLine": 138
+ },
+ "slot.payline": {
+  "code": "// Left to right: the first non-wild symbol decides what the line is\n// \"about\"; count how many reels in a row match it (wilds count too).\nLineResult evaluateLine(const ReelGame& g, const Screen& s, const std::vector<int>& rowOnReel) {\n    const int reels = static_cast<int>(rowOnReel.size());\n    int symbol = g.wild;\n    for (int k = 0; k < reels; ++k) {\n        const int sym = s[rowOnReel[k]][k];\n        if (sym != g.wild) { symbol = sym; break; }\n    }\n    int count = 0;\n    while (count < reels) {\n        const int sym = s[rowOnReel[count]][count];\n        if (sym != symbol && sym != g.wild) break;  // chain broken\n        ++count;\n    }\n    const int pay = (symbol >= 0) ? g.paytable[symbol][count] : 0;\n    return {symbol, count, pay};\n}",
+  "lines": {
+   "pick_symbol": 8,
+   "chain": 13,
+   "pay": 16
+  },
+  "file": "core/src/slot/game.cpp",
+  "sourceLine": 25
+ },
+ "slot.pick_binary": {
+  "code": "// First running total that is GREATER than r. Totals [40, 70, 90, 100]:\n// r = 0..39 -> 0,  r = 40..69 -> 1,  r = 70..89 -> 2,  r = 90..99 -> 3\nstd::size_t pickBinary(const std::vector<std::uint64_t>& prefix, std::uint64_t r,\n                       int* comparisons) {\n    std::size_t lo = 0, hi = prefix.size();  // answer is in [lo, hi)\n    while (lo < hi) {\n        const std::size_t mid = lo + (hi - lo) / 2;\n        if (comparisons) ++*comparisons;\n        if (prefix[mid] > r) hi = mid;  // mid could be the answer\n        else lo = mid + 1;              // answer is to the right\n    }\n    if (lo == prefix.size()) throw std::out_of_range(\"r must be smaller than the total weight\");\n    return lo;\n}",
+  "lines": {
+   "go_left": 9,
+   "go_right": 10
+  },
+  "file": "core/src/slot/rng_weighted.cpp",
+  "sourceLine": 38
+ },
+ "slot.pick_linear": {
+  "code": "std::size_t pickLinear(const std::vector<std::uint32_t>& weights, std::uint64_t r,\n                       int* comparisons) {\n    for (std::size_t i = 0; i < weights.size(); ++i) {\n        if (comparisons) ++*comparisons;\n        if (r < weights[i]) return i;  // r landed inside this symbol's slice\n        r -= weights[i];               // skip past this slice\n    }\n    throw std::out_of_range(\"r must be smaller than the total weight\");\n}",
+  "lines": {
+   "check": 5,
+   "skip": 6
+  },
+  "file": "core/src/slot/rng_weighted.cpp",
+  "sourceLine": 19
+ },
+ "slot.rng_lcg": {
+  "code": "// Linear congruential generator: x = a*x + c (mod 2^32).\n// Fast and tiny, but its LOW bits are weak: the lowest bit just alternates.\nclass Lcg32 {\npublic:\n    explicit Lcg32(std::uint32_t seed) : state_(seed) {}\n    std::uint32_t next() {\n        state_ = 1664525u * state_ + 1013904223u;  // unsigned overflow wraps = mod 2^32\n        return state_;\n    }\n\nprivate:\n    std::uint32_t state_;\n};",
+  "lines": {},
+  "file": "core/include/forge/slot/rng.hpp",
+  "sourceLine": 19
+ },
+ "slot.rng_pcg": {
+  "code": "// PCG32 (O'Neill, pcg-random.org): an LCG on 64 bits, then a permutation\n// that scrambles the output. Small, fast and statistically strong.\nclass Pcg32 {\npublic:\n    Pcg32(std::uint64_t seed, std::uint64_t sequence) : inc_((sequence << 1u) | 1u) {\n        next();\n        state_ += seed;\n        next();\n    }\n    std::uint32_t next() {\n        const std::uint64_t old = state_;\n        state_ = old * 6364136223846793005ULL + inc_;\n        const auto xorshifted = static_cast<std::uint32_t>(((old >> 18u) ^ old) >> 27u);\n        const auto rot = static_cast<std::uint32_t>(old >> 59u);\n        return (xorshifted >> rot) | (xorshifted << ((32u - rot) & 31u));\n    }\n\nprivate:\n    std::uint64_t state_ = 0;\n    std::uint64_t inc_;\n};",
+  "lines": {},
+  "file": "core/include/forge/slot/rng.hpp",
+  "sourceLine": 54
+ },
+ "slot.rng_xorshift": {
+  "code": "// Marsaglia's xorshift32: three shift-and-xor steps. Never outputs 0\n// (so the seed must not be 0). Period 2^32 - 1.\nclass XorShift32 {\npublic:\n    explicit XorShift32(std::uint32_t seed) : state_(seed == 0 ? 0x9E3779B9u : seed) {}\n    std::uint32_t next() {\n        std::uint32_t x = state_;\n        x ^= x << 13;\n        x ^= x >> 17;\n        x ^= x << 5;\n        return state_ = x;\n    }\n\nprivate:\n    std::uint32_t state_;\n};",
+  "lines": {},
+  "file": "core/include/forge/slot/rng.hpp",
+  "sourceLine": 35
+ },
+ "slot.rtp_exact": {
+  "code": "// Return To Player, exactly: try EVERY combination of stops once.\n// Each combination is equally likely, so the average pay is the RTP.\nRtpReport exactRtpCentreLine(const ReelGame& g) {\n    if (g.reels.size() != 3) throw std::invalid_argument(\"this brute force is written for 3 reels\");\n    RtpReport r;\n    const std::vector<int> centre = {1, 1, 1};\n    const int n0 = static_cast<int>(g.reels[0].size());\n    const int n1 = static_cast<int>(g.reels[1].size());\n    const int n2 = static_cast<int>(g.reels[2].size());\n    for (int a = 0; a < n0; ++a) {\n        for (int b = 0; b < n1; ++b) {\n            for (int c = 0; c < n2; ++c) {\n                const LineResult win = evaluateLine(g, window(g, {a, b, c}), centre);\n                ++r.combos;\n                if (win.pay > 0) ++r.winningCombos;\n                r.totalPay += static_cast<std::uint64_t>(win.pay);\n                r.sumSquares += static_cast<long double>(win.pay) * win.pay;\n            }\n        }\n    }\n    r.rtp = static_cast<double>(r.totalPay) / static_cast<double>(r.combos);\n    r.hitFrequency = static_cast<double>(r.winningCombos) / static_cast<double>(r.combos);\n    const long double mean = static_cast<long double>(r.rtp);\n    r.stdDev = static_cast<double>(std::sqrt(r.sumSquares / r.combos - mean * mean));\n    return r;\n}",
+  "lines": {
+   "variance": 24
+  },
+  "file": "core/src/slot/game.cpp",
+  "sourceLine": 72
+ },
+ "slot.rtp_sim": {
+  "code": "// Monte Carlo: play many random spins and average the pay.\n// The error shrinks like 1 / sqrt(spins): 100x more spins = 10x more accurate.\ndouble simulateRtp(const ReelGame& g, std::uint64_t spins, Pcg32& rng, Recorder& rec) {\n    const std::vector<int> centre = {1, 1, 1};\n    std::vector<int> stops(g.reels.size());\n    std::uint64_t paid = 0;\n    for (std::uint64_t i = 1; i <= spins; ++i) {\n        for (std::size_t k = 0; k < stops.size(); ++k) {\n            const auto len = static_cast<std::uint32_t>(g.reels[k].size());\n            stops[k] = static_cast<int>(uniformBelow(rng, len));  // fair stop\n        }\n        paid += static_cast<std::uint64_t>(evaluateLine(g, window(g, stops), centre).pay);\n    }\n    return static_cast<double>(paid) / static_cast<double>(spins);\n}",
+  "lines": {
+   "spin": 12
+  },
+  "file": "core/src/slot/slot_viz.cpp",
+  "sourceLine": 412
+ },
+ "slot.state_machine": {
+  "code": "// Every event checks \"is this allowed RIGHT NOW?\" before changing state.\n// That one rule prevents a whole class of bugs: double spins, paying twice,\n// spinning with no credits...\nbool SlotMachine::pressSpin(int bet) {\n    if (state_ == State::Idle) {\n        if (bet <= 0 || bet > credits_) return false;  // can't afford it\n        credits_ -= bet;\n        bet_ = bet;\n        inFreeSpin_ = false;\n    } else if (state_ == State::FreeSpins) {\n        --freeSpins_;  // free: no credits taken\n        inFreeSpin_ = true;\n    } else {\n        return false;  // ignored: reels already moving, or a win is showing\n    }\n    state_ = State::Spinning;\n    emit(\"spin\");\n    return true;\n}\n\nbool SlotMachine::reelsStopped(const std::vector<int>& stops) {\n    if (state_ != State::Spinning) return false;\n    state_ = State::Evaluating;\n    screen_ = window(game_, stops);\n    const LineResult win = evaluateLine(game_, screen_, {1, 1, 1});\n    lastWin_ = win.pay * bet_;\n    credits_ += lastWin_;\n    if (win.count == 3 && game_.symbols[win.symbol].id == \"BELL\") {\n        freeSpins_ += 3;  // bonus trigger: three bells\n        emit(\"bonus +3 free spins\");\n    }\n    if (lastWin_ > 0) {\n        state_ = State::WinShow;\n        emit(cat(\"win \", lastWin_));\n    } else {\n        finishRound();\n    }\n    return true;\n}\n\nbool SlotMachine::winShown() {\n    if (state_ != State::WinShow) return false;\n    finishRound();\n    return true;\n}\n\nvoid SlotMachine::finishRound() {\n    state_ = freeSpins_ > 0 ? State::FreeSpins : State::Idle;\n}",
+  "lines": {
+   "check_bet": 6,
+   "free_spin": 11,
+   "ignore": 14,
+   "to_spinning": 16,
+   "to_evaluating": 23,
+   "bonus": 29,
+   "to_win": 33,
+   "finish": 48
+  },
+  "file": "core/src/slot/machine.cpp",
+  "sourceLine": 22
+ },
+ "slot.uniform_below": {
+  "code": "// A fair number in [0, n). `rng() % n` is BIASED when 2^32 is not a\n// multiple of n: some results get one extra chance. Fix: throw away the\n// few raw values at the top that would cause the imbalance.\ntemplate <Rng32 G>\nstd::uint32_t uniformBelow(G& rng, std::uint32_t n) {\n    const std::uint32_t limit = static_cast<std::uint32_t>(-n) % n;  // = 2^32 mod n\n    while (true) {\n        const std::uint32_t r = rng.next();\n        if (r >= limit) return r % n;  // the rest is an exact multiple of n\n    }\n}",
+  "lines": {
+   "limit": 6,
+   "accept": 9
+  },
+  "file": "core/include/forge/slot/rng.hpp",
+  "sourceLine": 78
+ },
+ "slot.ways": {
+  "code": "// \"243 ways\" on 5 reels x 3 rows: any position on reel 1, then any on\n// reel 2, ... (3 x 3 x 3 x 3 x 3 = 243 paths). A symbol pays for every\n// path that matches from the left, so we MULTIPLY the matches per reel.\nstd::vector<WaysResult> evaluateWays(const ReelGame& g, const Screen& s) {\n    std::vector<WaysResult> wins;\n    for (int sym = 0; sym < static_cast<int>(g.symbols.size()); ++sym) {\n        if (sym == g.wild) continue;\n        long long ways = 1;\n        int reels = 0;\n        for (std::size_t k = 0; k < g.reels.size(); ++k) {\n            int matches = 0;\n            for (int row = 0; row < g.rows; ++row) {\n                if (s[row][k] == sym || s[row][k] == g.wild) ++matches;\n            }\n            if (matches == 0) break;  // the chain stops at the first reel without it\n            ways *= matches;\n            ++reels;\n        }\n        const int pay = g.paytable[sym][reels];\n        if (pay > 0) wins.push_back({sym, reels, ways, pay * ways});\n    }\n    return wins;\n}",
+  "lines": {
+   "multiply": 16,
+   "win": 20
+  },
+  "file": "core/src/slot/game.cpp",
+  "sourceLine": 46
+ },
+ "slot.window": {
+  "code": "// A reel strip is a CIRCULAR array: after the last stop comes the first.\n// The % (modulo) operator does the wrap-around for us.\nScreen window(const ReelGame& g, const std::vector<int>& stops) {\n    Screen screen(g.rows, std::vector<int>(g.reels.size()));\n    for (std::size_t reel = 0; reel < g.reels.size(); ++reel) {\n        const auto& strip = g.reels[reel];\n        const int len = static_cast<int>(strip.size());\n        for (int row = 0; row < g.rows; ++row) {\n            screen[row][reel] = strip[(stops[reel] + row) % len];\n        }\n    }\n    return screen;\n}",
+  "lines": {
+   "wrap": 9
+  },
+  "file": "core/src/slot/game.cpp",
+  "sourceLine": 9
+ },
  "sort.bubble": {
   "code": "void bubbleSort(std::vector<int>& a, Recorder& rec) {\n    const std::size_t n = a.size();\n    for (std::size_t pass = 0; pass + 1 < n; ++pass) {\n        bool swapped = false;\n        for (std::size_t j = 0; j + 1 < n - pass; ++j) {\n            if (a[j] > a[j + 1]) {\n                std::swap(a[j], a[j + 1]);\n                swapped = true;\n            }\n        }\n        if (!swapped) break;  // nothing moved: already sorted\n    }\n}",
   "lines": {
