@@ -10,6 +10,42 @@
   "file": "core/src/algo/graphs.cpp",
   "sourceLine": 93
  },
+ "hard.bit_tricks": {
+  "code": "// x - 1 flips the lowest set bit and every bit below it, so\n// x & (x - 1) clears the lowest set bit. Many tricks follow from that.\nconstexpr bool isPowerOfTwo(unsigned x) { return x != 0 && (x & (x - 1)) == 0; }\nconstexpr unsigned lowestSetBit(unsigned x) { return x & (~x + 1); }  // same as x & -x\nconstexpr int countBits(unsigned x) {  // Kernighan: one loop per set bit\n    int n = 0;\n    while (x != 0) {\n        x &= x - 1;\n        ++n;\n    }\n    return n;\n}\n// Flags: one bit per property (wild, scatter, sticky...). Compact and fast.\nconstexpr unsigned setFlag(unsigned flags, unsigned bit) { return flags | (1u << bit); }\nconstexpr unsigned clearFlag(unsigned flags, unsigned bit) { return flags & ~(1u << bit); }\nconstexpr bool hasFlag(unsigned flags, unsigned bit) { return ((flags >> bit) & 1u) != 0; }",
+  "lines": {},
+  "file": "core/include/forge/hardcpp.hpp",
+  "sourceLine": 15
+ },
+ "hard.declarations": {
+  "code": "// Read a declaration from the NAME outwards: right first, then left.\nint declarationsDemo() {\n    int value = 7;\n    int* p = &value;               // p: pointer to int\n    int** pp = &p;                 // pp: pointer to (pointer to int)\n    const int* readOnly = &value;  // pointer to const int: *readOnly = 1 won't compile\n    int* const fixed = &value;     // const pointer to int: fixed = p won't compile\n    int arr[3] = {1, 2, 3};\n    int (*pArr)[3] = &arr;         // pointer to an ARRAY of 3 ints (the parentheses matter)\n    int* ptrs[3] = {p, p, p};      // array of 3 POINTERS to int\n    int (*fn)(int) = [](int x) { return x * 2; };  // pointer to function int -> int\n    using Doubler = int (*)(int);  // the same type, readable\n    Doubler same = fn;\n    *fixed += 1;                   // value = 8\n    return **pp + *readOnly + (*pArr)[2] + *ptrs[1] + same(1);  // 8 + 8 + 3 + 8 + 2 = 29\n}",
+  "lines": {},
+  "file": "core/src/hardcpp/examples.cpp",
+  "sourceLine": 14
+ },
+ "hard.evaluation_order": {
+  "code": "// In f(g(), h()) C++ does NOT promise whether g or h runs first.\nstd::string evaluationOrderDemo() {\n    std::string log;\n    auto g = [&log] { log += \"g\"; return 1; };\n    auto h = [&log] { log += \"h\"; return 2; };\n    auto add = [](int a, int b) { return a + b; };\n    add(g(), h());  // log is \"gh\" or \"hg\": both are correct C++\n    return log;\n}",
+  "lines": {},
+  "file": "core/src/hardcpp/examples.cpp",
+  "sourceLine": 46
+ },
+ "hard.precedence": {
+  "code": "int precedenceDemo() {\n    int a[] = {10, 20, 30};\n    int* p = a;\n    int x = *p++;    // *(p++): read a[0] = 10, THEN move p to a[1]\n    int y = ++*p;    // ++(*p): a[1] becomes 21, y = 21\n    int z = (*p)++;  // read 21 into z, then a[1] becomes 22\n    bool shiftOk = 1 << 2 + 1 == 8;  // + before <<, << before ==: (1 << 3) == 8 is true\n    int masked = 6 & 3 == 2;         // == before &: 6 & (3 == 2) = 6 & 0 = 0. A classic bug!\n    return x + y + z + shiftOk + masked + a[1];  // 10 + 21 + 21 + 1 + 0 + 22 = 75\n}",
+  "lines": {},
+  "file": "core/src/hardcpp/examples.cpp",
+  "sourceLine": 33
+ },
+ "hard.stl_pipeline": {
+  "code": "// \"The total of the three biggest wins over 100\", as a pipeline.\nlong long topWins(std::vector<int> wins) {\n    std::sort(wins.begin(), wins.end(), std::greater<>{});  // biggest first\n    auto big = wins | std::views::filter([](int w) { return w > 100; }) | std::views::take(3);\n    long long total = 0;\n    for (int w : big) total += w;  // views are lazy: work happens here, element by element\n    return total;\n}",
+  "lines": {},
+  "file": "core/src/hardcpp/examples.cpp",
+  "sourceLine": 58
+ },
+ "hard.templates": {
+  "code": "// One function for every type that supports <.\ntemplate <typename T>\nT maxOf(T a, T b) { return a < b ? b : a; }\n\n// Variadic template + fold expression: sum(1, 2, 3) expands to (1 + (2 + (3 + 0))).\ntemplate <typename... Ts>\nauto sum(Ts... xs) { return (xs + ... + 0); }\n\n// A concept names a requirement, and errors say WHICH requirement failed.\ntemplate <typename T>\nconcept Scorable = requires(const T& t) {\n    { t.score() } -> std::convertible_to<int>;\n};\n\ntemplate <Scorable T>\nint best(const std::vector<T>& items) {\n    int top = 0;\n    for (const auto& item : items) top = std::max(top, item.score());\n    return top;\n}\n\n// CRTP: the base knows the derived type at compile time, so area() needs no virtual call.\ntemplate <typename Derived>\nstruct Shape {\n    double area() const { return static_cast<const Derived*>(this)->areaImpl(); }\n};\nstruct Square : Shape<Square> {\n    double side;\n    explicit Square(double s) : side(s) {}\n    double areaImpl() const { return side * side; }\n};",
+  "lines": {},
+  "file": "core/include/forge/hardcpp.hpp",
+  "sourceLine": 34
+ },
  "lambda.callbacks": {
   "code": "void callbacksDemo() {\n    int totalWon = 0;\n    std::vector<std::function<void(int)>> onWin;  // \"call these when a spin wins\"\n    onWin.push_back([&totalWon](int amount) { totalWon += amount; });\n    onWin.push_back([&out](int amount) {\n        if (amount >= 100) out << \"BIG WIN: \" << amount << '\\n';\n    });\n    for (int amount : {20, 150}) {\n        for (auto& listener : onWin) listener(amount);  // notify everyone\n    }\n    out << \"total \" << totalWon << '\\n';\n}",
   "lines": {
@@ -209,6 +245,54 @@
   "file": "core/src/memlab/pointers.cpp",
   "sourceLine": 224
  },
+ "pattern.command": {
+  "code": "// Each action is an OBJECT that knows how to do itself and undo itself.\nclass MoveCommand : public Command {\npublic:\n    MoveCommand(int dx, int dy) : dx_(dx), dy_(dy) {}\n    void execute(Board& b) override {\n        fromX_ = b.x;  // remember where we were, for undo\n        fromY_ = b.y;\n        b.x = std::clamp(b.x + dx_, 0, b.width - 1);\n        b.y = std::clamp(b.y + dy_, 0, b.height - 1);\n    }\n    void undo(Board& b) override {\n        b.x = fromX_;\n        b.y = fromY_;\n    }\n    std::string name() const override {\n        return dx_ > 0 ? \"right\" : dx_ < 0 ? \"left\" : dy_ > 0 ? \"down\" : \"up\";\n    }\n\nprivate:\n    int dx_, dy_;\n    int fromX_ = 0, fromY_ = 0;\n};\n\n// Two stacks give you undo AND redo.\nvoid History::run(std::unique_ptr<Command> cmd, Board& b) {\n    cmd->execute(b);\n    done_.push_back(std::move(cmd));\n    undone_.clear();  // a new action makes the old \"future\" invalid\n}\n\nbool History::undo(Board& b) {\n    if (done_.empty()) return false;\n    done_.back()->undo(b);\n    undone_.push_back(std::move(done_.back()));\n    done_.pop_back();\n    return true;\n}\n\nbool History::redo(Board& b) {\n    if (undone_.empty()) return false;\n    undone_.back()->execute(b);\n    done_.push_back(std::move(undone_.back()));\n    undone_.pop_back();\n    return true;\n}",
+  "lines": {
+   "run": 27,
+   "undo": 33,
+   "redo": 41
+  },
+  "file": "core/src/patterns/command.cpp",
+  "sourceLine": 7
+ },
+ "pattern.event_queue": {
+  "code": "// A fixed-size circular queue: no allocation, ever. head = next to read,\n// tail = next free slot; both wrap around with % N.\ntemplate <typename T, std::size_t N>\nclass RingQueue {\npublic:\n    bool push(const T& v) {\n        if (count_ == N) return false;  // full: the caller decides what to do\n        items_[tail_] = v;\n        tail_ = (tail_ + 1) % N;\n        ++count_;\n        return true;\n    }\n    bool pop(T& out) {\n        if (count_ == 0) return false;\n        out = items_[head_];\n        head_ = (head_ + 1) % N;\n        --count_;\n        return true;\n    }\n    std::size_t size() const { return count_; }\n    std::size_t head() const { return head_; }\n    std::size_t tail() const { return tail_; }\n    const std::array<T, N>& raw() const { return items_; }\n\nprivate:\n    std::array<T, N> items_{};\n    std::size_t head_ = 0, tail_ = 0, count_ = 0;\n};",
+  "lines": {
+   "full": 7,
+   "push": 9,
+   "pop": 16
+  },
+  "file": "core/include/forge/patterns/patterns.hpp",
+  "sourceLine": 94
+ },
+ "pattern.flyweight": {
+  "code": "struct TreeModel {          // shared by every tree of the same kind\n    std::array<float, 3 * 512> mesh{};   // 512 vertices x (x, y, z)\n    std::array<unsigned char, 64 * 64 * 4> bark{};  // a small RGBA texture\n};\nstruct TreeHeavy {          // the naive version: every tree carries its own copy\n    TreeModel model;\n    float x = 0, y = 0, scale = 1;\n};\nstruct TreeLight {          // flyweight: every tree points at one shared model\n    const TreeModel* model = nullptr;\n    float x = 0, y = 0, scale = 1;\n};",
+  "lines": {
+   "shared": 10
+  },
+  "file": "core/include/forge/patterns/patterns.hpp",
+  "sourceLine": 150
+ },
+ "pattern.game_loop": {
+  "code": "// Physics wants a steady tick (say every 20 ms) even when frames take\n// 8 ms on one device and 50 ms on another. Bank the real time in an\n// accumulator and spend it in fixed-size steps.\nstd::vector<LoopStats> runFixedStep(const std::vector<double>& frameTimes, double dt,\n                                    int maxStepsPerFrame) {\n    std::vector<LoopStats> frames;\n    double accumulator = 0;\n    for (double frameTime : frameTimes) {\n        accumulator += frameTime;  // real time that passed\n        int updates = 0;\n        while (accumulator >= dt && updates < maxStepsPerFrame) {\n            // update(dt);  <- the simulation always advances by exactly dt\n            accumulator -= dt;\n            ++updates;\n        }\n        // Too far behind? Drop the backlog instead of falling further behind every frame.\n        if (updates == maxStepsPerFrame) accumulator = std::fmod(accumulator, dt);\n        const double alpha = accumulator / dt;  // render(alpha) blends the last two states\n        frames.push_back({updates, accumulator, alpha});\n    }\n    return frames;\n}",
+  "lines": {
+   "bank": 9,
+   "step": 13,
+   "clamp": 17,
+   "render": 18
+  },
+  "file": "core/src/patterns/loop_state.cpp",
+  "sourceLine": 8
+ },
+ "pattern.object_pool": {
+  "code": "// Allocate every bullet ONCE, up front. Free slots form a linked list\n// stored inside the pool itself (next_[i] = the free slot after i).\ntemplate <std::size_t N>\nclass BulletPool {\npublic:\n    BulletPool() {\n        for (std::size_t i = 0; i < N; ++i) next_[i] = static_cast<int>(i) + 1;  // 0 -> 1 -> 2 ...\n        next_[N - 1] = -1;\n    }\n    // O(1): take the first free slot. Returns -1 when the pool is exhausted.\n    int acquire() {\n        if (freeHead_ < 0) return -1;\n        const int slot = freeHead_;\n        freeHead_ = next_[static_cast<std::size_t>(slot)];\n        active_[static_cast<std::size_t>(slot)] = true;\n        return slot;\n    }\n    // O(1): push the slot back on the front of the free list.\n    void release(int slot) {\n        active_[static_cast<std::size_t>(slot)] = false;\n        next_[static_cast<std::size_t>(slot)] = freeHead_;\n        freeHead_ = slot;\n    }\n    Bullet& operator[](int slot) { return items_[static_cast<std::size_t>(slot)]; }\n    bool active(int slot) const { return active_[static_cast<std::size_t>(slot)]; }\n    int freeHead() const { return freeHead_; }\n    int nextFree(int slot) const { return next_[static_cast<std::size_t>(slot)]; }\n    static constexpr std::size_t capacity() { return N; }\n\nprivate:\n    std::array<Bullet, N> items_{};\n    std::array<int, N> next_{};\n    std::array<bool, N> active_{};\n    int freeHead_ = 0;\n};",
+  "lines": {
+   "acquire": 14,
+   "release": 22
+  },
+  "file": "core/include/forge/patterns/patterns.hpp",
+  "sourceLine": 45
+ },
  "pattern.prefix_sums": {
   "code": "std::vector<int> prefixSums(const std::vector<int>& a, Recorder& rec) {\n    std::vector<int> prefix(a.size() + 1, 0);  // prefix[i] = sum of the first i values\n    for (std::size_t i = 0; i < a.size(); ++i) {\n        prefix[i + 1] = prefix[i] + a[i];\n    }\n    return prefix;\n}\n\n// Sum of a[l..r] = (sum of first r+1 values) - (sum of first l values).\nint rangeSum(const std::vector<int>& prefix, int l, int r) {\n    return prefix[r + 1] - prefix[l];  // O(1), no loop!\n}",
   "lines": {
@@ -217,6 +301,14 @@
   },
   "file": "core/src/algo/array_patterns.cpp",
   "sourceLine": 61
+ },
+ "pattern.singleton": {
+  "code": "// The Singleton: one global instance reachable from anywhere.\nclass AudioSingleton {\npublic:\n    static AudioSingleton& instance() {\n        static AudioSingleton audio;  // created on first use\n        return audio;\n    }\n    void play(const std::string& sound) { played.push_back(sound); }\n    std::vector<std::string> played;\n\nprivate:\n    AudioSingleton() = default;\n};\n// Convenient... but any function may secretly depend on it, the order of\n// global start-up gets fragile, and tests can't swap in a fake.\n\n// The alternative: hand the dependency in (dependency injection).\nclass Audio {\npublic:\n    virtual ~Audio() = default;\n    virtual void play(const std::string& sound) = 0;\n};\n\nclass SpinButton {\npublic:\n    explicit SpinButton(Audio& audio) : audio_(audio) {}  // the dependency is visible\n    void press() { audio_.play(\"reel_spin\"); }\n\nprivate:\n    Audio& audio_;\n};",
+  "lines": {
+   "inject": 26
+  },
+  "file": "core/include/forge/patterns/strategy_singleton.hpp",
+  "sourceLine": 44
  },
  "pattern.sliding_window": {
   "code": "int maxWindowSum(const std::vector<int>& a, int k, Recorder& rec) {\n    int windowSum = 0;\n    for (int i = 0; i < k; ++i) windowSum += a[i];  // the first window\n    int best = windowSum;\n    for (int right = k; right < static_cast<int>(a.size()); ++right) {\n        windowSum += a[right] - a[right - k];  // add the new value, drop the old one\n        best = std::max(best, windowSum);\n    }\n    return best;\n}",
@@ -227,6 +319,25 @@
   },
   "file": "core/src/algo/array_patterns.cpp",
   "sourceLine": 34
+ },
+ "pattern.state": {
+  "code": "// Each state is its own class. It only handles the inputs that make\n// sense for it, and says which state comes next. No giant switch.\nclass Standing;\nclass Jumping;\nclass Ducking;\nclass Diving;\n\nclass Standing : public HeroState {\npublic:\n    const char* name() const override { return \"Standing\"; }\n    std::unique_ptr<HeroState> handle(Hero& hero, Input in) override;\n};\nclass Jumping : public HeroState {\npublic:\n    const char* name() const override { return \"Jumping\"; }\n    std::unique_ptr<HeroState> handle(Hero& hero, Input in) override;\n};\nclass Ducking : public HeroState {\npublic:\n    const char* name() const override { return \"Ducking\"; }\n    std::unique_ptr<HeroState> handle(Hero& hero, Input in) override;\n};\nclass Diving : public HeroState {\npublic:\n    const char* name() const override { return \"Diving\"; }\n    std::unique_ptr<HeroState> handle(Hero& hero, Input in) override;\n};\n\nstd::unique_ptr<HeroState> Standing::handle(Hero& hero, Input in) {\n    if (in == Input::PressJump) { ++hero.jumps; return std::make_unique<Jumping>(); }\n    if (in == Input::PressDown) return std::make_unique<Ducking>();\n    return nullptr;  // everything else: stay\n}\nstd::unique_ptr<HeroState> Jumping::handle(Hero&, Input in) {\n    if (in == Input::PressDown) return std::make_unique<Diving>();  // no double jump!\n    if (in == Input::Land) return std::make_unique<Standing>();\n    return nullptr;\n}\nstd::unique_ptr<HeroState> Ducking::handle(Hero&, Input in) {\n    if (in == Input::ReleaseDown) return std::make_unique<Standing>();\n    return nullptr;\n}\nstd::unique_ptr<HeroState> Diving::handle(Hero&, Input in) {\n    if (in == Input::Land) return std::make_unique<Standing>();\n    return nullptr;\n}\n\nvoid Hero::handle(Input input) {\n    if (auto next = state_->handle(*this, input)) state_ = std::move(next);\n}",
+  "lines": {
+   "stand_jump": 30,
+   "jump_dive": 35,
+   "duck_stand": 40,
+   "switch": 49
+  },
+  "file": "core/src/patterns/loop_state.cpp",
+  "sourceLine": 43
+ },
+ "pattern.strategy": {
+  "code": "// Strategy: one question (\"what did this spin win?\"), interchangeable\n// answers. The machine holds a PayRule&, not a hard-coded algorithm.\nclass PayRule {\npublic:\n    virtual ~PayRule() = default;\n    virtual const char* name() const = 0;\n    virtual long long pay(const slot::ReelGame& g, const slot::Screen& s) const = 0;\n};\n\nclass CentreLinePay : public PayRule {\npublic:\n    const char* name() const override { return \"centre payline\"; }\n    long long pay(const slot::ReelGame& g, const slot::Screen& s) const override {\n        const std::vector<int> centre(g.reels.size(), 1);\n        return slot::evaluateLine(g, s, centre).pay;\n    }\n};\n\nclass WaysPay : public PayRule {\npublic:\n    const char* name() const override { return \"243 ways\"; }\n    long long pay(const slot::ReelGame& g, const slot::Screen& s) const override {\n        long long total = 0;\n        for (const auto& w : slot::evaluateWays(g, s)) total += w.pay;\n        return total;\n    }\n};\n\n// Swapping the rule changes the game's maths without touching this code.\ninline long long settle(const PayRule& rule, const slot::ReelGame& g, const slot::Screen& s) {\n    return rule.pay(g, s);\n}",
+  "lines": {
+   "settle": 31
+  },
+  "file": "core/include/forge/patterns/strategy_singleton.hpp",
+  "sourceLine": 9
  },
  "pattern.two_pointers": {
   "code": "std::pair<int, int> pairWithSum(const std::vector<int>& a, int target, Recorder& rec) {\n    int left = 0;\n    int right = static_cast<int>(a.size()) - 1;\n    while (left < right) {\n        int sum = a[left] + a[right];\n        if (sum == target) return {left, right};\n        if (sum < target) ++left;  // need a bigger sum\n        else --right;              // need a smaller sum\n    }\n    return {-1, -1};\n}",
