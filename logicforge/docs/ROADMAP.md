@@ -3,7 +3,7 @@
 | Milestone | Scope | Status |
 |---|---|---|
 | M0 | Bootstrap: docs, ADRs, CI | done |
-| M1 | Core foundation: scene/trace/JSON, registry, dispatcher, CLI, first algorithms, snippet extractor | in progress |
+| M1 | Core foundation: scene/trace/JSON, registry, dispatcher, CLI, first algorithms, snippet extractor | done |
 | M2 | Android shell: Gradle + NDK + JNI, Compose screens, renderers, APK in CI | planned |
 | M3 | Pointer & Lambda Lab | planned |
 | M4 | Slot Math Lab | planned |
