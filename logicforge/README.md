@@ -18,7 +18,15 @@ Most DSA apps show you a finished answer. LogicForge is built on three ideas:
 3. **Build it.** Watching isn't learning. Every lesson ends with a *koan*: a small C++ function in
    [`exercises/`](exercises/) that you implement on your PC until its tests pass.
 
-## What's inside (planned for v1)
+## Screenshots
+
+These are rendered by tests from the real app code and the real C++ core (see [Screenshot tests](#screenshot-tests)).
+
+| Home | Algorithm Lab | Pointer Lab | Slot Math Lab |
+|---|---|---|---|
+| ![Home](docs/screenshots/home.png) | ![Bubble sort](docs/screenshots/visualizer_bubble_sort.png) | ![weak_ptr](docs/screenshots/pointer_lab_weak_ptr.png) | ![State machine](docs/screenshots/slot_state_machine.png) |
+
+## What's inside
 
 | Track | What you learn | Why it matters for game dev |
 |---|---|---|
@@ -30,8 +38,8 @@ Most DSA apps show you a finished answer. LogicForge is built on three ideas:
 | English → Diagram | Type `tree 8 3 10 1 6` and see a binary search tree drawn | Turn the picture in your head into a structure |
 | How AI works | A neural network written from scratch in C++, backprop one step at a time, a tiny next-word model | Knowing how AI works, not just how to call it |
 
-Motivation: XP, levels, daily streaks, achievements, a skill tree, spaced-repetition reviews and *Topic Reels*,
-a reel spin that picks today's review topic.
+Motivation: XP, levels, daily streaks, achievements, spaced-repetition reviews (Leitner boxes), a skill plan
+ordered by topological sort, and the *Topic Reel*: one spin a day that picks today's review topic for a fixed 20 XP.
 
 > The Slot Math Lab uses play credits only. It teaches the maths and engineering of slot games; it is not gambling.
 
@@ -77,6 +85,17 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 
 CI builds the APK on every push that touches `logicforge/` and attaches it to the
 `logicforge-latest` pre-release.
+
+### Screenshot tests
+
+Robolectric renders real screens on your desktop JVM, with the C++ core compiled for your machine and loaded through the same JNI bridge:
+
+```bash
+./scripts/build_host_jni.sh                      # liblogicforge.so for this computer
+./gradlew testDebugUnitTest -Pscreenshots        # writes docs/screenshots/*.png
+```
+
+They are opt-in because Robolectric downloads a ~200 MB Android runtime the first time.
 
 ### Exercises (koans)
 

@@ -7,7 +7,7 @@
 | M2 | Android shell: Gradle + NDK + JNI, Compose screens, renderers, APK in CI | planned |
 | M3 | Pointer & Lambda Lab | done |
 | M4 | Slot Math Lab | done |
-| M5 | Learning engine: quizzes, spaced repetition, XP, streaks, Topic Reels | in progress |
+| M5 | Learning engine: quizzes, spaced repetition, XP, streaks, Topic Reels | done |
 | M6 | Design patterns + hard-to-read C++ | planned |
 | M7 | English → Diagram sandbox | planned |
 | M8 | How AI works (MLP, backprop, bigram model) | planned |

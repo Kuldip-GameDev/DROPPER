@@ -27,3 +27,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [S
   (linear, binary search, Vose alias), reel windows, paylines, 243 ways, exact RTP by enumeration,
   Monte Carlo convergence, cluster flood fill, cascades and a game-flow state machine; plot renderer.
 - 6-lesson Slot Math track and two new exercises (weighted pick, exact RTP).
+- Learning engine in C++: XP and levels, daily streaks, Leitner spaced repetition with a priority-queue review
+  queue, achievements, the daily Topic Reel (fixed result per day, fixed reward), crash-safe progress file.
+- Skill plan: lessons ordered by Kahn's topological sort over track order and cross-track prerequisites;
+  also available as a visual algorithm.
+- App: progress header, Continue card, review sessions, Topic Reel animation, profile with achievements.
+- Screenshot tests (Robolectric + Roborazzi) that run the real C++ core on the desktop JVM.
+
+### Fixed
+- Text outside a Scaffold rendered black on the dark background (found by the screenshot tests).
+- Graph nodes truncated long labels; edges had no labels; same-row forward edges curved needlessly.
