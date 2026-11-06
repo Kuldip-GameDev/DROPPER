@@ -1,0 +1,70 @@
+{
+  "id": "slot.weighted",
+  "title": "Weighted picks",
+  "summary": "Make cherries common and sevens rare: three algorithms, three speeds.",
+  "minutes": 9,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Not all symbols are equal",
+      "body": "A game designer says: cherries 40%, lemons 30%, bells 20%, sevens 10%. Write those as **weights** `40, 30, 20, 10`. Draw a fair random number from 0 to 99 and turn it into a symbol. Three ways to do it:"
+    },
+    {
+      "type": "visual",
+      "algo": "slot.pick_linear",
+      "title": "1. Linear scan: O(n)",
+      "body": "Lay the weights end to end like slices of a ruler. Walk along, subtracting, until r lands inside a slice."
+    },
+    {
+      "type": "visual",
+      "algo": "slot.pick_binary",
+      "title": "2. Running totals + binary search: O(log n)",
+      "body": "Store the running totals once. Then each pick is a binary search: the first total greater than r. This is **prefix sums** and **binary search** from the Foundations track, working together."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.pick_binary",
+      "highlight": "go_left"
+    },
+    {
+      "type": "visual",
+      "algo": "slot.alias",
+      "title": "3. The alias method: O(1)",
+      "body": "Vose's alias method pre-builds a table where every column has height exactly 1. A pick is then one uniform column plus one biased coin, however many symbols there are."
+    },
+    {
+      "type": "text",
+      "title": "Which one should a game use?",
+      "body": "- A handful of symbols: linear is perfectly fine and the easiest to audit.\n- Hundreds of entries (big virtual reels, prize tables): running totals + binary search.\n- Millions of picks per second over a fixed table (simulations): the alias method.\n\nAll three give **exactly the same probabilities**. The tests in this app check that for random weight tables."
+    },
+    {
+      "type": "quiz",
+      "question": "Weights `40, 30, 20, 10`, running totals `40, 70, 90, 100`. Which symbol does r = 70 pick?",
+      "choices": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "answer": 2,
+      "explain": "The first running total GREATER than 70 is 90, at index 2. (r = 69 would still be index 1.)"
+    },
+    {
+      "type": "build",
+      "exercise": "ex_08_weighted_pick",
+      "title": "Build it: a weighted reel",
+      "body": "Write `runningTotals` and a binary-search `pickWeighted`. The tests check every single value of r maps to the right symbol."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Random Pick with Weight",
+          "url": "https://leetcode.com/problems/random-pick-with-weight/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

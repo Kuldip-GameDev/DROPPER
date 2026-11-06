@@ -16,6 +16,19 @@
       ]
     },
     {
+      "id": "slot",
+      "title": "Slot Math Lab",
+      "subtitle": "The algorithms inside the games you ship: RNGs, weighted reels, ways, clusters, RTP. Play credits only.",
+      "lessons": [
+        "slot.rng",
+        "slot.weighted",
+        "slot.reels_lines",
+        "slot.ways_clusters",
+        "slot.rtp",
+        "slot.state_machine"
+      ]
+    },
+    {
       "id": "dsa",
       "title": "Foundations: algorithms",
       "subtitle": "From \"what is an algorithm?\" to linked lists. Every step is visual.",

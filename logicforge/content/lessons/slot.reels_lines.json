@@ -1,0 +1,47 @@
+{
+  "id": "slot.reels_lines",
+  "title": "Reel strips and paylines",
+  "summary": "Circular arrays, the modulo operator, and reading a line.",
+  "minutes": 7,
+  "cards": [
+    {
+      "type": "text",
+      "title": "A reel is a loop",
+      "body": "A physical reel is a strip glued into a circle: after the last symbol comes the first. In code that's a **circular array**, and the % operator does the wrap-around:\n\n`strip[(stop + row) % length]`\n\nWith 20 stops, stop 19 and row 1 gives (19 + 1) % 20 = 0: back to the start."
+    },
+    {
+      "type": "visual",
+      "algo": "slot.reel_window",
+      "body": "Try stops near the end of the strip in the Algorithm Lab, like 19, 18, 19, to see the wrap."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.window",
+      "highlight": "wrap"
+    },
+    {
+      "type": "visual",
+      "algo": "slot.payline",
+      "title": "Reading a payline",
+      "body": "Lucky 3 has one payline across the middle row. Only three in a row pays."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.payline",
+      "highlight": "chain",
+      "body": "With wilds, the first non-wild symbol decides what the line is \"about\", and wilds extend the chain. (Real games add rules, e.g. comparing a pure-wild line's own pay, but the core loop is this one.)"
+    },
+    {
+      "type": "quiz",
+      "question": "A strip has 22 stops. The reel stops at 21. Which strip index shows in the bottom row (row 2)?",
+      "choices": [
+        "23",
+        "1",
+        "0",
+        "21"
+      ],
+      "answer": 1,
+      "explain": "(21 + 2) % 22 = 23 % 22 = 1."
+    }
+  ]
+}

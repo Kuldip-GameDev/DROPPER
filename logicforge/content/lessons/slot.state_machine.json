@@ -1,0 +1,54 @@
+{
+  "id": "slot.state_machine",
+  "title": "Game flow as a state machine",
+  "summary": "States, events, and why \"ignore it\" is a feature.",
+  "minutes": 8,
+  "cards": [
+    {
+      "type": "text",
+      "title": "A slot is always in exactly one state",
+      "body": "IDLE → SPINNING → EVALUATING → WIN_SHOW → IDLE, with a detour through FREE_SPINS. Every button press or timer is an **event**, and each state decides which events it accepts.\n\nWriting this down as a **finite-state machine** removes a whole family of bugs: double spins, paying a win twice, spinning with no credits, a bonus that starts during a win celebration."
+    },
+    {
+      "type": "visual",
+      "algo": "slot.state_machine",
+      "body": "The highlighted arrow is the transition just taken. Watch step 3: an event that is simply ignored."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.state_machine",
+      "highlight": "ignore",
+      "title": "The code",
+      "body": "Each event method first asks \"is this allowed right now?\" and returns false if not. The UI can't break the machine, however fast the player taps."
+    },
+    {
+      "type": "text",
+      "title": "Observers",
+      "body": "`subscribe()` takes `std::function` callbacks: the **Observer pattern** from the Lambda Lab. Sound, animation, achievements and analytics listen for \"win 16\" or \"bonus\" without the machine knowing they exist. Add a new feature, touch zero lines of game logic."
+    },
+    {
+      "type": "quiz",
+      "question": "The reels are SPINNING and the player presses SPIN again. What should happen?",
+      "choices": [
+        "Start a second spin",
+        "Charge another credit",
+        "Ignore the event",
+        "Stop the reels immediately"
+      ],
+      "answer": 2,
+      "explain": "SPINNING doesn't accept pressSpin. (Some games map it to \"slam stop\", but that's a separate, deliberate event, not a second spin.)"
+    },
+    {
+      "type": "quiz",
+      "question": "Free spins are left after a win celebration. Which state comes next?",
+      "choices": [
+        "IDLE",
+        "FREE_SPINS",
+        "SPINNING",
+        "EVALUATING"
+      ],
+      "answer": 1,
+      "explain": "finishRound() goes to FREE_SPINS whenever free spins remain; from there the next spin starts without taking credits."
+    }
+  ]
+}

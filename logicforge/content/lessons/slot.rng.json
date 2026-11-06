@@ -1,0 +1,79 @@
+{
+  "id": "slot.rng",
+  "title": "Randomness you can trust",
+  "summary": "Pseudo-random generators, modulo bias, and how to test an RNG.",
+  "minutes": 9,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Computers can't flip coins",
+      "body": "A **pseudo-random number generator** (PRNG) is a tiny machine with a hidden **state**. Each call scrambles the state and hands you a number. Same starting state (the **seed**), same sequence, every time.\n\nThat's useful for replays and testing. But a game's outcomes must be **unpredictable** and **fair**, so slot studios use certified RNGs, and regulated markets test them against published standards (GLI-11 is a well-known one)."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.rng_pcg",
+      "title": "A modern PRNG in 10 lines",
+      "body": "PCG32: a 64-bit LCG for the state, then a scrambling step for the output. The app's tests check it against the official reference output."
+    },
+    {
+      "type": "visual",
+      "algo": "slot.modulo_bias",
+      "title": "The bug in rng() % n",
+      "body": "This is the most common randomness bug in game code, and it's invisible unless you count."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.uniform_below",
+      "highlight": "limit",
+      "title": "The fix",
+      "body": "`-n` on an unsigned number wraps around to 2³² − n, so `(-n) % n` is 2³² mod n: the size of the unfair leftover. Rejecting raw values below it leaves an exact multiple of n."
+    },
+    {
+      "type": "visual",
+      "algo": "slot.rng_quality",
+      "title": "Testing a generator",
+      "body": "The **chi-square** statistic measures how far the counts are from perfectly even. Then watch the final step: a test can pass while a real flaw hides elsewhere."
+    },
+    {
+      "type": "quiz",
+      "question": "A generator outputs 0..7 equally often. You compute `r % 3`. Which result is least likely?",
+      "choices": [
+        "0",
+        "1",
+        "2",
+        "They're equally likely"
+      ],
+      "answer": 2,
+      "explain": "0 comes from {0, 3, 6}, 1 from {1, 4, 7}, but 2 only from {2, 5}: 2 chances out of 8 instead of 3."
+    },
+    {
+      "type": "quiz",
+      "question": "Why is the LCG's lowest bit 1, 0, 1, 0...?",
+      "choices": [
+        "Bad luck with the seed",
+        "Odd multiplier and odd increment: each step flips the parity",
+        "A bug in the code",
+        "Chi-square found it"
+      ],
+      "answer": 1,
+      "explain": "With x = a·x + c (mod 2³²) and both a and c odd, the parity of x flips every step. The low bits of power-of-two LCGs have very short cycles. That's why modern generators scramble their output."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Implement Rand10() Using Rand7()",
+          "url": "https://leetcode.com/problems/implement-rand10-using-rand7/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Shuffle an Array",
+          "url": "https://leetcode.com/problems/shuffle-an-array/",
+          "level": "Medium"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "id": "slot.rtp",
+  "title": "RTP, hit frequency and volatility",
+  "summary": "Compute a game's true return, and see why simulations need millions of spins.",
+  "minutes": 12,
+  "cards": [
+    {
+      "type": "text",
+      "title": "Three numbers that define a slot",
+      "body": "- **RTP** (Return To Player): the long-run average paid back per credit bet. 94.95% means 94.95 credits back per 100 bet, on average, over a very long time.\n- **Hit frequency**: how often a spin pays anything.\n- **Volatility**: how wildly results swing. Measured with the **standard deviation** of one spin's pay.\n\nTwo games can share an RTP and feel completely different: frequent small wins vs rare huge ones."
+    },
+    {
+      "type": "visual",
+      "algo": "slot.rtp_exact",
+      "title": "Exact RTP by counting",
+      "body": "Every combination of stops is equally likely, so counting gives the exact answer, no randomness involved."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.rtp_exact",
+      "highlight": "variance",
+      "body": "Brute force over 8,000 combinations takes microseconds. Big 5-reel games have billions of combinations, so studios count smarter (per-symbol products, like the table) or simulate."
+    },
+    {
+      "type": "visual",
+      "algo": "slot.rtp_sim",
+      "title": "RTP by simulation",
+      "body": "Monte Carlo: play random spins and average. Watch how slowly the curve settles, and try other seeds in the Algorithm Lab."
+    },
+    {
+      "type": "text",
+      "title": "Why it takes so long",
+      "body": "The error of an average shrinks like **σ / √N**. Lucky 3's σ is about 10 credits per spin, mostly because of the rare 800-credit jackpot.\n\nTo be 95% sure the RTP is within ±0.1 points you need (1.96 × 10 / 0.001)² ≈ **384 million** spins. 100× more spins only buys 10× more accuracy."
+    },
+    {
+      "type": "quiz",
+      "question": "10 stops per reel, 3 reels, one 7 per reel. Only 777 pays: 500 credits for a 1-credit bet. What is the RTP?",
+      "choices": [
+        "5%",
+        "50%",
+        "500%",
+        "0.1%"
+      ],
+      "answer": 1,
+      "explain": "1 × 1 × 1 = 1 winning combination out of 10 × 10 × 10 = 1,000. Average pay = 500 / 1,000 = 0.5 credits per credit: 50%."
+    },
+    {
+      "type": "quiz",
+      "question": "Game A: RTP 95%, hit frequency 30%. Game B: RTP 95%, hit frequency 5%. Which is more volatile?",
+      "choices": [
+        "A",
+        "B",
+        "Same",
+        "Can't say anything"
+      ],
+      "answer": 1,
+      "explain": "Same average return, but B pays far less often, so each win must be bigger on average. Bigger, rarer wins = higher variance. (Strictly you'd compare standard deviations, but that's the usual pattern.)"
+    },
+    {
+      "type": "build",
+      "exercise": "ex_09_exact_rtp",
+      "title": "Build it: an RTP calculator",
+      "body": "Compute RTP and hit frequency from per-reel symbol counts and a paytable. Your Lucky 3 answer must match this lesson's 94.95%."
+    }
+  ]
+}

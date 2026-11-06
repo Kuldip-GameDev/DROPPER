@@ -1,0 +1,84 @@
+{
+  "id": "slot.ways_clusters",
+  "title": "Ways, clusters and cascades",
+  "summary": "243 ways by multiplication, cluster pays by BFS, cascades by gravity.",
+  "minutes": 10,
+  "cards": [
+    {
+      "type": "visual",
+      "algo": "slot.ways",
+      "title": "243 ways: multiply, don't enumerate",
+      "body": "On 5 reels × 3 rows there are 3⁵ = 243 left-to-right paths. Instead of checking each one, count matches per reel and multiply."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.ways",
+      "highlight": "multiply",
+      "body": "A symbol pays once, for its longest run from the left, times the number of ways. The test suite checks this against brute force over all 243 paths."
+    },
+    {
+      "type": "visual",
+      "algo": "slot.cluster",
+      "title": "Cluster pays = flood fill",
+      "body": "\"Five or more touching\" is a **graph** problem: cells are nodes, equal neighbours are edges. Breadth-first search finds each group."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.flood_fill",
+      "highlight": "enqueue",
+      "body": "Mark a cell as seen **when you queue it**, not when you visit it. Otherwise the same cell can be queued many times."
+    },
+    {
+      "type": "visual",
+      "algo": "slot.cascade",
+      "title": "Cascades: gravity is two pointers",
+      "body": "After a win, the winners vanish and each column compacts downward. Then new symbols fall in and the grid is checked again."
+    },
+    {
+      "type": "code",
+      "snippet": "slot.gravity",
+      "highlight": "fall"
+    },
+    {
+      "type": "quiz",
+      "question": "Reel match counts for a symbol are 2, 1, 3, 0, 2 (5 reels). How many ways does it pay, and for how many reels?",
+      "choices": [
+        "2 × 1 × 3 = 6 ways, 3 reels",
+        "2 × 1 × 3 × 2 = 12 ways, 4 reels",
+        "8 ways, 5 reels",
+        "No win"
+      ],
+      "answer": 0,
+      "explain": "The run stops at reel 4 (0 matches). Reels 1-3 give 2 × 1 × 3 = 6 ways of a 3-reel win. Reel 5 doesn't count: it isn't connected."
+    },
+    {
+      "type": "practice",
+      "links": [
+        {
+          "site": "LeetCode",
+          "title": "Flood Fill",
+          "url": "https://leetcode.com/problems/flood-fill/",
+          "level": "Easy"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Number of Islands",
+          "url": "https://leetcode.com/problems/number-of-islands/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Max Area of Island",
+          "url": "https://leetcode.com/problems/max-area-of-island/",
+          "level": "Medium"
+        },
+        {
+          "site": "LeetCode",
+          "title": "Candy Crush",
+          "url": "https://leetcode.com/problems/candy-crush/",
+          "level": "Medium · Premium"
+        }
+      ]
+    }
+  ]
+}
