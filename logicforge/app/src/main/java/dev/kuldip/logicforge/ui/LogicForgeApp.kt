@@ -7,6 +7,9 @@ import androidx.navigation.compose.rememberNavController
 import dev.kuldip.logicforge.ui.explore.AlgorithmListScreen
 import dev.kuldip.logicforge.ui.home.HomeScreen
 import dev.kuldip.logicforge.ui.lesson.LessonScreen
+import dev.kuldip.logicforge.ui.profile.ProfileScreen
+import dev.kuldip.logicforge.ui.reel.TopicReelScreen
+import dev.kuldip.logicforge.ui.review.ReviewScreen
 import dev.kuldip.logicforge.ui.viz.VisualizerScreen
 
 /** Every screen and how to reach it. */
@@ -15,6 +18,10 @@ object Routes {
     const val LAB = "lab"
     const val VIZ = "viz/{id}"
     const val LESSON = "lesson/{id}"
+    const val REVIEW = "review/{mode}"
+    const val REEL = "reel"
+    const val PROFILE = "profile"
+    fun review(mode: String) = "review/$mode"
     fun viz(id: String) = "viz/$id"
     fun lesson(id: String) = "lesson/$id"
 }
@@ -27,6 +34,9 @@ fun LogicForgeApp() {
             HomeScreen(
                 onOpenLesson = { nav.navigate(Routes.lesson(it)) },
                 onOpenLab = { nav.navigate(Routes.LAB) },
+                onOpenReviews = { nav.navigate(Routes.review("due")) },
+                onOpenReel = { nav.navigate(Routes.REEL) },
+                onOpenProfile = { nav.navigate(Routes.PROFILE) },
             )
         }
         composable(Routes.LAB) {
@@ -37,6 +47,15 @@ fun LogicForgeApp() {
         }
         composable(Routes.LESSON) { entry ->
             LessonScreen(lessonId = entry.arguments?.getString("id").orEmpty(), onBack = { nav.popBackStack() })
+        }
+        composable(Routes.REVIEW) { entry ->
+            ReviewScreen(mode = entry.arguments?.getString("mode").orEmpty(), onBack = { nav.popBackStack() })
+        }
+        composable(Routes.REEL) {
+            TopicReelScreen(onReview = { nav.navigate(Routes.review("topic:$it")) }, onBack = { nav.popBackStack() })
+        }
+        composable(Routes.PROFILE) {
+            ProfileScreen(onBack = { nav.popBackStack() })
         }
     }
 }

@@ -44,12 +44,12 @@ import dev.kuldip.logicforge.ui.theme.Mono
 import dev.kuldip.logicforge.ui.viz.TracePlayer
 
 @Composable
-fun CardView(card: Card) {
+fun CardView(card: Card, onQuizAnswered: (Boolean) -> Unit = {}) {
     when (card) {
         is TextCard -> TextCardView(card)
         is VisualCard -> VisualCardView(card)
         is CodeCard -> CodeCardView(card)
-        is QuizCard -> QuizCardView(card)
+        is QuizCard -> QuizCardView(card, onQuizAnswered)
         is BuildCard -> BuildCardView(card)
         is PracticeCard -> PracticeCardView(card)
     }
@@ -100,8 +100,9 @@ private fun CodeCardView(card: CodeCard) {
     }
 }
 
+/** Only the FIRST tap counts, which is what spaced repetition needs to know. */
 @Composable
-private fun QuizCardView(card: QuizCard) {
+fun QuizCardView(card: QuizCard, onAnswered: (Boolean) -> Unit = {}) {
     var picked by remember(card) { mutableStateOf<Int?>(null) }
     Text("Quick check", style = MaterialTheme.typography.labelLarge, color = ForgeColors.Cyan)
     RichText(card.question)
@@ -128,7 +129,10 @@ private fun QuizCardView(card: QuizCard) {
                     .clip(RoundedCornerShape(12.dp))
                     .border(2.dp, border, RoundedCornerShape(12.dp))
                     .background(ForgeColors.Surface)
-                    .clickable(enabled = picked == null) { picked = i }
+                    .clickable(enabled = picked == null) {
+                        picked = i
+                        onAnswered(i == card.answer)
+                    }
                     .padding(14.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {

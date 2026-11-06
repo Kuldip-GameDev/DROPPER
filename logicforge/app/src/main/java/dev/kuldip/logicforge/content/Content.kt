@@ -23,6 +23,7 @@ data class Lesson(
     val title: String,
     val summary: String = "",
     val minutes: Int = 5,
+    val requires: List<String> = emptyList(),
     val cards: List<Card>,
 )
 
