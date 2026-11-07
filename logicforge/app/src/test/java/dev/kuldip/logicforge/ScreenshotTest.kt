@@ -11,6 +11,7 @@ import com.github.takahirom.roborazzi.captureRoboImage
 import dev.kuldip.logicforge.ui.home.HomeScreen
 import dev.kuldip.logicforge.ui.lesson.LessonScreen
 import dev.kuldip.logicforge.ui.reel.TopicReelScreen
+import dev.kuldip.logicforge.ui.sandbox.SandboxScreen
 import dev.kuldip.logicforge.ui.theme.LogicForgeTheme
 import dev.kuldip.logicforge.ui.viz.VisualizerScreen
 import dev.kuldip.logicforge.core.NativeBridge
@@ -103,6 +104,20 @@ class ScreenshotTest {
         show { LessonScreen("ptr.addresses") {} }
         waitForText("Lockers")
         capture("lesson_first_card")
+    }
+
+    @Test
+    fun sandbox() {
+        show { SandboxScreen {} }
+        waitForText("Insert 8")
+        capture("sandbox_tree")
+    }
+
+    @Test
+    fun xorNetwork() {
+        show { VisualizerScreen("ai.xor_network") {} }
+        waitForText("brand-new network")
+        capture("ai_xor_network")
     }
 
     @Test

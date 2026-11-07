@@ -43,6 +43,9 @@ class Forge(
 
     suspend fun algorithms(): List<AlgoInfo> = ForgeJson.decodeFromJsonElement(call("algo.list"))
 
+    /** English -> Diagram: same shape as a trace, plus the tokens the lexer produced (in result). */
+    suspend fun dsl(text: String): Trace = ForgeJson.decodeFromJsonElement(call("dsl.render", buildJsonObject { put("text", text) }))
+
     suspend fun trace(id: String, input: JsonObject? = null): Trace {
         val args = buildJsonObject {
             put("id", id)

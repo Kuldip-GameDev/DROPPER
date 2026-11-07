@@ -10,6 +10,7 @@ import dev.kuldip.logicforge.ui.lesson.LessonScreen
 import dev.kuldip.logicforge.ui.profile.ProfileScreen
 import dev.kuldip.logicforge.ui.reel.TopicReelScreen
 import dev.kuldip.logicforge.ui.review.ReviewScreen
+import dev.kuldip.logicforge.ui.sandbox.SandboxScreen
 import dev.kuldip.logicforge.ui.viz.VisualizerScreen
 
 /** Every screen and how to reach it. */
@@ -21,6 +22,7 @@ object Routes {
     const val REVIEW = "review/{mode}"
     const val REEL = "reel"
     const val PROFILE = "profile"
+    const val SANDBOX = "sandbox"
     fun review(mode: String) = "review/$mode"
     fun viz(id: String) = "viz/$id"
     fun lesson(id: String) = "lesson/$id"
@@ -37,6 +39,7 @@ fun LogicForgeApp() {
                 onOpenReviews = { nav.navigate(Routes.review("due")) },
                 onOpenReel = { nav.navigate(Routes.REEL) },
                 onOpenProfile = { nav.navigate(Routes.PROFILE) },
+                onOpenSandbox = { nav.navigate(Routes.SANDBOX) },
             )
         }
         composable(Routes.LAB) {
@@ -56,6 +59,9 @@ fun LogicForgeApp() {
         }
         composable(Routes.PROFILE) {
             ProfileScreen(onBack = { nav.popBackStack() })
+        }
+        composable(Routes.SANDBOX) {
+            SandboxScreen(onBack = { nav.popBackStack() })
         }
     }
 }

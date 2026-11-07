@@ -57,6 +57,7 @@ fun HomeScreen(
     onOpenReviews: () -> Unit,
     onOpenReel: () -> Unit,
     onOpenProfile: () -> Unit,
+    onOpenSandbox: () -> Unit = {},
 ) {
     val container = LocalAppContainer.current
     val learn by container.learn.state.collectAsStateValue()
@@ -135,6 +136,14 @@ fun HomeScreen(
                 subtitle = "Run any algorithm, scenario or slot simulation on your own input and step through it like a debugger.",
                 accent = ForgeColors.Cyan,
                 onClick = onOpenLab,
+            )
+        }
+        item {
+            FeatureCard(
+                title = "English → Diagram",
+                subtitle = "Type \"tree 8 3 10 1 6\" or \"stack push 3 pop\" and watch it drawn.",
+                accent = ForgeColors.Magenta,
+                onClick = onOpenSandbox,
             )
         }
         if (d == null) return@LazyColumn
