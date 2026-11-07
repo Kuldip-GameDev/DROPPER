@@ -38,6 +38,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versioning: [S
 - Hard-to-read C++: compiled, tested examples and a 5-lesson track.
 - More DSA: BST, traversals, binary heap, hash set, BFS grid pathfinding, Dijkstra, coin change, LCS and
   N-Queens, each with a visual trace and brute-force-checked tests; 8 more Foundations lessons.
+- How AI works: gradient descent, a 2-3-1 network learning XOR with hand-written backpropagation (verified
+  against finite differences), and a character bigram language model; 4-lesson track.
+- English -> Diagram sandbox: lexer and recursive-descent parser for a forgiving mini-language, a sandbox
+  screen, and a lesson on how it works.
 
 ### Fixed
 - Text outside a Scaffold rendered black on the dark background (found by the screenshot tests).

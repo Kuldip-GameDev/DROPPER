@@ -3,7 +3,8 @@
 **Learn data structures, algorithms, design patterns and modern C++ by watching them run, then building them yourself.**
 It's an Android app with a C++20 brain, written for game developers (slot-machine developers especially) and for complete beginners.
 
-> Status: early development (v0.x). See [`CHANGELOG.md`](CHANGELOG.md) and [`docs/ROADMAP.md`](docs/ROADMAP.md).
+> Status: v0.x, all ten planned milestones done: 80+ visual algorithms and scenarios, 7 tracks, 52 lessons,
+> 9 exercises. See [`CHANGELOG.md`](CHANGELOG.md) and [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ---
 
@@ -25,6 +26,10 @@ These are rendered by tests from the real app code and the real C++ core (see [S
 | Home | Algorithm Lab | Pointer Lab | Slot Math Lab |
 |---|---|---|---|
 | ![Home](docs/screenshots/home.png) | ![Bubble sort](docs/screenshots/visualizer_bubble_sort.png) | ![weak_ptr](docs/screenshots/pointer_lab_weak_ptr.png) | ![State machine](docs/screenshots/slot_state_machine.png) |
+
+| English → Diagram | How AI works | Exact RTP | Topic Reel |
+|---|---|---|---|
+| ![Sandbox](docs/screenshots/sandbox_tree.png) | ![XOR network](docs/screenshots/ai_xor_network.png) | ![RTP](docs/screenshots/slot_rtp_exact.png) | ![Topic Reel](docs/screenshots/topic_reel.png) |
 
 ## What's inside
 
