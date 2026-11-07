@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "forge/viz/recorder.hpp"
+#include "forge/viz/scene.hpp"
 
 namespace forge::algo {
 
@@ -23,5 +24,9 @@ std::vector<int> levelOrder(const TreeNode* root);
 
 void heapPush(std::vector<int>& heap, int value);
 int heapPop(std::vector<int>& heap);  // heap must not be empty
+
+// Pictures, reused by the English -> Diagram sandbox.
+viz::GraphScene drawTree(const TreeNode* root);
+viz::GraphScene drawHeap(const std::vector<int>& heap);
 
 }  // namespace forge::algo

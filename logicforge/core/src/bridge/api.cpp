@@ -35,6 +35,7 @@ Api::Api() {
     });
 
     registerLearnApi(*this);
+    registerDslApi(*this);
 }
 
 void Api::on(std::string method, Handler handler) {

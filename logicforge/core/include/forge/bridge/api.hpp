@@ -39,6 +39,8 @@ private:
 
 // Registers learn.* methods (progress, reviews, Topic Reel, skill plan).
 void registerLearnApi(Api& api);
+// Registers dsl.render (English -> Diagram).
+void registerDslApi(Api& api);
 
 const char* version();
 

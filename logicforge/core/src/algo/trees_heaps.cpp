@@ -153,6 +153,8 @@ std::unique_ptr<TreeNode> buildBst(const std::vector<int>& values) {
 }  // namespace
 
 std::unique_ptr<TreeNode> buildBstFrom(const std::vector<int>& values) { return buildBst(values); }
+viz::GraphScene drawTree(const TreeNode* root) { return treeScene(root); }
+viz::GraphScene drawHeap(const std::vector<int>& heap) { return heapScene(heap); }
 
 void registerTreesHeaps(Registry& r) {
     r.add({"tree.bst", "Binary search tree", "Trees & heaps", "tree.bst", "O(log n) average, O(n) worst", "O(n)",
