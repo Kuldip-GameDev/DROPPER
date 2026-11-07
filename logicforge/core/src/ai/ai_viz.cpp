@@ -76,7 +76,13 @@ Json xorTrace(const Json& input, Recorder& rec) {
         for (int i = 0; i < 4; ++i) g.var(cat(kX[i][0], " xor ", kX[i][1]), round2(predict(n, kX[i][0], kX[i][1])));
         return g;
     };
-    rec.frame(predictions(netScene(n, 1, 0)), "A brand-new network with random weights (edge labels). It knows nothing: every answer is a guess near 0.5. The node values shown are for the input (1, 0).", "");
+    double lo = 1, hi = 0;
+    for (int i = 0; i < 4; ++i) {
+        const double o = predict(n, kX[i][0], kX[i][1]);
+        lo = std::min(lo, o);
+        hi = std::max(hi, o);
+    }
+    rec.frame(predictions(netScene(n, 1, 0)), cat("A brand-new network with random weights (edge labels). It knows nothing: all four answers sit between ", round2(lo), " and ", round2(hi), ", whatever the input. Node values are shown for the input (1, 0)."), "");
     std::vector<std::pair<double, double>> lossCurve;
     int nextShow = 10;
     for (int e = 1; e <= epochs; ++e) {
