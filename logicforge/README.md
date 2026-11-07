@@ -3,7 +3,7 @@
 **Learn data structures, algorithms, design patterns and modern C++ by watching them run, then building them yourself.**
 It's an Android app with a C++20 brain, written for game developers (slot-machine developers especially) and for complete beginners.
 
-> Status: v0.x, all ten planned milestones done: 80+ visual algorithms and scenarios, 7 tracks, 52 lessons,
+> Status: v0.x, all ten planned milestones done: 62 visual algorithms and scenarios, 7 tracks, 52 lessons,
 > 9 exercises. See [`CHANGELOG.md`](CHANGELOG.md) and [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ---
