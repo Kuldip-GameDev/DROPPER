@@ -92,6 +92,14 @@
         "ai.language_models",
         "ai.build_apps"
       ]
+    },
+    {
+      "id": "tools",
+      "title": "Build your own tools",
+      "subtitle": "How the app itself works: parsers today, more tools later.",
+      "lessons": [
+        "tools.parser"
+      ]
     }
   ]
 }

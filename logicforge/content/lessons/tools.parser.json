@@ -1,0 +1,59 @@
+{
+  "id": "tools.parser",
+  "title": "How the sandbox reads English",
+  "summary": "Lexers, tokens and recursive descent: how compilers read your code.",
+  "minutes": 9,
+  "requires": [
+    "dsa.stacks"
+  ],
+  "cards": [
+    {
+      "type": "text",
+      "title": "Two steps, like every compiler",
+      "body": "The English → Diagram sandbox understands text like \"sorted array of 9, 2 and 7\". It does it the same way a C++ compiler reads your code:\n\n- The **lexer** cuts characters into **tokens**: words, numbers, arrows, commas.\n- The **parser** reads the tokens left to right and decides what they mean.\n\nIt's a deliberately tiny language, so forgiving words like \"a\", \"of\" and \"and\" are simply skipped."
+    },
+    {
+      "type": "code",
+      "snippet": "dsl.lexer",
+      "highlight": "arrow",
+      "title": "The lexer",
+      "body": "Look at the arrow case: two characters (`->`) become one token. And `-4` after a space is a negative number, while `A-4` is an edge. The lexer decides by looking one character back."
+    },
+    {
+      "type": "code",
+      "snippet": "dsl.parser",
+      "highlight": "kind",
+      "title": "The parser",
+      "body": "**Recursive descent**: one small function per part of the grammar (`kind()`, `numbers()`, `operations()`, `edges()`). Each function consumes the tokens it understands and returns. Real compilers are built the same way, with a much bigger grammar."
+    },
+    {
+      "type": "quiz",
+      "question": "How many tokens does the lexer produce for `list 1 -> 2`?",
+      "choices": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "answer": 1,
+      "explain": "list, 1, ->, 2: four tokens. The arrow's two characters form one token, and spaces produce none."
+    },
+    {
+      "type": "quiz",
+      "question": "What does the parser do with the word \"of\" in \"array of 5 3\"?",
+      "choices": [
+        "Errors",
+        "Skips it as a filler word",
+        "Draws it",
+        "Treats it as a number"
+      ],
+      "answer": 1,
+      "explain": "skipFiller() steps over words like a, an, the, of, with and and. That's what makes the language forgiving."
+    },
+    {
+      "type": "text",
+      "title": "Why this matters for AI apps",
+      "body": "An AI model asked to \"draw a tree of 8, 3 and 10\" could answer in this little language instead of free text. The app can then **parse and check** the answer before drawing it: if it doesn't parse, it isn't shown. Constraining a model's output to a language you can validate is one of the most practical ways to make AI features trustworthy."
+    }
+  ]
+}
